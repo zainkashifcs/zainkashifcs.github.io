@@ -1,0 +1,12 @@
+title: zain's cp log
+description: Notes from my competitive programming practice, mostly Codeforces.
+solutions_repo: https://github.com/zainkashifcs/comp-program-grind
+permalink: /posts/:title/
+
+defaults:
+  - scope: { type: posts }
+    values: { layout: post }
+  - scope: { type: pages }
+    values: { layout: default }
+
+exclude: [README.md, skills-lock.json, Gemfile, Gemfile.lock, vendor]

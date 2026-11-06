@@ -1,0 +1,6 @@
+---
+---
+<p class="lede">{{ site.description }}</p>
+<ul class="log">
+  {% for post in site.posts %}{% include post-row.html post=post %}{% endfor %}
+</ul>

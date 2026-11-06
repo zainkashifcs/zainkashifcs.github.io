@@ -1,0 +1,16 @@
+---
+layout: default
+---
+<article>
+  <header>
+    <h1>{{ page.title }}</h1>
+    <p class="meta">
+      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%Y-%m-%d" }}</time>
+      {% include tags.html tags=page.tags %}
+    </p>
+    {% if page.solution != blank %}
+      <a class="solution" href="{{ site.solutions_repo }}/blob/main/{{ page.solution | uri_escape }}">View solution on GitHub</a>
+    {% endif %}
+  </header>
+  {{ content }}
+</article>

@@ -1,0 +1,14 @@
+# Jekyll build output and caches
+_site/
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/
+
+# Local Ruby setup
+Gemfile.lock
+.bundle/
+vendor/
+
+# AI agent tooling (not part of the site)
+.claude/
+skills-lock.json
