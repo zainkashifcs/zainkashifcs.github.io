@@ -1,9 +1,75 @@
 ---
 ---
-<section class="hero">
-  <h1>Problems I've solved, and what each one taught me.</h1>
-  <p>{{ site.description }}</p>
+{%- assign s = site.data.activity_stats -%}
+{%- assign latest = site.posts | first -%}
+{%- assign quiz_total = 0 -%}
+{%- for p in site.posts -%}
+  {%- assign _qs = site.data.quizzes[p.slug] | where: "status", "approved" -%}
+  {%- assign quiz_total = quiz_total | plus: _qs.size -%}
+{%- endfor -%}
+{%- assign _problems = site.data.activity | where_exp: "e", "e.type != 'milestone'" | where_exp: "e", "e.display != false" | group_by: "problem" -%}
+<section class="intro" aria-labelledby="intro-h">
+  <canvas class="hero-bg" aria-hidden="true"></canvas>
+  <h1 id="intro-h">Problems I&rsquo;ve solved, and what each one taught me.</h1>
+  <p class="lede">A record of my competitive programming journey, mostly on Codeforces. Each write-up keeps the idea, where I got stuck, the lesson and the code.</p>
+  <p class="links">
+    {%- if latest %}<a href="{{ latest.url | relative_url }}">Latest write-up: {{ latest.title }}</a>{% endif -%}
+    <a href="{{ site.solutions_repo }}">All solutions on GitHub</a>
+    {%- if quiz_total > 0 %}<a href="{{ '/quiz/' | relative_url }}">Take a quiz</a>{% endif -%}
+  </p>
+  <dl class="facts">
+    <div><dt>Solved independently</dt><dd>{{ s.independent_total.size }}<small>incl. {{ s.independent_upsolves.size }} upsolve{% if s.independent_upsolves.size != 1 %}s{% endif %}; plus {{ s.assisted_solves.size }} with help</small></dd></div>
+    <div><dt>Active days</dt><dd>{{ s.active_days }}<small>since {{ s.first_day | date: "%-d %b %Y" }}</small></dd></div>
+    <div><dt>Longest streak</dt><dd>{{ s.longest_streak.days }} day{% if s.longest_streak.days != 1 %}s{% endif %}<small>{{ s.longest_streak.start | date: "%-d %b" }} to {{ s.longest_streak.end | date: "%-d %b" }}</small></dd></div>
+    <div><dt>Write-ups</dt><dd>{{ site.posts.size }}<small>published</small></dd></div>
+  </dl>
 </section>
-<div class="cards">
-  {% for post in site.posts %}{% include post-card.html post=post %}{% endfor %}
-</div>
+
+<section class="section" id="activity" aria-labelledby="act-h">
+  <div class="section-head"><h2 id="act-h">Coding activity</h2><a href="{{ '/activity/' | relative_url }}">Full activity log</a></div>
+  {% include heatmap.html %}
+</section>
+
+<section class="section" aria-labelledby="feed-h">
+  <div class="section-head"><h2 id="feed-h">Recent activity</h2><a href="{{ '/activity/' | relative_url }}">See all {{ site.data.activity.size }} entries</a></div>
+  {% include feed.html limit=6 short=true %}
+</section>
+
+<section class="section" id="index" aria-labelledby="index-h" data-index>
+  <div class="section-head"><h2 id="index-h">Problem index</h2><p>Every problem in the log, with write-ups where they exist.</p></div>
+  <div class="toolbar" hidden>
+    <label>Search<input type="search" placeholder="ID, title, topic, status or lesson"></label>
+    <label>Status<select name="status"><option value="">All problems</option><option value="solved">Solved</option><option value="help">Solved with help</option><option value="unsolved">Not solved</option></select></label>
+    <label>Topic<select name="topic"><option value="">All topics</option>{% assign _tags = site.tags | sort %}{% for t in _tags %}<option value="{{ t[0] | escape }}">{{ t[0] }}</option>{% endfor %}</select></label>
+    <label>Sort<select name="sort"><option value="newest">Newest</option><option value="rating">Highest rating</option><option value="id">Problem ID</option></select></label>
+  </div>
+  <p class="count" aria-live="polite"></p>
+  <div class="thead" aria-hidden="true"><span>Problem</span><span>Notes</span><span>Topics</span><span>Rating</span><span>Date</span></div>
+  <ul class="index">{% for g in _problems %}{% include problem-row.html g=g %}{% endfor %}</ul>
+  <p class="empty" hidden>No problems match &ldquo;<span></span>&rdquo;. <button type="button">Clear search and filters</button></p>
+</section>
+
+
+{% if quiz_total > 0 %}
+<section class="section quiz-band" aria-labelledby="quiz-h">
+  <div><h2 id="quiz-h">Test your knowledge</h2>
+    <p>Questions drawn from the published write-ups: edge cases, complexity, tracing the code and the reasoning behind each choice. Choose topics and a rating range, or take a mix of everything.</p>
+    <p class="small">{{ quiz_total }} approved question{% if quiz_total != 1 %}s{% endif %} so far. Each answer is checked against the notes or by running the solution.</p>
+    <a class="btn" href="{{ '/quiz/' | relative_url }}">Practise by topic</a></div>
+  <form data-quiz data-try onsubmit="return false">
+    {%- assign _t = 0 -%}
+    {%- for p in site.posts -%}
+      {%- assign _qs = site.data.quizzes[p.slug] | where: "status", "approved" -%}
+      {%- if _qs.size > 0 -%}{%- assign _pid = p.title | split: " " | first -%}{%- include rating.html pid=_pid rating=p.rating -%}{%- endif -%}
+      {%- for q in _qs -%}{%- assign _t = _t | plus: 1 -%}
+        {%- assign _label = "Try one: from " | append: p.title %}
+        <div class="try"{% if _t > 1 %} hidden{% endif %}>{% include quiz-question.html q=q i=_t total=1 name="t" label=_label slug=p.slug rating=rating %}</div>
+      {%- endfor -%}
+    {%- endfor %}
+  </form>
+</section>
+{% endif %}
+<script src="{{ '/assets/js/hero.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/activity.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/index.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/quiz.js' | relative_url }}" defer></script>

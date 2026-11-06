@@ -1,0 +1,9 @@
+{%- comment -%} Chronological activity feed, newest day first. Usage: include feed.html limit=6 short=true {%- endcomment -%}
+{%- assign _lim = include.limit | default: 100000 -%}
+{%- assign _days = site.data.activity | sort: "seq" | reverse | group_by: "date" -%}
+<ol class="feed{% if include.short %} short{% endif %}">
+  {%- for g in _days limit: _lim %}
+  <li><time datetime="{{ g.name }}"><b>{{ g.name | date: "%-d %b" }}</b><span>{{ g.name | date: "%a %Y" }}</span></time>
+    <ul>{% for e in g.items %}{% include activity-item.html e=e %}{% endfor %}</ul></li>
+  {%- endfor %}
+</ol>

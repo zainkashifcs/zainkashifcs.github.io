@@ -1,0 +1,23 @@
+{%- comment -%}
+One approved question. Without JavaScript it shows a "Show answer" disclosure; assets/js/quiz.js turns it into
+check-and-explain. Usage: include quiz-question.html q=q i=1 total=4 name="p" [from_title= from_url= slug= rating=]
+{%- endcomment -%}
+{%- assign q = include.q -%}
+{%- capture src -%}
+  {%- if q.source.type == "note" -%}{{ q.source.section }}: &ldquo;{{ q.source.quote }}&rdquo;{%- else -%}Verified by running the solution on the {{ q.source.detail }}.{%- endif %}
+  {% case q.validation.method -%}
+    {%- when "executed" %}Checked: input {{ q.validation.input }} prints {{ q.validation.output }}.
+    {%- when "brute-force" %}Checked by brute force: {{ q.validation.detail }}.
+    {%- else %}Checked: {{ q.validation.detail }}.
+  {%- endcase -%}
+{%- endcapture -%}
+<fieldset class="q" data-answer="{{ q.answer }}" data-tags="{{ q.tags | join: ' ' }}" data-rating="{{ include.rating }}" data-problem="{{ include.slug }}">
+  <legend><span class="qtext"><span class="qnum"><span class="qn">{% if include.label %}{{ include.label }}{% else %}Question {{ include.i }} of {{ include.total }}{% endif %}</span>{% if include.from_url %} <span class="from">from <a href="{{ include.from_url | relative_url }}">{{ include.from_title }}</a></span>{% endif %}</span>{{ q.question | escape }}</span></legend>
+  <div class="choices">
+    {%- for c in q.choices %}
+    <label class="choice"><input type="radio" name="{{ include.name }}-{{ include.i }}" value="{{ forloop.index0 }}"><span>{% if q.code %}<code>{{ c | escape }}</code>{% else %}{{ c | escape }}{% endif %}</span><span class="mark"></span></label>
+    {%- endfor %}
+  </div>
+  <details class="reveal"><summary>Show answer</summary><p><strong>{{ q.choices[q.answer] | escape }}.</strong> {{ q.explanation | escape }}</p><p class="src">{{ src | strip }}</p></details>
+  <div class="explain" hidden><p>{{ q.explanation | escape }}</p><p class="src">{{ src | strip }}</p></div>
+</fieldset>

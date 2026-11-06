@@ -1,0 +1,23 @@
+{%- comment -%} Contribution heatmap (drawn by assets/js/activity.js), day panel and progress figures. {%- endcomment -%}
+{%- assign s = site.data.activity_stats -%}
+<p class="activity-summary"><b>{{ s.verified_entries }} verified activities</b> across <b>{{ s.active_days }} days</b> since the log began on {{ s.log_start | date: "%-d %B %Y" }}: <b>{{ s.independent_total.size }}</b> problems solved independently, <b>{{ s.assisted_solves.size }}</b> with help, and <b>{{ s.redos.size }}</b> redos.</p>
+<div class="heat-wrap" data-heatmap>
+  <div class="heat-scroll"><div class="heat" role="group" aria-label="Verified activity since the log began. Days with activity are buttons."></div></div>
+  <div class="tip" hidden></div>
+  <div class="legend"><span class="before"><span class="d none"></span>Before the log started</span><span class="scale" aria-label="Fewer to more activities"><span>Less</span><span class="d"></span><span class="d l1"></span><span class="d l2"></span><span class="d l3"></span><span class="d l4"></span><span>More</span></span></div>
+</div>
+<noscript><p>The calendar needs JavaScript; every entry is listed in the activity feed.</p></noscript>
+<div class="activity-cols">
+  <div class="dayview" data-dayview aria-live="polite"><h3>Select a day</h3><p>Choose a coloured square to see what happened.</p><ul></ul></div>
+  <div class="progress"><h3>Progress</h3>
+    <dl>
+      <dt>Independent solves</dt><dd>{{ s.independent_solves.size }}</dd>
+      <dt>Independent upsolves</dt><dd>{{ s.independent_upsolves.size }}</dd>
+      <dt>Solved with help</dt><dd>{{ s.assisted_solves.size }}</dd>
+      <dt>Redos (file-backed)</dt><dd>{{ s.redos.size }}</dd>
+      {%- if s.highest_rating %}<dt>Highest rating solved</dt><dd>{{ s.highest_rating[0] }} ({{ s.highest_rating[1] }})</dd>{% endif %}
+    </dl>
+    <p class="stat-note">Counts are distinct problems. Assisted work and message-only entries never count as independent solves.</p>
+  </div>
+</div>
+<script id="activity-data" type="application/json">{"start": {{ s.log_start | jsonify }}, "today": {{ site.time | date: "%Y-%m-%d" | jsonify }}, "base": {{ site.baseurl | default: "" | jsonify }}, "events": {{ site.data.activity | jsonify | replace: "</", "<\/" }}}</script>

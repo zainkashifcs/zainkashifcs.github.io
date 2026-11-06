@@ -1,0 +1,41 @@
+---
+title: Quiz
+permalink: /quiz/
+description: Practise by topic and difficulty with questions drawn from the published competitive programming write-ups.
+---
+{%- assign n = 0 -%}
+<div class="quizpage">
+  <h1>Test your knowledge</h1>
+  <p class="lede">Choose the topics you want to practise, or take a mix of everything. Check each answer to see the explanation and where it comes from.</p>
+  <section class="quizfilter" data-filter hidden aria-labelledby="pick-h">
+    <h2 id="pick-h" class="vh">Choose what to practise</h2>
+    {%- for g in site.data.topics %}
+    <div class="tgroup" data-group>
+      <h3>{{ g.group }}</h3>
+      <div class="chips">{% for t in g.topics %}<button type="button" class="chip" data-tag="{{ t.id }}" aria-pressed="false" hidden>{{ t.label }}<span class="n"></span></button>{% endfor %}</div>
+    </div>
+    {%- endfor %}
+    <div class="diff" data-diff hidden>
+      <h3>Codeforces rating</h3>
+      <label>From <select name="min"><option value="">Any</option></select></label>
+      <label>to <select name="max"><option value="">Any</option></select></label>
+    </div>
+    <div class="pickbar"><p data-match aria-live="polite"></p><button class="btn" type="button" data-start>Start quiz</button></div>
+  </section>
+  <div class="quizbar"><span data-progress aria-live="polite">Up to 5 questions per round</span><span class="meter" aria-hidden="true"><i></i></span><button class="btn quiet" type="button" data-deal hidden>New set of questions</button></div>
+  <form data-mixed onsubmit="return false">
+    {%- for p in site.posts -%}
+      {%- assign _qs = site.data.quizzes[p.slug] | where: "status", "approved" -%}
+      {%- if _qs.size > 0 -%}
+        {%- assign _pid = p.title | split: " " | first -%}
+        {%- include rating.html pid=_pid rating=p.rating -%}
+        {%- for q in _qs -%}{%- assign n = n | plus: 1 -%}{%- capture _label -%}Question {{ n }}{%- endcapture -%}
+          {% include quiz-question.html q=q i=n name="m" label=_label from_url=p.url from_title=p.title slug=p.slug rating=rating %}
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endfor %}
+    {% if n == 0 %}<p>No questions have been approved yet.</p>{% endif %}
+    <div class="score" hidden tabindex="-1"><h2></h2><p>Problems worth another look:</p><ul></ul><button class="btn" type="button" data-deal>Try another set</button></div>
+  </form>
+</div>
+<script src="{{ '/assets/js/quiz.js' | relative_url }}" defer></script>

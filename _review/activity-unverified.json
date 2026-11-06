@@ -1,0 +1,13 @@
+[
+  {
+    "key": "58dc2ab:474B:solved",
+    "date": "2026-10-20",
+    "commit": "58dc2ab26e93b6fde8db14b550afa61a24e80dcb",
+    "problem": "474B",
+    "type": "solved",
+    "verification": "message",
+    "reason": "no 474B file anywhere in the repository history; kept internal only",
+    "message": "redo CF 1791D + solve 706B, 474B (binary search, prefix sums)",
+    "display": false
+  }
+]

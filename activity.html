@@ -1,0 +1,18 @@
+---
+title: Activity
+permalink: /activity/
+description: Every recorded day of competitive programming practice, traced to the commit it came from.
+---
+<header class="page-head">
+  <h1>Activity</h1>
+  <p class="lede">Every entry comes from a commit in <a href="{{ site.solutions_repo }}">{{ site.solutions_repo | split: '/' | last }}</a>, dated by that commit. Assisted work is labelled, and entries with no file evidence say so.</p>
+</header>
+<section class="section" aria-labelledby="cal-h">
+  <h2 id="cal-h" class="vh">Calendar</h2>
+  {% include heatmap.html %}
+</section>
+<section class="section" aria-labelledby="log-h">
+  <div class="section-head"><h2 id="log-h">Full log</h2><p>{{ site.data.activity.size }} entries, newest first.</p></div>
+  {% include feed.html %}
+</section>
+<script src="{{ '/assets/js/activity.js' | relative_url }}" defer></script>

@@ -1,20 +1,68 @@
 ---
 layout: default
 ---
-<article class="post">
-  <header>
-    <p class="meta">
-      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time>
-      {% include tags.html tags=page.tags %}
-    </p>
-    <h1>{{ page.title }}</h1>
-    {% if page.solution != blank %}
-      <a class="btn" href="{{ site.solutions_repo }}/blob/main/{{ page.solution | uri_escape }}">View solution on GitHub</a>
-    {% endif %}
+{%- assign pid = page.title | split: " " | first -%}
+{%- assign name = page.title | remove_first: pid | strip -%}
+{%- include summary.html summary=page.summary html=content -%}
+{%- include rating.html pid=pid rating=page.rating -%}
+{%- assign _acts = site.data.activity | where: "problem", pid -%}
+{%- assign _solve = _acts | where: "type", "solved" | first -%}
+{%- unless _solve -%}{%- assign _solve = _acts | where: "type", "upsolved" | first -%}{%- endunless -%}
+{%- comment -%} A write-up whose front matter says status: attempted or unsolved has no accepted solution. {%- endcomment -%}
+{%- if page.status == "attempted" or page.status == "unsolved" -%}{%- assign _notsolved = true -%}{%- else -%}{%- assign _notsolved = false -%}{%- endif -%}
+{%- comment -%} tabindex lets keyboard users focus and scroll code blocks that overflow sideways {%- endcomment -%}
+{%- assign html = content | replace: '<pre class="highlight">', '<pre class="highlight" tabindex="0">' -%}
+{%- if page.solution != blank -%}
+  {%- assign _fname = page.solution | split: "/" | last -%}
+  {%- capture _cap -%}<div class="code-caption"><span>{{ _fname }}{% if _notsolved %} (attempt, not accepted){% endif %}</span><button class="copy" type="button" data-copy hidden>Copy code</button></div><div class="language-cpp highlighter-rouge">{%- endcapture -%}
+  {%- assign html = html | replace: '<div class="language-cpp highlighter-rouge">', _cap -%}
+{%- endif -%}
+{%- assign _l = html | split: '<h2 id="lesson">Lesson</h2>' -%}
+{%- if _l.size == 2 -%}
+  {%- assign _c = _l[1] | split: '<h2 id="code">' -%}
+  {%- capture html -%}{{ _l[0] }}<h2 id="lesson">Lesson</h2><div class="takeaway">{{ _c[0] }}</div>{% if _c.size > 1 %}<h2 id="code">{{ _c[1] }}{% endif %}{%- endcapture -%}
+{%- endif -%}
+<div class="post">
+  <header class="title">
+    <p class="pid"><span class="rb">{{ pid }}</span></p>
+    <h1>{{ name }}</h1>
+    {% if _notsolved %}<p class="nosolve big">Sorry, not solved.</p>{% elsif summary != "" %}<p class="summary">{{ summary }}</p>{% endif %}
   </header>
-  {% if page.link != blank %}
-    <h2>Problem</h2>
-    <p><a href="{{ page.link }}">Read the problem statement</a></p>
-  {% endif %}
-  {{ content }}
-</article>
+  <aside class="spec" aria-label="Problem details">
+    <dl>
+      {% if page.link %}<div><dt>Source</dt><dd><a href="{{ page.link }}">Codeforces {{ pid }}</a></dd></div>{% endif %}
+      <div><dt>Rating</dt><dd>{% if rating %}<i class="rk" style="background:{{ rank_colour }}"></i>{{ rating }}{% else %}<span class="na">Unrated</span>{% endif %}</dd></div>
+      {% if page.tags.size > 0 %}<div><dt>Topics</dt><dd>{% include tags.html tags=page.tags %}</dd></div>{% endif %}
+      {% assign _solved_on = page.solved | default: _solve.date %}
+      {% if _notsolved %}<div><dt>Status</dt><dd>{% if page.status == "attempted" %}Attempted, not solved{% else %}Not solved{% endif %}</dd></div>
+      {% elsif _solved_on %}<div><dt>Solved</dt><dd>{{ _solved_on | date: "%-d %b %Y" }}</dd></div>{% endif %}
+      <div><dt>Published</dt><dd><time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%-d %b %Y" }}</time></dd></div>
+    </dl>
+    <p class="links">
+      {%- if page.link %}<a href="{{ page.link }}">Problem statement</a>{% endif -%}
+      {%- if page.solution != blank %}<a href="{{ site.solutions_repo }}/blob/main/{{ page.solution | uri_escape }}">{% if _notsolved %}Attempt on GitHub{% else %}Solution on GitHub{% endif %}</a>{% endif -%}
+    </p>
+  </aside>
+  <article class="post-body">
+    {{ html }}
+    {%- if page.previous or page.next %}
+    <nav class="pn" aria-label="More problems">
+      {%- if page.previous %}<a href="{{ page.previous.url | relative_url }}"><span>Previous</span><b>{{ page.previous.title }}</b></a>{% endif -%}
+      {%- if page.next %}<a class="next" href="{{ page.next.url | relative_url }}"><span>Next</span><b>{{ page.next.title }}</b></a>{% endif -%}
+    </nav>
+    {%- endif %}
+  </article>
+  {%- assign quiz = site.data.quizzes[page.slug] | where: "status", "approved" -%}
+  {%- if quiz.size > 0 %}
+  <section class="check" aria-labelledby="check-h">
+    <h2 id="check-h">Check your understanding</h2>
+    <p class="check-lede">{{ quiz.size }} question{% if quiz.size != 1 %}s{% endif %} on {{ pid }}. Check each answer to see the explanation and where it comes from.</p>
+    <form data-quiz onsubmit="return false">
+      {%- for q in quiz %}{% include quiz-question.html q=q i=forloop.index total=quiz.size name="p" slug=page.slug rating=rating %}{% endfor %}
+      <div class="score" hidden tabindex="-1"><h3></h3><p>Each explanation names the note or check it comes from.</p></div>
+    </form>
+  </section>
+  {%- endif %}
+</div>
+<script src="{{ '/assets/js/quiz.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/post.js' | relative_url }}" defer></script>

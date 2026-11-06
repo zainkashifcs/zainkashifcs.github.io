@@ -1,0 +1,125 @@
+[
+  {
+    "id": "1a-theatre-square-q1",
+    "status": "approved",
+    "kind": "tracing",
+    "tags": [
+      "math",
+      "implementation"
+    ],
+    "code": false,
+    "question": "The input is 6 6 4. What does the solution print?",
+    "choices": [
+      "2",
+      "4",
+      "6",
+      "9"
+    ],
+    "answer": 1,
+    "explanation": "Each side needs 6 / 4 rounded up = 2 tiles, so the answer is 2 x 2 = 4.",
+    "source": {
+      "type": "run",
+      "detail": "Codeforces sample input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "6 6 4",
+      "output": "4",
+      "checked": "2026-11-06"
+    },
+    "origin": "human",
+    "approved_on": "2026-11-06"
+  },
+  {
+    "id": "1a-theatre-square-q2",
+    "status": "approved",
+    "kind": "edge-case",
+    "tags": [
+      "implementation"
+    ],
+    "code": true,
+    "question": "The input is 999999999 999999999 1. Which type stores the answer exactly?",
+    "choices": [
+      "int",
+      "unsigned int",
+      "long long",
+      "double"
+    ],
+    "answer": 2,
+    "explanation": "The answer, 999999998000000001, is bigger than the largest int (2147483647) and the largest unsigned int (4294967295). A double keeps only about 15 to 16 significant digits, so it stores 999999998000000000, off by one.",
+    "source": {
+      "type": "note",
+      "section": "Lesson",
+      "quote": "LONG LONG everywhere"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "999999999 999999999 1",
+      "output": "999999998000000001",
+      "extra": "type limits and the double conversion checked by a test program",
+      "checked": "2026-11-06"
+    },
+    "origin": "human",
+    "approved_on": "2026-11-06"
+  },
+  {
+    "id": "1a-theatre-square-q3",
+    "status": "approved",
+    "kind": "math",
+    "tags": [
+      "math"
+    ],
+    "code": true,
+    "question": "n and a are positive integers stored as long long. Which expression gives the number of tiles along a side of length n, rounded up, for every n and a?",
+    "choices": [
+      "n / a",
+      "n / a + 1",
+      "(n % a != 0) ? n / a + 1 : n / a",
+      "ceil(n / a)"
+    ],
+    "answer": 2,
+    "explanation": "It adds a tile only when there is a remainder. n / a rounds down (n = 1, a = 2 gives 0). n / a + 1 overcounts exact fits (n = 4, a = 4 gives 2). ceil(n / a) rounds after integer division has already discarded the remainder, so it behaves like n / a.",
+    "source": {
+      "type": "note",
+      "section": "Idea",
+      "quote": "if (n % a != 0) then n / a + 1, otherwise n / a"
+    },
+    "validation": {
+      "method": "brute-force",
+      "detail": "all 90,000 pairs with 1 <= n, a <= 300: only this choice always correct",
+      "checked": "2026-11-06"
+    },
+    "origin": "human",
+    "approved_on": "2026-11-06"
+  },
+  {
+    "id": "1a-theatre-square-q4",
+    "status": "approved",
+    "kind": "complexity",
+    "tags": [
+      "math"
+    ],
+    "code": false,
+    "question": "What is the time complexity of the 1A solution?",
+    "choices": [
+      "O(1)",
+      "O(log n)",
+      "O(n + m)",
+      "O(n * m)"
+    ],
+    "answer": 0,
+    "explanation": "It does a fixed number of divisions, comparisons and one multiplication, however large n, m and a are.",
+    "source": {
+      "type": "note",
+      "section": "Idea",
+      "quote": "No loop needed: it's pure maths. Complexity: O(1)."
+    },
+    "validation": {
+      "method": "note+inspection",
+      "detail": "the code contains no loops",
+      "checked": "2026-11-06"
+    },
+    "origin": "human",
+    "approved_on": "2026-11-06"
+  }
+]
