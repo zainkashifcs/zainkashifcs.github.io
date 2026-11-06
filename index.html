@@ -1,6 +1,9 @@
 ---
 ---
-<p class="lede">{{ site.description }}</p>
-<ul class="log">
-  {% for post in site.posts %}{% include post-row.html post=post %}{% endfor %}
-</ul>
+<section class="hero">
+  <h1>Problems I've solved, and what each one taught me.</h1>
+  <p>{{ site.description }}</p>
+</section>
+<div class="cards">
+  {% for post in site.posts %}{% include post-card.html post=post %}{% endfor %}
+</div>

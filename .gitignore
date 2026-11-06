@@ -12,3 +12,6 @@ vendor/
 # AI agent tooling (not part of the site)
 .claude/
 skills-lock.json
+
+# Python
+__pycache__/

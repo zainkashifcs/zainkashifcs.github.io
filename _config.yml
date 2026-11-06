@@ -9,4 +9,4 @@ defaults:
   - scope: { type: pages }
     values: { layout: default }
 
-exclude: [README.md, skills-lock.json, Gemfile, Gemfile.lock, vendor]
+exclude: [README.md, make_post.py, skills-lock.json, Gemfile, Gemfile.lock, vendor]

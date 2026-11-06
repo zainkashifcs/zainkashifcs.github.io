@@ -2,10 +2,13 @@
 title: Tags
 permalink: /tags/
 ---
+<h1>Tags</h1>
 {% assign tags = site.tags | sort %}
 {% for tag in tags %}
-<h2 id="{{ tag[0] | slugify }}">#{{ tag[0] }}</h2>
-<ul class="log">
-  {% for post in tag[1] %}{% include post-row.html post=post %}{% endfor %}
-</ul>
+<section class="tag-group">
+  <h2 id="{{ tag[0] | slugify }}">{{ tag[0] }} <span>{{ tag[1].size }}</span></h2>
+  <div class="cards">
+    {% for post in tag[1] %}{% include post-card.html post=post %}{% endfor %}
+  </div>
+</section>
 {% endfor %}

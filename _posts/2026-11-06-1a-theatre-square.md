@@ -1,38 +1,27 @@
 ---
 title: "1A Theatre Square"
-tags: [math, implementation]
-solution: CF Questions/1_A_Theatre_Square.cpp
+link: "https://codeforces.com/problemset/problem/1/A"
+tags: ["math", "implementation"]
+solution: "CF Questions/1_A_Theatre_Square.cpp"
 ---
-## Problem
-
-[Codeforces 1A: Theatre Square](https://codeforces.com/problemset/problem/1/A)
-
-_Placeholder: restate the problem in your own words._
-
+{% raw %}
 ## Idea
 
-_Placeholder: the key observation and why it works._
+Cover an n x m square with a x a tiles (tiles can go past the edge). How many tiles?
+Tiles along each side = that side / a, ROUNDED UP:
+if (n % a != 0) then n / a + 1, otherwise n / a (the same for m).
+Answer = tilesN * tilesM. No loop needed: it's pure maths. Complexity: O(1).
 
-## Where I got stuck
+## Lesson
 
-_Placeholder: what you tried first and what went wrong._
+% = remainder, / = division. Don't mix them up!
+Use integer rounding, NOT ceil() (decimals can be inaccurate with huge numbers).
+LONG LONG everywhere: n and m are up to 1e9, so the answer can reach 1e18,
+and an int (max ~2.1e9) would overflow.
 
 ## Code
 
 ```cpp
-// CF 1A - Theatre Square (rating 1000)
-// Cover an n x m square with a x a tiles (tiles can go past the edge). How many tiles?
-// Tiles along each side = that side / a, ROUNDED UP:
-//   if (n % a != 0) then n / a + 1, otherwise n / a (the same for m).
-//   % = remainder, / = division. Don't mix them up!
-//   Use integer rounding, NOT ceil() (decimals can be inaccurate with huge numbers).
-// Answer = tilesN * tilesM.
-// LONG LONG everywhere: n and m are up to 1e9, so the answer can reach 1e18,
-//   and an int (max ~2.1e9) would overflow.
-// No loop needed: it's pure maths.
-// Complexity: O(1)
-
-
 #include <iostream>
 
 int main(){
@@ -72,7 +61,4 @@ int main(){
     return 0;
 }
 ```
-
-## Lesson
-
-_Placeholder: what you'll remember next time._
+{% endraw %}
