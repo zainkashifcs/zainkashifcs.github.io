@@ -9,9 +9,13 @@ Gemfile.lock
 .bundle/
 vendor/
 
-# AI agent tooling (not part of the site)
-.claude/
+# AI agent tooling (not part of the site); the quiz-drafting command is versioned
+.claude/*
+!.claude/commands/
 skills-lock.json
+
+# CI clone of the solutions repository (see .github/workflows/sync-and-deploy.yml)
+_solutions/
 
 # Python
 __pycache__/

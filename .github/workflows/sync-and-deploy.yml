@@ -1,0 +1,74 @@
+# Keeps the site in step with comp-program-grind and deploys it. No AI and no secrets:
+# the solutions repo is public, and pushes/deploys use the short-lived GITHUB_TOKEN.
+# Requires Settings > Pages > Build and deployment > Source = "GitHub Actions".
+name: Sync activity and deploy
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"   # every 6 hours: picks up new commits in the solutions repo
+  workflow_dispatch: {}      # "Run workflow" button in the Actions tab
+  push:
+    branches: [main]         # ordinary site edits also sync and deploy
+
+permissions: {}              # each job asks only for what it needs
+
+concurrency:
+  group: sync-and-deploy
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write        # commit regenerated _data and _review files
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+      - name: Clone the solutions repository (public, read-only)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+        with:
+          repository: zainkashifcs/comp-program-grind
+          path: _solutions
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
+        with:
+          python-version: "3.12"
+      - name: Self-tests
+        run: |
+          python -m doctest make_post.py
+          python -m doctest _scripts/sync_activity.py _scripts/check_data.py _scripts/verify_quiz.py _scripts/approve_quiz.py
+      - name: Rebuild activity data from the solutions history
+        run: python _scripts/sync_activity.py --solutions _solutions --fetch-titles
+      - name: Validate data files
+        run: python _scripts/check_data.py
+      - name: Commit changes, if any
+        run: |
+          git add _data _review
+          if git diff --cached --quiet; then echo "No data changes."; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "sync: activity up to comp-program-grind@$(git -C _solutions rev-parse --short HEAD)"
+          git push origin HEAD:main || { git pull --rebase origin main && git push origin HEAD:main; }
+
+  deploy:
+    needs: sync
+    if: always()             # a failed sync never blocks deploying the current site
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+        with:
+          ref: main          # includes the sync job's commit
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b  # v5.0.0
+      - uses: actions/jekyll-build-pages@44a6e6beabd48582f863aeeb6cb2151cc1716697  # v1.0.13 (github-pages gem)
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa  # v3.0.1
+      - id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e  # v4.0.5

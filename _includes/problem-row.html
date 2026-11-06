@@ -1,0 +1,42 @@
+{%- comment -%}
+One row of the problem index: every problem in the activity log, with its write-up if one is published.
+Status comes from the verified log (activity_stats) unless the write-up's front matter sets `status`.
+A problem without an accepted solution says exactly "Sorry, not solved." Usage: include problem-row.html g=group
+{%- endcomment -%}
+{%- assign _s = site.data.activity_stats -%}
+{%- assign pid = include.g.name -%}
+{%- assign _items = include.g.items | sort: "seq" -%}
+{%- assign _last = _items | last -%}
+{%- assign _post = nil -%}
+{%- for p in site.posts -%}{%- assign _ppid = p.title | split: " " | first -%}{%- if _ppid == pid -%}{%- assign _post = p -%}{%- endif -%}{%- endfor -%}
+{%- assign _types = _items | map: "type" | join: " " -%}
+{%- if _post and _post.status -%}{%- assign _st = _post.status -%}
+{%- elsif _s.independent_total contains pid -%}{%- assign _st = "solved" -%}
+{%- elsif _s.assisted_solves contains pid -%}{%- assign _st = "help" -%}
+{%- elsif _s.redos contains pid -%}{%- assign _st = "redo" -%}
+{%- elsif _types contains "attempted" -%}{%- assign _st = "attempted" -%}
+{%- else -%}{%- assign _st = "unsolved" -%}{%- endif -%}
+{%- case _st -%}
+  {%- when "solved" -%}{%- assign _label = "Solved" -%}{%- assign _key = "solved" -%}
+  {%- when "redo" -%}{%- assign _label = "Solved (redo)" -%}{%- assign _key = "solved" -%}
+  {%- when "help" -%}{%- assign _label = "Solved with help" -%}{%- assign _key = "help" -%}
+  {%- when "attempted" -%}{%- assign _label = "Attempted" -%}{%- assign _key = "unsolved" -%}
+  {%- else -%}{%- assign _label = "Not solved" -%}{%- assign _key = "unsolved" -%}
+{%- endcase -%}
+{%- if _last.assisted and _key == "unsolved" -%}{%- assign _label = _label | append: " with help" -%}{%- endif -%}
+{%- assign _evidence = _items | where_exp: "e", "e.verification != 'message'" | last -%}
+{%- if _post -%}{%- assign _href = _post.url | relative_url -%}{%- else -%}{%- assign _href = _evidence.source_url -%}{%- endif -%}
+{%- assign summary = "" -%}{%- if _post and _key != "unsolved" -%}{%- include summary.html summary=_post.summary html=_post.content -%}{%- endif -%}
+{%- include rating.html pid=pid rating=_post.rating -%}
+{%- capture _hay -%}{{ pid }} {{ _last.title }} {{ _label }} {% if _key == "unsolved" %}sorry not solved unsolved{% endif %} {{ summary }} {{ _post.tags | join: " " }}{%- endcapture -%}
+<li data-id="{{ pid }}" data-date="{{ _last.date }}" data-rating="{{ rating }}" data-topics="{{ _post.tags | join: '|' | escape }}" data-status="{{ _key }}" data-search="{{ _hay | downcase | escape }}">
+  <a class="row st-{{ _key }}"{% if _href %} href="{{ _href }}"{% endif %}>
+    <span class="pid"><span class="rb">{{ pid }}</span></span>
+    <span class="what"><span class="name">{{ _last.title }}</span>
+      {%- if _key == "unsolved" %}<span class="nosolve">Sorry, not solved.</span>{% elsif summary != "" %}<span class="summary">{{ summary }}</span>{% endif -%}
+      <span class="state">{{ _label }}{% unless _post %}. No write-up yet{% endunless %}</span></span>
+    <span class="topics">{{ _post.tags | join: ", " }}</span>
+    <span class="rating">{% if rating %}<i class="rk" style="background:{{ rank_colour }}"></i>{{ rating }}{% else %}<span class="na">Unrated</span>{% endif %}</span>
+    <time datetime="{{ _last.date }}">{{ _last.date | date: "%-d %b %Y" }}</time>
+  </a>
+</li>

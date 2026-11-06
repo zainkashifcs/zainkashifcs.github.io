@@ -1,0 +1,86 @@
+[
+  {
+    "id": "405a-gravity-flip-q1",
+    "status": "draft",
+    "origin": "human",
+    "kind": "tracing",
+    "code": false,
+    "question": "The columns are 3 2 1 2. What does the solution print after gravity flips right?",
+    "choices": [
+      "3 2 2 1",
+      "1 2 2 3",
+      "2 1 2 3",
+      "3 2 1 2"
+    ],
+    "answer": 1,
+    "explanation": "Pulling right stacks the shortest columns on the left, so the heights come out sorted.",
+    "source": {
+      "type": "run",
+      "detail": "Codeforces sample input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "4\n3 2 1 2",
+      "output": "1 2 2 3",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-06"
+    }
+  },
+  {
+    "id": "405a-gravity-flip-q2",
+    "status": "draft",
+    "origin": "human",
+    "kind": "reasoning",
+    "code": false,
+    "question": "What actually changes when gravity flips?",
+    "choices": [
+      "The heights",
+      "Only the order of the heights",
+      "The number of columns",
+      "Nothing"
+    ],
+    "answer": 1,
+    "explanation": "Blocks only slide sideways, so the same heights are kept and only their order changes.",
+    "source": {
+      "type": "note",
+      "section": "Idea",
+      "quote": "the heights stay the same, only their ORDER changes"
+    },
+    "validation": {
+      "method": "note",
+      "status": "needs-review",
+      "reasons": [
+        "405a-gravity-flip-q2: the answer follows from reasoning, not a check; check it yourself before approving"
+      ],
+      "checked": "2026-11-06"
+    }
+  },
+  {
+    "id": "405a-gravity-flip-q3",
+    "status": "draft",
+    "origin": "human",
+    "kind": "complexity",
+    "code": false,
+    "question": "What is the time complexity of the solution?",
+    "choices": [
+      "O(1)",
+      "O(n)",
+      "O(n log n)",
+      "O(n^2)"
+    ],
+    "answer": 2,
+    "explanation": "Reading and printing are single passes; the sort dominates.",
+    "source": {
+      "type": "note",
+      "section": "Lesson",
+      "quote": "Complexity: O(n log n), because of the sort"
+    },
+    "validation": {
+      "method": "note",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-06"
+    }
+  }
+]

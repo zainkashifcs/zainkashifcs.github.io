@@ -1,0 +1,22 @@
+{%- assign e = include.e -%}
+{%- case e.type -%}
+  {%- when "solved" -%}{%- assign lab = "Solved" -%}
+  {%- when "upsolved" -%}{%- assign lab = "Upsolved" -%}
+  {%- when "redo" -%}{%- assign lab = "Redo" -%}
+  {%- when "attempted" -%}{%- assign lab = "Attempted" -%}
+  {%- when "practice" -%}{%- assign lab = "Practice" -%}
+  {%- when "published" -%}{%- assign lab = "Published" -%}
+  {%- when "milestone" -%}{%- assign lab = "Milestone" -%}
+  {%- else -%}{%- assign lab = e.type | capitalize -%}
+{%- endcase -%}
+{%- if e.assisted -%}{%- assign lab = lab | append: ", assisted" -%}{%- endif -%}
+{%- assign href = nil -%}
+{%- if e.post -%}{%- assign href = e.post | relative_url -%}{%- elsif e.source_url -%}{%- assign href = e.source_url -%}{%- endif -%}
+<li class="ev {{ e.type }}{% if e.assisted %} assisted{% endif %}">{% if e.type == "milestone" %}<span class="rb ms" aria-hidden="true"></span>{% else %}<span class="rb">{{ e.problem }}</span>{% endif %}<span class="what">
+  {%- if href %}<a href="{{ href }}">{% endif -%}
+  {%- if e.type == "milestone" %}{{ e.note }}{% else %}<span class="vh">{{ e.problem }} </span>{{ e.title }}{% endif -%}
+  {%- if href %}</a>{% endif -%}
+  {%- if e.note != "" and e.type != "milestone" %}<span class="note">{{ e.note }}</span>{% endif -%}
+  {%- if e.type == "attempted" %}{% unless site.data.activity_stats.independent_total contains e.problem or site.data.activity_stats.assisted_solves contains e.problem %}<span class="nosolve">Sorry, not solved.</span>{% endunless %}{% endif -%}
+  {%- if e.verification == "message" and e.type != "milestone" %}<span class="unverified">Message only, unverified</span>{% endif -%}
+</span><span class="type">{{ lab }}</span></li>

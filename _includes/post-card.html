@@ -1,7 +1,16 @@
-<article class="card">
-  <h2><a href="{{ include.post.url | relative_url }}">{{ include.post.title }}</a></h2>
-  <p class="meta">
-    <time datetime="{{ include.post.date | date_to_xmlschema }}">{{ include.post.date | date: "%b %-d, %Y" }}</time>
-    {% include tags.html tags=include.post.tags %}
-  </p>
-</article>
+{%- comment -%} One row of the problem index. Usage: include post-card.html post=post {%- endcomment -%}
+{%- assign _p = include.post -%}
+{%- assign pid = _p.title | split: " " | first -%}
+{%- assign name = _p.title | remove_first: pid | strip -%}
+{%- include summary.html summary=_p.summary html=_p.content -%}
+{%- include rating.html pid=pid rating=_p.rating -%}
+{%- capture _hay -%}{{ _p.title }} {{ summary }} {{ _p.tags | join: " " }}{%- endcapture -%}
+<li data-id="{{ pid }}" data-date="{{ _p.date | date: '%Y-%m-%d' }}" data-rating="{{ rating }}" data-topics="{{ _p.tags | join: '|' | escape }}" data-search="{{ _hay | downcase | escape }}">
+  <a class="row" href="{{ _p.url | relative_url }}">
+    <span class="pid"><span class="rb">{{ pid }}</span></span>
+    <span class="what"><span class="name">{{ name }}</span>{% if summary != "" %}<span class="summary">{{ summary }}</span>{% endif %}</span>
+    <span class="topics">{{ _p.tags | join: ", " }}</span>
+    <span class="rating">{% if rating %}<i class="rk" style="background:{{ rank_colour }}"></i>{{ rating }}{% else %}<span class="na">Unrated</span>{% endif %}</span>
+    <time datetime="{{ _p.date | date_to_xmlschema }}">{{ _p.date | date: "%-d %b %Y" }}</time>
+  </a>
+</li>

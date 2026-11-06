@@ -1,0 +1,118 @@
+[
+  {
+    "id": "1790d-matryoshkas-q1",
+    "status": "draft",
+    "origin": "human",
+    "kind": "edge-case",
+    "code": false,
+    "question": "Doll sizes are 1 and 3. What is the fewest number of sets?",
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "0"
+    ],
+    "answer": 1,
+    "explanation": "Sets must use consecutive sizes, so the gap at 2 forces a second set.",
+    "source": {
+      "type": "note",
+      "section": "Idea",
+      "quote": "gaps force extra sets ([1, 3] needs 2, not 1)"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1\n2\n1 3",
+      "output": "2",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-06"
+    }
+  },
+  {
+    "id": "1790d-matryoshkas-q2",
+    "status": "draft",
+    "origin": "human",
+    "kind": "math",
+    "code": true,
+    "question": "How many new sets must start at size x?",
+    "choices": [
+      "cnt[x]",
+      "cnt[x] - cnt[x - 1]",
+      "max(0, cnt[x] - cnt[x - 1])",
+      "max(cnt[x], cnt[x - 1])"
+    ],
+    "answer": 2,
+    "explanation": "Each set ending at x - 1 can absorb one doll of size x; only the surplus starts new sets, and that can't be negative.",
+    "source": {
+      "type": "note",
+      "section": "Idea",
+      "quote": "New sets starting at x = max(0, cnt[x] - cnt[x - 1])"
+    },
+    "validation": {
+      "method": "note",
+      "status": "needs-review",
+      "reasons": [
+        "1790d-matryoshkas-q2: the answer follows from reasoning, not a check; check it yourself before approving"
+      ],
+      "checked": "2026-11-06"
+    }
+  },
+  {
+    "id": "1790d-matryoshkas-q3",
+    "status": "draft",
+    "origin": "human",
+    "kind": "data-structure",
+    "code": false,
+    "question": "Why does the solution check cnt.count(x - 1) before reading cnt[x - 1]?",
+    "choices": [
+      "count() is faster than []",
+      "[] would insert a missing key into the map while looping over it",
+      "[] throws an exception for missing keys",
+      "To skip duplicate sizes"
+    ],
+    "answer": 1,
+    "explanation": "std::map::operator[] default-inserts a missing key, which would change the map in the middle of the loop.",
+    "source": {
+      "type": "note",
+      "section": "Idea",
+      "quote": "otherwise you'd insert into the map mid-loop"
+    },
+    "validation": {
+      "method": "note",
+      "detail": "a test program showed the map growing from 2 to 3 keys after cnt[2]",
+      "status": "needs-review",
+      "reasons": [
+        "1790d-matryoshkas-q3: the answer follows from reasoning, not a check; check it yourself before approving"
+      ],
+      "checked": "2026-11-06"
+    }
+  },
+  {
+    "id": "1790d-matryoshkas-q4",
+    "status": "draft",
+    "origin": "human",
+    "kind": "tracing",
+    "code": false,
+    "question": "Doll sizes are 1 2 2 3. How many sets does the solution print?",
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "answer": 1,
+    "explanation": "Two dolls of size 2 need two sets: one continues from size 1 and one starts at 2. Size 3 extends one of them.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1\n4\n1 2 2 3",
+      "output": "2",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-06"
+    }
+  }
+]

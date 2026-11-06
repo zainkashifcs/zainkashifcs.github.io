@@ -1,0 +1,15 @@
+{%- comment -%}
+Sets `rating` (or nil) and `rank_colour`: the post's `rating`, otherwise a rating recorded in the activity data
+(solution header or commit message). Never estimated. Usage: include rating.html pid=pid rating=post.rating
+{%- endcomment -%}
+{%- assign rating = include.rating -%}
+{%- unless rating -%}
+  {%- assign _r = site.data.activity | where: "problem", include.pid | where_exp: "e", "e.rating != nil" | first -%}
+  {%- if _r -%}{%- assign rating = _r.rating -%}{%- endif -%}
+{%- endunless -%}
+{%- if rating -%}{%- assign rating = rating | plus: 0 -%}
+  {%- if rating < 1200 -%}{%- assign rank_colour = "#808080" -%}{%- elsif rating < 1400 -%}{%- assign rank_colour = "#008000" -%}
+  {%- elsif rating < 1600 -%}{%- assign rank_colour = "#03a89e" -%}{%- elsif rating < 1900 -%}{%- assign rank_colour = "#0000ff" -%}
+  {%- elsif rating < 2100 -%}{%- assign rank_colour = "#aa00aa" -%}{%- elsif rating < 2400 -%}{%- assign rank_colour = "#ff8c00" -%}
+  {%- else -%}{%- assign rank_colour = "#ff0000" -%}{%- endif -%}
+{%- endif -%}

@@ -1,0 +1,404 @@
+[
+  {
+    "commit": "0587d90",
+    "problem": null,
+    "file": "Hello world!.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "18a9aed",
+    "problem": null,
+    "file": "hello.cpp",
+    "reason": "renamed from Hello world!.cpp"
+  },
+  {
+    "commit": "2fc38ca",
+    "problem": null,
+    "file": "hello.cpp",
+    "reason": "edit"
+  },
+  {
+    "commit": "5a0ac90",
+    "problem": "791A",
+    "file": "791A.Bear.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "5a0ac90",
+    "problem": null,
+    "file": "Bro code play time.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "5a0ac90",
+    "problem": null,
+    "file": "Bro.Code.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "5a0ac90",
+    "problem": null,
+    "file": "BroCode.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "5a0ac90",
+    "problem": null,
+    "file": "Hw.5.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "5a0ac90",
+    "problem": null,
+    "file": "Hw4.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "5a0ac90",
+    "problem": null,
+    "file": "Untitled-1.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "5a0ac90",
+    "problem": null,
+    "file": "hw.3.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "5a0ac90",
+    "problem": null,
+    "file": "hw1.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "5a0ac90",
+    "problem": null,
+    "file": "hw2.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "5a0ac90",
+    "problem": null,
+    "file": "tempCodeRunnerFile.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "91abe22",
+    "problem": null,
+    "file": "Bro code play time.cpp",
+    "reason": "deleted"
+  },
+  {
+    "commit": "91abe22",
+    "problem": null,
+    "file": "Bro.Code.cpp",
+    "reason": "deleted"
+  },
+  {
+    "commit": "91abe22",
+    "problem": null,
+    "file": "BroCode.cpp",
+    "reason": "deleted"
+  },
+  {
+    "commit": "91abe22",
+    "problem": "50A",
+    "file": "CF Questions/50A_Dominos.cpp",
+    "reason": "renamed from 50A_Dominos.cpp"
+  },
+  {
+    "commit": "91abe22",
+    "problem": "791A",
+    "file": "CF Questions/791A.Bear.cpp",
+    "reason": "renamed from 791A.Bear.cpp"
+  },
+  {
+    "commit": "91abe22",
+    "problem": null,
+    "file": "CF Questions/watermelon.cpp",
+    "reason": "renamed from watermelon.cpp"
+  },
+  {
+    "commit": "91abe22",
+    "problem": null,
+    "file": "Hw.5.cpp",
+    "reason": "deleted"
+  },
+  {
+    "commit": "91abe22",
+    "problem": null,
+    "file": "Hw4.cpp",
+    "reason": "deleted"
+  },
+  {
+    "commit": "91abe22",
+    "problem": null,
+    "file": "Untitled-1.cpp",
+    "reason": "deleted"
+  },
+  {
+    "commit": "91abe22",
+    "problem": null,
+    "file": "hello.cpp",
+    "reason": "deleted"
+  },
+  {
+    "commit": "91abe22",
+    "problem": null,
+    "file": "hw.3.cpp",
+    "reason": "deleted"
+  },
+  {
+    "commit": "91abe22",
+    "problem": null,
+    "file": "hw1.cpp",
+    "reason": "deleted"
+  },
+  {
+    "commit": "91abe22",
+    "problem": null,
+    "file": "hw2.cpp",
+    "reason": "deleted"
+  },
+  {
+    "commit": "91abe22",
+    "problem": null,
+    "file": "tempCodeRunnerFile.cpp",
+    "reason": "deleted"
+  },
+  {
+    "commit": "97146b0",
+    "problem": "546A",
+    "file": "CF Questions/546A_Soldier.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "97146b0",
+    "problem": null,
+    "file": "CF Questions/Bears_Again.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "80a98d6",
+    "problem": "791A",
+    "file": null,
+    "reason": "decision: duplicate of the 97146b0 message"
+  },
+  {
+    "commit": "80a98d6",
+    "problem": "546A",
+    "file": "CF Questions/546A_Soldier.cpp",
+    "reason": "edit"
+  },
+  {
+    "commit": "54f7873",
+    "problem": "546A",
+    "file": "CF Questions/546A_Soldier.cpp",
+    "reason": "edit"
+  },
+  {
+    "commit": "54f7873",
+    "problem": null,
+    "file": "CF Questions/Soldier Again.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "54f7873",
+    "problem": null,
+    "file": "CF Questions/tempCodeRunnerFile.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "20c8348",
+    "problem": "282A",
+    "file": "CF Questions/282_A_Bit++.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "e00b13f",
+    "problem": "116A",
+    "file": "CF Questions/116A_Tram.cpp",
+    "reason": "edit"
+  },
+  {
+    "commit": "f054573",
+    "problem": "282A",
+    "file": null,
+    "reason": "decision: 282A redo excluded: the commit doesn't touch the 282A file"
+  },
+  {
+    "commit": "f054573",
+    "problem": "467A",
+    "file": "CF Questions/467A_George and_Accommodation.cpp",
+    "reason": "edit"
+  },
+  {
+    "commit": "f054573",
+    "problem": "467A",
+    "file": "CF Questions/467A_George_and_Accommodation.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "f054573",
+    "problem": "69A",
+    "file": "CF Questions/69_A_Physicist.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "814244b",
+    "problem": "1676B",
+    "file": "CF Questions/1676_B_Equal_Candies.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "814244b",
+    "problem": "71A",
+    "file": "CF Questions/71A_W2LW.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "2043c99",
+    "problem": null,
+    "file": "CF Questions/281_Word_Capitalisation.cpp",
+    "reason": "edit"
+  },
+  {
+    "commit": "2043c99",
+    "problem": null,
+    "file": "CF Questions/tempCodeRunnerFile.cpp",
+    "reason": "edit"
+  },
+  {
+    "commit": "32a4f24",
+    "problem": "59A",
+    "file": "CF Questions/59_A_Word.cpp",
+    "reason": "edit"
+  },
+  {
+    "commit": "9eaa567",
+    "problem": "226A",
+    "file": "CF Questions/226_A_Stones_on_Table.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "9eaa567",
+    "problem": null,
+    "file": "CF Questions/lol_xd.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "197fffb",
+    "problem": "2275A",
+    "file": "CF Questions/2275_A_Wifi_Search.cpp",
+    "reason": "edit"
+  },
+  {
+    "commit": "197fffb",
+    "problem": "2275B",
+    "file": "CF Questions/2275_B_Did_Not_Print.cpp",
+    "reason": "edit"
+  },
+  {
+    "commit": "197fffb",
+    "problem": "734A",
+    "file": "CF Questions/734_A_D_and_A.cpp",
+    "reason": "edit"
+  },
+  {
+    "commit": "197fffb",
+    "problem": null,
+    "file": "CF Questions/Untitled-1.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "3b6265f",
+    "problem": "158A",
+    "file": null,
+    "reason": "decision: 158A redo has no file change"
+  },
+  {
+    "commit": "7e42cc9",
+    "problem": null,
+    "file": "CF Questions/tempCodeRunnerFile.cpp",
+    "reason": "edit"
+  },
+  {
+    "commit": "df37d50",
+    "problem": null,
+    "file": "CF Questions/tempCodeRunnerFile.cpp",
+    "reason": "edit"
+  },
+  {
+    "commit": "fc05024",
+    "problem": "1399A",
+    "file": null,
+    "reason": "decision: unsupported '+ 1399A' fragment"
+  },
+  {
+    "commit": "3b330f6",
+    "problem": "112A",
+    "file": null,
+    "reason": "decision: unsupported '+ 112A' fragment"
+  },
+  {
+    "commit": "8d55472",
+    "problem": "236A",
+    "file": null,
+    "reason": "decision: redo excluded: 236A file not touched"
+  },
+  {
+    "commit": "8d55472",
+    "problem": "160A",
+    "file": null,
+    "reason": "decision: redo excluded: 160A file not touched"
+  },
+  {
+    "commit": "8d55472",
+    "problem": "112A",
+    "file": "CF Questions/112_A_Petya_And_Strings.cpp",
+    "reason": "edit"
+  },
+  {
+    "commit": "8d55472",
+    "problem": "1399A",
+    "file": "CF Questions/1399_A_Remove_Smallest.cpp",
+    "reason": "edit"
+  },
+  {
+    "commit": "58dc2ab",
+    "problem": "1790D",
+    "file": "CF Questions/1790D_Matryoshkas.cpp",
+    "reason": "edit"
+  },
+  {
+    "commit": "58dc2ab",
+    "problem": "1791E",
+    "file": "CF Questions/1791_E_Neg_And_Pos.cpp",
+    "reason": "edit"
+  },
+  {
+    "commit": "58dc2ab",
+    "problem": "1A",
+    "file": "CF Questions/1_A_Theatre_Square.cpp",
+    "reason": "edit"
+  },
+  {
+    "commit": "58dc2ab",
+    "problem": null,
+    "file": "CF Questions/CSES_USACO.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "58dc2ab",
+    "problem": null,
+    "file": "CF Questions/tempCodeRunnerFile.cpp",
+    "reason": "edit"
+  },
+  {
+    "commit": "295d074",
+    "problem": "1A",
+    "file": "CF Questions/1_A_Theatre_Square.cpp",
+    "reason": "edit (no verb)"
+  }
+]

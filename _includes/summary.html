@@ -1,0 +1,9 @@
+{%- comment -%}
+Sets `summary`: the post's optional `summary` front matter (from a // Summary: header), otherwise the
+first paragraph of its rendered Lesson section. Usage: include summary.html summary=post.summary html=post.content
+{%- endcomment -%}
+{%- assign summary = include.summary | default: "" -%}
+{%- if summary == "" -%}
+  {%- assign _parts = include.html | split: '<h2 id="lesson">Lesson</h2>' -%}
+  {%- if _parts.size > 1 -%}{%- assign summary = _parts[1] | split: '</p>' | first | strip_html | strip -%}{%- endif -%}
+{%- endif -%}

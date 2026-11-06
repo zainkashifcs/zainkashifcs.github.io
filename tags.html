@@ -1,14 +1,15 @@
 ---
-title: Tags
+title: Topics
 permalink: /tags/
 ---
-<h1>Tags</h1>
 {% assign tags = site.tags | sort %}
+<header class="page-head">
+  <h1>Topics</h1>
+  <ul class="topic-index">{% for tag in tags %}<li><a href="#{{ tag[0] | slugify }}">{{ tag[0] }}</a><span>{{ tag[1].size }}</span></li>{% endfor %}</ul>
+</header>
 {% for tag in tags %}
-<section class="tag-group">
-  <h2 id="{{ tag[0] | slugify }}">{{ tag[0] }} <span>{{ tag[1].size }}</span></h2>
-  <div class="cards">
-    {% for post in tag[1] %}{% include post-card.html post=post %}{% endfor %}
-  </div>
+<section class="tag-group" aria-labelledby="{{ tag[0] | slugify }}">
+  <h2 id="{{ tag[0] | slugify }}">{{ tag[0] }} <span>{{ tag[1].size }} write-up{% if tag[1].size != 1 %}s{% endif %}</span></h2>
+  <ul class="index">{% for post in tag[1] %}{% include post-card.html post=post %}{% endfor %}</ul>
 </section>
 {% endfor %}

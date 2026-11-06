@@ -1,0 +1,27 @@
+[
+  {"group": "Problem-solving", "topics": [
+    {"id": "brute-force", "label": "Brute Force"},
+    {"id": "greedy", "label": "Greedy"},
+    {"id": "two-pointers", "label": "Two Pointers"},
+    {"id": "binary-search", "label": "Binary Search"},
+    {"id": "sorting", "label": "Sorting"},
+    {"id": "prefix-sums", "label": "Prefix Sums"},
+    {"id": "implementation", "label": "Implementation"}
+  ]},
+  {"group": "Mathematics", "topics": [
+    {"id": "math", "label": "Math"},
+    {"id": "number-theory", "label": "Number Theory"},
+    {"id": "combinatorics", "label": "Combinatorics"},
+    {"id": "probability", "label": "Probability"},
+    {"id": "geometry", "label": "Geometry"}
+  ]},
+  {"group": "Algorithms and data structures", "topics": [
+    {"id": "graphs", "label": "Graphs"},
+    {"id": "bfs-dfs", "label": "BFS / DFS"},
+    {"id": "dp", "label": "Dynamic Programming"},
+    {"id": "arrays", "label": "Arrays"},
+    {"id": "strings", "label": "Strings"},
+    {"id": "sets-and-maps", "label": "Sets and Maps"},
+    {"id": "trees", "label": "Trees"}
+  ]}
+]
