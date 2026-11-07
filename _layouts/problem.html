@@ -29,6 +29,7 @@ build_problems.py. Nothing is generated in his voice. When a write-up is publish
       <div><dt>Rating</dt><dd>{% if rating %}<i class="rk" style="background:{{ rank_colour }}"></i>{{ rating }}{% else %}<span class="na">Unrated</span>{% endif %}</dd></div>
       {% if p.cf_tags.size > 0 %}<div><dt>Codeforces tags</dt><dd>{{ p.cf_tags | join: ", " }}</dd></div>{% endif %}
       <div><dt>Status</dt><dd>{{ p.status_label }}{% unless p.solved %}, not solved{% endunless %}</dd></div>
+      {%- if site.data.codeforces.status == "ok" and site.data.codeforces.accepted contains p.id %}<div><dt>Codeforces</dt><dd>Accepted on Codeforces</dd></div>{% endif %}
       <div><dt>Last activity</dt><dd><time datetime="{{ p.last_date }}">{{ p.last_date | date: "%-d %b %Y" }}</time></dd></div>
     </dl>
     <p class="links">

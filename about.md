@@ -34,6 +34,8 @@ description: Zain Kashif, a first-year Computer Science student at the Universit
     </dl>
   </section>
 
+  {% include codeforces-profile.html class="about-cf" %}
+
   <section aria-labelledby="now-h">
     <h2 id="now-h">So far</h2>
     <p class="about-facts">{{ solved.size }} of the {{ site.data.problems.size }} problems in the log solved ({{ s.assisted_solves.size }} with help), over {{ s.active_days }} active days. The log updates itself from my solutions repository.</p>

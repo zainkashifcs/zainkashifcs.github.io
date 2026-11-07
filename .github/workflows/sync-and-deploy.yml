@@ -37,11 +37,13 @@ jobs:
       - name: Self-tests
         run: |
           python -m doctest make_post.py
-          python -m doctest _scripts/sync_activity.py _scripts/check_data.py _scripts/verify_quiz.py _scripts/approve_quiz.py _scripts/build_problems.py
+          python -m doctest _scripts/sync_activity.py _scripts/check_data.py _scripts/verify_quiz.py _scripts/approve_quiz.py _scripts/build_problems.py _scripts/fetch_codeforces.py
       - name: Rebuild activity data from the solutions history
         run: python _scripts/sync_activity.py --solutions _solutions --fetch-titles
       - name: Rebuild the problem archive (Codeforces public problem data)
         run: python _scripts/build_problems.py --fetch --solutions _solutions
+      - name: Refresh the public Codeforces profile (no keys; keeps old data if the API is down)
+        run: python _scripts/fetch_codeforces.py
       - name: Validate data files
         run: python _scripts/check_data.py
       - name: Commit changes, if any

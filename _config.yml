@@ -16,13 +16,14 @@ collections:
     output: true
     permalink: /journal/:name/
 
+# Excerpts are not used anywhere; turning them off avoids warnings from the {% raw %} blocks in generated pages.
 defaults:
   - scope: { type: posts }
-    values: { layout: post }
+    values: { layout: post, excerpt_separator: "" }
   - scope: { type: pages }
     values: { layout: default }
   - scope: { type: problems }
-    values: { layout: problem }
+    values: { layout: problem, excerpt_separator: "" }
   - scope: { type: journal }
     values: { layout: journal-entry }
 

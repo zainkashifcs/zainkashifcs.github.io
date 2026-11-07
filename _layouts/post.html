@@ -36,6 +36,7 @@ layout: default
       {% assign _solved_on = page.solved | default: _solve.date %}
       {% if _notsolved %}<div><dt>Status</dt><dd>{% if page.status == "attempted" %}Attempted, not solved{% else %}Not solved{% endif %}</dd></div>
       {% elsif _solved_on %}<div><dt>Solved</dt><dd>{{ _solved_on | date: "%-d %b %Y" }}</dd></div>{% endif %}
+      {%- if site.data.codeforces.status == "ok" and site.data.codeforces.accepted contains pid %}<div><dt>Codeforces</dt><dd>Accepted on Codeforces</dd></div>{% endif %}
       <div><dt>Published</dt><dd><time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%-d %b %Y" }}</time></dd></div>
     </dl>
     <p class="links">

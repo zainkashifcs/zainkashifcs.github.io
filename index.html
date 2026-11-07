@@ -29,6 +29,8 @@
   {% include heatmap.html %}
 </section>
 
+{% include codeforces-profile.html %}
+
 <section class="section" aria-labelledby="feed-h">
   <div class="section-head"><h2 id="feed-h">Recent activity</h2><a href="{{ '/activity/' | relative_url }}">See all {{ site.data.activity.size }} entries</a></div>
   {% include feed.html limit=6 short=true %}
