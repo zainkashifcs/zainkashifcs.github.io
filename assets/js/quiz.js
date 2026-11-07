@@ -118,6 +118,10 @@
         deal();
         mixed.querySelector('.q')?.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
       });
+      (new URLSearchParams(location.search).get('topics') || '').split(',').forEach(t => { // ?topics=a,b from the roadmap
+        const c = chips.find(c => c.dataset.tag === t && bank.some(q => tagsOf(q).includes(t)));
+        if (c) { chosen.add(t); c.setAttribute('aria-pressed', 'true'); }
+      });
       panel.hidden = false; refresh();
     }
     document.querySelectorAll('[data-deal]').forEach(b => b.addEventListener('click', deal));

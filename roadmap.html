@@ -1,0 +1,54 @@
+---
+title: Roadmap
+permalink: /roadmap/
+description: The route from programming fundamentals to the topics a 1800 Codeforces rating needs, and what I have practised so far.
+---
+{%- assign R = site.data.roadmap -%}
+{%- comment -%} Approved question tags, flattened once: "slug:kind:tag tag|..." {%- endcomment -%}
+<header class="page-head">
+  <h1>Roadmap to {{ R.goal }}</h1>
+  <p class="lede">The route from fundamentals to the topics a {{ R.goal }} Codeforces rating needs. Each stage shows what I&rsquo;ve practised so far, straight from the problem archive. Practising a topic is not the same as mastering it.</p>
+</header>
+<p class="roadmap-key"><span class="pill done">Practising</span> problems I solved myself in this stage&rsquo;s topics <span class="pill">Planned</span> not started yet</p>
+<ol class="roadmap">
+{%- for st in R.stages %}
+  {%- assign _solved = "" | split: "" -%}{%- assign _posts = 0 -%}
+  {%- for p in site.data.problems -%}{%- if p.solved and p.status != "help" -%}{%- for t in st.topics -%}{%- if p.topics contains t -%}{%- assign _solved = _solved | push: p -%}{%- if p.post -%}{%- assign _posts = _posts | plus: 1 -%}{%- endif -%}{%- break -%}{%- endif -%}{%- endfor -%}{%- endif -%}{%- endfor -%}
+  {%- assign _q = 0 -%}
+  {%- for f in site.data.quizzes -%}{%- for q in f[1] -%}{%- if q.status == "approved" -%}
+    {%- if st.quiz_kind and q.kind == st.quiz_kind -%}{%- assign _q = _q | plus: 1 -%}{%- else -%}{%- for t in st.topics -%}{%- if q.tags contains t -%}{%- assign _q = _q | plus: 1 -%}{%- break -%}{%- endif -%}{%- endfor -%}{%- endif -%}
+  {%- endif -%}{%- endfor -%}{%- endfor -%}
+  {%- assign _topics = st.topics | join: "," -%}
+  {%- assign _started = false -%}{%- if _solved.size > 0 -%}{%- assign _started = true -%}{%- elsif st.quiz_kind and _q > 0 -%}{%- assign _started = true -%}{%- endif %}
+  <li class="stage{% if _started %} started{% endif %}" id="{{ st.id }}">
+    <div class="stage-head">
+      <span class="stage-n" aria-hidden="true">{{ forloop.index }}</span>
+      <div>
+        <h2>{{ st.title }}</h2>
+        {%- if _solved.size > 0 %}<p class="pill done">Practising: {{ _solved.size }} problem{% if _solved.size != 1 %}s{% endif %} solved</p>
+        {%- elsif st.quiz_kind and _q > 0 %}<p class="pill done">Practising in quizzes</p>
+        {%- else %}<p class="pill">Planned</p>{% endif %}
+      </div>
+    </div>
+    <p class="teaches">{{ st.teaches }}</p>
+    <p class="how"><b>How to practise:</b> {{ st.practise }}</p>
+    {%- if st.after.size > 0 %}
+    <p class="after">Builds on {% for a in st.after %}{% assign _a = R.stages | where: "id", a | first %}<a href="#{{ a }}">{{ _a.title }}</a>{% unless forloop.last %}{% if forloop.rindex == 2 %} and {% else %}, {% endif %}{% endunless %}{% endfor %}.</p>
+    {%- endif %}
+    <div class="stage-work">
+      {%- if _solved.size > 0 %}
+      <p class="badges">{% for p in _solved limit: 14 %}<a class="rb" href="{{ p.post | default: p.page | relative_url }}" title="{{ p.name }}">{{ p.id }}</a>{% endfor %}{% if _solved.size > 14 %} <a href="{{ '/' | relative_url }}?topics={{ _topics }}#index">and {{ _solved.size | minus: 14 }} more</a>{% endif %}</p>
+      <p class="stage-links">
+        <a href="{{ '/' | relative_url }}?topics={{ _topics }}#index">Problems in these topics</a>
+        {%- if _q > 0 and st.topics.size > 0 %}<a href="{{ '/quiz/' | relative_url }}?topics={{ _topics }}">{{ _q }} quiz question{% if _q != 1 %}s{% endif %}</a>{% endif %}
+        <span class="muted">{% if _posts > 0 %}{{ _posts }} write-up{% if _posts != 1 %}s{% endif %}{% else %}No write-ups yet{% endif %}</span>
+      </p>
+      {%- elsif st.quiz_kind %}
+      <p class="stage-links">{% if _q > 0 %}<a href="{{ '/quiz/' | relative_url }}">{{ _q }} complexity question{% if _q != 1 %}s{% endif %} in the quizzes</a>{% endif %}<span class="muted">Every write-up states its complexity.</span></p>
+      {%- else %}
+      <p class="gap">Nothing in the archive yet. This is where the next stretch of practice goes.</p>
+      {%- endif %}
+    </div>
+  </li>
+{%- endfor %}
+</ol>

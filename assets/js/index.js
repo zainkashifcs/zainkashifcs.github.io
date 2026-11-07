@@ -13,6 +13,10 @@
   const ratings = [...new Set(rows.map(li => Number(li.dataset.rating)).filter(Boolean))].sort((a, b) => a - b);
   for (const s of [lo, hi]) s.insertAdjacentHTML('beforeend', ratings.map(r => `<option value="${r}">${r}</option>`).join(''));
   bar.hidden = false;
+  // ?topics=greedy,sorting (used by the roadmap) preselects topics
+  (new URLSearchParams(location.search).get('topics') || '').split(',').forEach(t => {
+    const c = chips.find(c => c.dataset.tag === t); if (c) { chosen.add(t); c.setAttribute('aria-pressed', 'true'); }
+  });
 
   const topicsOf = li => (li.dataset.topics || '').split(' ').filter(Boolean);
   const passes = (li, skipTopics) => {

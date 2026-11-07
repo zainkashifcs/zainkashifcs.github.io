@@ -41,7 +41,7 @@ jobs:
       - name: Rebuild activity data from the solutions history
         run: python _scripts/sync_activity.py --solutions _solutions --fetch-titles
       - name: Rebuild the problem archive (Codeforces public problem data)
-        run: python _scripts/build_problems.py --fetch
+        run: python _scripts/build_problems.py --fetch --solutions _solutions
       - name: Validate data files
         run: python _scripts/check_data.py
       - name: Commit changes, if any

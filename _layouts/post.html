@@ -14,7 +14,7 @@ layout: default
 {%- assign html = content | replace: '<pre class="highlight">', '<pre class="highlight" tabindex="0">' -%}
 {%- if page.solution != blank -%}
   {%- assign _fname = page.solution | split: "/" | last -%}
-  {%- capture _cap -%}<div class="code-caption"><span>{{ _fname }}{% if _notsolved %} (attempt, not accepted){% endif %}</span><button class="copy" type="button" data-copy hidden>Copy code</button></div><div class="language-cpp highlighter-rouge">{%- endcapture -%}
+  {%- capture _cap -%}<div class="code-caption"><span>{{ _fname }}{% if _notsolved %} (attempt, not counted as solved){% endif %}</span><button class="copy" type="button" data-copy hidden>Copy code</button></div><div class="language-cpp highlighter-rouge">{%- endcapture -%}
   {%- assign html = html | replace: '<div class="language-cpp highlighter-rouge">', _cap -%}
 {%- endif -%}
 {%- assign _l = html | split: '<h2 id="lesson">Lesson</h2>' -%}

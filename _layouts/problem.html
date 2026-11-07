@@ -2,12 +2,17 @@
 layout: default
 ---
 {%- comment -%}
-A problem in the archive that has no write-up yet. Everything here comes from the verified practice log and Codeforces'
-public problem data; nothing is written in Zain's voice. When a write-up is published, build_problems.py drops this page.
+A problem in the archive that has no write-up yet. Status and dates come from the verified practice log, rating and tags
+from Codeforces' public data, and the notes and code (the page body) are copied verbatim from Zain's solution file by
+build_problems.py. Nothing is generated in his voice. When a write-up is published, build_problems.py drops this page.
 {%- endcomment -%}
 {%- assign p = site.data.problems | where: "id", page.pid | first -%}
 {%- assign _hist = site.data.activity | where: "problem", page.pid -%}
 {%- include rating.html pid=p.id rating=p.rating -%}
+{%- assign html = content | replace: '<pre class="highlight">', '<pre class="highlight" tabindex="0">' -%}
+{%- assign _fname = p.solution_file | split: "/" | last -%}
+{%- capture _cap -%}<div class="code-caption"><span>{{ _fname }}{% unless p.solved %} (attempt, not counted as solved){% endunless %}</span><button class="copy" type="button" data-copy hidden>Copy code</button></div><div class="language-cpp highlighter-rouge">{%- endcapture -%}
+{%- assign html = html | replace: '<div class="language-cpp highlighter-rouge">', _cap -%}
 <div class="post problem">
   <header class="title">
     <p class="pid"><span class="rb{% unless p.solved %} open{% endunless %}">{{ p.id }}</span></p>
@@ -32,10 +37,12 @@ public problem data; nothing is written in Zain's voice. When a write-up is publ
     </p>
   </aside>
   <article class="post-body">
+    {{ html }}
     <h2>History</h2>
     {% include feed.html items=_hist %}
-    <p class="provenance">Status and dates come from the practice log, each entry traced to a commit in the solutions repository. The rating and tags are Codeforces' own. {% if p.solved %}A write-up with the idea, where I got stuck and the lesson has not been written yet.{% else %}There is no accepted solution, so there is no write-up or solution walkthrough.{% endif %}</p>
+    <p class="provenance">Status and dates come from the practice log, each entry traced to a commit in the solutions repository. The rating and tags are Codeforces' own. {% if html contains "My notes" %}The notes and code above are copied from my solution file as I wrote them. {% endif %}{% if p.solved %}A full write-up has not been written yet.{% else %}This problem is not counted as solved, so there is no write-up or walkthrough.{% endif %}</p>
   </article>
   {%- include quiz-section.html slug=p.slug pid=p.id rating=rating %}
 </div>
 <script src="{{ '/assets/js/quiz.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/post.js' | relative_url }}" defer></script>

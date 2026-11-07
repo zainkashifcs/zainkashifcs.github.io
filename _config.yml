@@ -11,6 +11,10 @@ collections:
   problems:
     output: true
     permalink: /problems/:name/
+  # Monthly progress notes written by Zain; months without notes still show their facts on /journal/.
+  journal:
+    output: true
+    permalink: /journal/:name/
 
 defaults:
   - scope: { type: posts }
@@ -19,5 +23,7 @@ defaults:
     values: { layout: default }
   - scope: { type: problems }
     values: { layout: problem }
+  - scope: { type: journal }
+    values: { layout: journal-entry }
 
 exclude: [README.md, make_post.py, skills-lock.json, Gemfile, Gemfile.lock, vendor]

@@ -1,0 +1,13 @@
+---
+layout: default
+---
+{%- comment -%} One month of Zain's notes. The facts block comes from the log; everything else is his writing. {%- endcomment -%}
+{%- assign m = site.data.months | where: "month", page.month | first -%}
+<article class="journal-entry">
+  <header class="page-head">
+    <p class="kicker"><a href="{{ '/journal/' | relative_url }}">Journal</a></p>
+    <h1>{{ page.title }}</h1>
+  </header>
+  {%- if m %}{% include month-facts.html m=m %}{% endif %}
+  <div class="post-body">{{ content }}</div>
+</article>
