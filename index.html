@@ -1,7 +1,6 @@
 ---
 ---
 {%- assign s = site.data.activity_stats -%}
-{%- assign latest = site.posts | first -%}
 {%- assign quiz_total = 0 -%}
 {%- for p in site.data.problems -%}
   {%- assign _qs = site.data.quizzes[p.slug] | where: "status", "approved" -%}
@@ -10,17 +9,18 @@
 <section class="intro" aria-labelledby="intro-h">
   <canvas class="hero-bg" aria-hidden="true"></canvas>
   <h1 id="intro-h">Problems I&rsquo;ve solved, and what each one taught me.</h1>
-  <p class="lede">A record of my competitive programming journey, mostly on Codeforces. Each write-up keeps the idea, where I got stuck, the lesson and the code.</p>
+  <p class="lede">I&rsquo;m Zain, a first-year Computer Science student at the University of Nottingham. This is the record of my climb from beginner towards a 1800 Codeforces rating: every problem I&rsquo;ve attempted, what each one taught me, and the ones I haven&rsquo;t solved yet.</p>
   <p class="links">
-    {%- if latest %}<a href="{{ latest.url | relative_url }}">Latest write-up: {{ latest.title }}</a>{% endif -%}
-    <a href="{{ site.solutions_repo }}">All solutions on GitHub</a>
-    {%- if quiz_total > 0 %}<a href="{{ '/quiz/' | relative_url }}">Take a quiz</a>{% endif -%}
+    <a href="#index">Browse the problems</a>
+    <a href="{{ '/roadmap/' | relative_url }}">Roadmap to 1800</a>
+    {%- if quiz_total > 0 %}<a href="{{ '/quiz/' | relative_url }}">Practise with quizzes</a>{% endif -%}
+    <a href="{{ '/about/' | relative_url }}">About me</a>
   </p>
   <dl class="facts">
     <div><dt>Solved independently</dt><dd>{{ s.independent_total.size }}<small>incl. {{ s.independent_upsolves.size }} upsolve{% if s.independent_upsolves.size != 1 %}s{% endif %}; plus {{ s.assisted_solves.size }} with help</small></dd></div>
     <div><dt>Active days</dt><dd>{{ s.active_days }}<small>since {{ s.first_day | date: "%-d %b %Y" }}</small></dd></div>
     <div><dt>Longest streak</dt><dd>{{ s.longest_streak.days }} day{% if s.longest_streak.days != 1 %}s{% endif %}<small>{{ s.longest_streak.start | date: "%-d %b" }} to {{ s.longest_streak.end | date: "%-d %b" }}</small></dd></div>
-    <div><dt>Write-ups</dt><dd>{{ site.posts.size }}<small>published</small></dd></div>
+    <div><dt>Goal</dt><dd>1800<small>Codeforces rating</small></dd></div>
   </dl>
 </section>
 

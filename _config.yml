@@ -1,6 +1,8 @@
 title: Zain's Blog
 description: Zain's Blog. Notes from my competitive programming practice, mostly Codeforces.
 solutions_repo: https://github.com/zainkashifcs/comp-program-grind
+url: "https://zainkashifcs.github.io"  # used for canonical links and the sitemap
+baseurl: ""  # a user site is served from the root; set explicitly so local builds match GitHub Pages
 permalink: /posts/:title/
 # Codeforces handle for the profile section. Left empty until confirmed: "amaza1nn__" returned "not found" from
 # the Codeforces API on 6 Nov 2026, so nothing is fetched or shown yet (see _scripts/fetch_codeforces.py).

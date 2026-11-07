@@ -1,0 +1,20 @@
+---
+layout: null
+permalink: /sitemap.xml
+sitemap: false
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{%- for p in site.pages %}{% if p.sitemap == false %}{% continue %}{% endif %}
+  <url><loc>{{ p.url | absolute_url }}</loc></url>
+{%- endfor %}
+{%- for p in site.posts %}
+  <url><loc>{{ p.url | absolute_url }}</loc><lastmod>{{ p.date | date_to_xmlschema }}</lastmod></url>
+{%- endfor %}
+{%- for p in site.problems %}
+  <url><loc>{{ p.url | absolute_url }}</loc></url>
+{%- endfor %}
+{%- for p in site.journal %}
+  <url><loc>{{ p.url | absolute_url }}</loc></url>
+{%- endfor %}
+</urlset>
