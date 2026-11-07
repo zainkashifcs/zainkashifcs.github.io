@@ -83,6 +83,11 @@ def solution_file(solutions, pid):
     for e in acts:
         if e["problem"] == pid and e.get("file") in tree:
             return Path(solutions) / e["file"]
+    for e in acts:  # the recorded file was moved later (e.g. into "CF Questions/"): same file name, new folder
+        if e["problem"] == pid and e.get("file"):
+            moved = [p for p in tree if p.endswith(".cpp") and Path(p).name == Path(e["file"]).name]
+            if len(moved) == 1:
+                return Path(solutions) / moved[0]
     return None
 
 
@@ -109,27 +114,18 @@ def notes_text(cpp):
 
 
 def queue(solutions):
-    """Problems with notes in their solution file and no approved or draft questions yet."""
-    acts = json.loads((SITE / "_data/activity.json").read_text(encoding="utf-8"))
+    """Independently solved archive problems (see _data/problems.json) with no approved or draft questions yet."""
+    problems = json.loads((SITE / "_data/problems.json").read_text(encoding="utf-8"))
     have = {p.stem for p in (SITE / "_data/quizzes").glob("*.json")} | {p.stem for p in (SITE / "_review/quiz").glob("*.json")}
-    posts = {p.stem[11:] for p in (SITE / "_posts").glob("????-??-??-*.md")}
-    out, seen = [], set()
-    for e in sorted(acts, key=lambda e: e["seq"], reverse=True):
-        if e["type"] not in ("solved", "upsolved") or e["verification"] != "file" or e["problem"] in seen:
+    out = []
+    for pr in problems:
+        if not pr["eligible"] or pr["slug"] in have:
             continue
-        seen.add(e["problem"])
-        cpp = solution_file(solutions, e["problem"])
+        cpp = solution_file(solutions, pr["id"])
         if not cpp:
             continue
-        fields, _ = parse(cpp.read_text(encoding="utf-8"))
-        if not (fields.get("Idea") or fields.get("Lesson")):
-            continue
-        title = fields.get("Problem") or f"{e['problem']} {e['title']}"
-        slug = re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")
-        if slug in have:
-            continue
-        out.append(dict(problem=e["problem"], title=title, slug=slug, solution=str(cpp.relative_to(solutions)).replace("\\", "/"),
-                        published=slug in posts, solved=e["date"], commit=e["short"]))
+        out.append(dict(problem=pr["id"], title=f"{pr['id']} {pr['name']}", slug=pr["slug"], topics=pr["topics"],
+                        solution=str(cpp.relative_to(solutions)).replace("\\", "/"), published=bool(pr["post"]), solved=pr["solved_date"]))
     return out
 
 
