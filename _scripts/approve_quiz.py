@@ -4,7 +4,8 @@ Usage:
     python _scripts/approve_quiz.py 1790d-matryoshkas 1790d-matryoshkas-q1 1790d-matryoshkas-q3
     python _scripts/approve_quiz.py 1790d-matryoshkas 1790d-matryoshkas-q2 --reviewed   # for needs-review drafts you checked
 
-Rules: the problem must have a published post; a draft must have passed verify_quiz.py (or be
+Rules: the problem must be in the archive and solved independently; its topic tags must come from its write-up
+or Codeforces tags; a draft must have passed verify_quiz.py (or be
 needs-review and approved with --reviewed); live questions are only ever appended, never changed.
 Self-check: python -m doctest _scripts/approve_quiz.py
 """
@@ -45,10 +46,14 @@ def main(argv=None):
     ap.add_argument("ids", nargs="+")
     ap.add_argument("--reviewed", action="store_true", help="you have checked the needs-review drafts yourself")
     a = ap.parse_args(argv)
-    if not list((SITE / "_posts").glob(f"????-??-??-{a.slug}.md")):
-        sys.exit(f"{a.slug} has no published post yet; publish the write-up first (make_post.py)")
-    post = sorted((SITE / "_posts").glob(f"????-??-??-{a.slug}.md"))[-1]
-    post_tags = set(front_matter(post).get("tags") or [])
+    problems = {p["slug"]: p for p in json.loads((SITE / "_data/problems.json").read_text(encoding="utf-8"))}
+    pr = problems.get(a.slug)
+    if not pr:
+        sys.exit(f"{a.slug} is not in the problem archive (_data/problems.json); run _scripts/build_problems.py")
+    if not pr["eligible"]:
+        sys.exit(f"{a.slug} is {pr['status_label'].lower()}; quizzes are only approved for independently solved problems")
+    post = sorted((SITE / "_posts").glob(f"????-??-??-{a.slug}.md"))
+    post_tags = set(pr["topics"]) | set((front_matter(post[-1]).get("tags") or []) if post else [])
     vocab = {t["id"] for g in json.loads((SITE / "_data/topics.json").read_text(encoding="utf-8")) for t in g["topics"]}
     draft_path, live_path = SITE / f"_review/quiz/{a.slug}.json", SITE / f"_data/quizzes/{a.slug}.json"
     drafts = json.loads(draft_path.read_text(encoding="utf-8"))
@@ -65,7 +70,7 @@ def main(argv=None):
             sys.exit(f"{i}: {why}")
         bad = tag_errors(by_id[i], vocab, post_tags)
         if bad:
-            sys.exit("; ".join(bad) + " (topic tags must come from the write-up's own Tags)")
+            sys.exit("; ".join(bad) + " (topic tags must come from the problem's write-up or Codeforces tags)")
     for i in a.ids:
         q = dict(by_id[i], status="approved", approved_on=dt.date.today().isoformat())
         q["validation"].pop("reasons", None)

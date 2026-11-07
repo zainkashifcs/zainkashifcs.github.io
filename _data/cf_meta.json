@@ -1,0 +1,265 @@
+{
+ "112A": {
+  "name": "Petya and Strings",
+  "rating": 800,
+  "tags": [
+   "implementation",
+   "strings"
+  ]
+ },
+ "116A": {
+  "name": "Tram",
+  "rating": 800,
+  "tags": [
+   "implementation"
+  ]
+ },
+ "1399A": {
+  "name": "Remove Smallest",
+  "rating": 800,
+  "tags": [
+   "greedy",
+   "sortings"
+  ]
+ },
+ "158A": {
+  "name": "Next Round",
+  "rating": 800,
+  "tags": [
+   "*special",
+   "implementation"
+  ]
+ },
+ "160A": {
+  "name": "Twins",
+  "rating": 900,
+  "tags": [
+   "greedy",
+   "sortings"
+  ]
+ },
+ "1703A": {
+  "name": "YES or YES?",
+  "rating": 800,
+  "tags": [
+   "brute force",
+   "implementation",
+   "strings"
+  ]
+ },
+ "1742A": {
+  "name": "Sum",
+  "rating": 800,
+  "tags": [
+   "implementation"
+  ]
+ },
+ "1790D": {
+  "name": "Matryoshkas",
+  "rating": 1200,
+  "tags": [
+   "data structures",
+   "greedy",
+   "sortings"
+  ]
+ },
+ "1791D": {
+  "name": "Distinct Split",
+  "rating": 1000,
+  "tags": [
+   "brute force",
+   "greedy",
+   "strings"
+  ]
+ },
+ "1791E": {
+  "name": "Negatives and Positives",
+  "rating": 1100,
+  "tags": [
+   "dp",
+   "greedy",
+   "sortings"
+  ]
+ },
+ "1A": {
+  "name": "Theatre Square",
+  "rating": 1000,
+  "tags": [
+   "math"
+  ]
+ },
+ "2275A": {
+  "name": "In Search of Convenience",
+  "rating": 800,
+  "tags": [
+   "geometry",
+   "implementation"
+  ]
+ },
+ "2275B": {
+  "name": "Did Not Go to Print",
+  "rating": 800,
+  "tags": [
+   "data structures",
+   "implementation"
+  ]
+ },
+ "231A": {
+  "name": "Team",
+  "rating": 800,
+  "tags": [
+   "brute force",
+   "greedy"
+  ]
+ },
+ "236A": {
+  "name": "Boy or Girl",
+  "rating": 800,
+  "tags": [
+   "brute force",
+   "implementation",
+   "strings"
+  ]
+ },
+ "263A": {
+  "name": "Beautiful Matrix",
+  "rating": 800,
+  "tags": [
+   "implementation"
+  ]
+ },
+ "281A": {
+  "name": "Word Capitalization",
+  "rating": 800,
+  "tags": [
+   "implementation",
+   "strings"
+  ]
+ },
+ "339A": {
+  "name": "Helpful Maths",
+  "rating": 800,
+  "tags": [
+   "greedy",
+   "implementation",
+   "sortings",
+   "strings"
+  ]
+ },
+ "344A": {
+  "name": "Magnets",
+  "rating": 800,
+  "tags": [
+   "implementation"
+  ]
+ },
+ "405A": {
+  "name": "Gravity Flip",
+  "rating": 900,
+  "tags": [
+   "greedy",
+   "implementation",
+   "sortings"
+  ]
+ },
+ "451A": {
+  "name": "Game With Sticks",
+  "rating": 900,
+  "tags": [
+   "implementation"
+  ]
+ },
+ "467A": {
+  "name": "George and Accommodation",
+  "rating": 800,
+  "tags": [
+   "implementation"
+  ]
+ },
+ "4A": {
+  "name": "Watermelon",
+  "rating": 800,
+  "tags": [
+   "brute force",
+   "math"
+  ]
+ },
+ "4C": {
+  "name": "Registration System",
+  "rating": 1300,
+  "tags": [
+   "data structures",
+   "hashing",
+   "implementation"
+  ]
+ },
+ "50A": {
+  "name": "Domino piling",
+  "rating": 800,
+  "tags": [
+   "greedy",
+   "math"
+  ]
+ },
+ "59A": {
+  "name": "Word",
+  "rating": 800,
+  "tags": [
+   "implementation",
+   "strings"
+  ]
+ },
+ "617A": {
+  "name": "Elephant",
+  "rating": 800,
+  "tags": [
+   "math"
+  ]
+ },
+ "677A": {
+  "name": "Vanya and Fence",
+  "rating": 800,
+  "tags": [
+   "implementation"
+  ]
+ },
+ "69A": {
+  "name": "Young Physicist",
+  "rating": 1000,
+  "tags": [
+   "implementation",
+   "math"
+  ]
+ },
+ "706B": {
+  "name": "Interesting drink",
+  "rating": 1100,
+  "tags": [
+   "binary search",
+   "dp",
+   "implementation"
+  ]
+ },
+ "734A": {
+  "name": "Anton and Danik",
+  "rating": 800,
+  "tags": [
+   "implementation",
+   "strings"
+  ]
+ },
+ "791A": {
+  "name": "Bear and Big Brother",
+  "rating": 800,
+  "tags": [
+   "implementation"
+  ]
+ },
+ "977A": {
+  "name": "Wrong Subtraction",
+  "rating": 800,
+  "tags": [
+   "implementation"
+  ]
+ }
+}

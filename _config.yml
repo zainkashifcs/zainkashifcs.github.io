@@ -2,11 +2,22 @@ title: Zain's Blog
 description: Zain's Blog. Notes from my competitive programming practice, mostly Codeforces.
 solutions_repo: https://github.com/zainkashifcs/comp-program-grind
 permalink: /posts/:title/
+# Codeforces handle for the profile section. Left empty until confirmed: "amaza1nn__" returned "not found" from
+# the Codeforces API on 6 Nov 2026, so nothing is fetched or shown yet (see _scripts/fetch_codeforces.py).
+codeforces_handle: ""
+
+# One page per archive problem without a write-up; the stubs in _problems/ are written by _scripts/build_problems.py.
+collections:
+  problems:
+    output: true
+    permalink: /problems/:name/
 
 defaults:
   - scope: { type: posts }
     values: { layout: post }
   - scope: { type: pages }
     values: { layout: default }
+  - scope: { type: problems }
+    values: { layout: problem }
 
 exclude: [README.md, make_post.py, skills-lock.json, Gemfile, Gemfile.lock, vendor]

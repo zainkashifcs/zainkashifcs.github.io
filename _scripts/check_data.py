@@ -64,7 +64,7 @@ def tag_errors(q, vocab, post_tags):
     if not tags:
         return [f"{i}: needs at least one topic tag"]
     errs = [f"{i}: unknown topic tag {t!r} (see _data/topics.json)" for t in tags if t not in vocab]
-    return errs + [f"{i}: tag {t!r} is not one of its write-up's tags" for t in tags if t in vocab and t not in post_tags]
+    return errs + [f"{i}: tag {t!r} is not one of its write-up's tags" for t in tags if t in vocab and t not in post_tags]  # post_tags: write-up tags plus Codeforces tags
 
 
 def front_matter(path):
@@ -106,12 +106,24 @@ def main():
         if fm.get("status", "solved") not in STATUSES:
             errs.append(f"{slug}: status must be one of {sorted(STATUSES)}")
     ids = []
+    problems = {p["slug"]: p for p in load(SITE / "_data/problems.json")}
+    logged = {e["problem"] for e in acts if e["type"] != "milestone" and e.get("display", True)}
+    if logged != {p["id"] for p in problems.values()}:
+        errs.append("problems.json is out of date with the activity log; run _scripts/build_problems.py")
+    for slug, pr in problems.items():
+        stub = SITE / "_problems" / f"{slug}.md"
+        if pr["page"] and not stub.exists():
+            errs.append(f"{slug}: problem page stub missing; run _scripts/build_problems.py")
+        if pr["post"] and slug not in posts:
+            errs.append(f"{slug}: problems.json points to a write-up that does not exist")
     for f in sorted((SITE / "_data/quizzes").glob("*.json")):
-        if f.stem not in posts:
-            errs.append(f"{f.name}: quiz for a problem with no published post")
+        if f.stem not in problems:
+            errs.append(f"{f.name}: quiz for a problem that is not in the archive")
+            continue
+        allowed = set(problems[f.stem]["topics"]) | set(posts.get(f.stem, {}).get("tags") or [])
         for q in load(f):
             errs += question_errors(q, live=True)
-            errs += tag_errors(q, vocab, set(posts.get(f.stem, {}).get("tags") or []))
+            errs += tag_errors(q, vocab, allowed)
             ids.append(q.get("id"))
     for f in sorted((SITE / "_review/quiz").glob("*.json")):
         if f.name == "queue.json":

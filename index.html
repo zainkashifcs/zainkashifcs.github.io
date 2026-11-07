@@ -7,7 +7,6 @@
   {%- assign _qs = site.data.quizzes[p.slug] | where: "status", "approved" -%}
   {%- assign quiz_total = quiz_total | plus: _qs.size -%}
 {%- endfor -%}
-{%- assign _problems = site.data.activity | where_exp: "e", "e.type != 'milestone'" | where_exp: "e", "e.display != false" | group_by: "problem" -%}
 <section class="intro" aria-labelledby="intro-h">
   <canvas class="hero-bg" aria-hidden="true"></canvas>
   <h1 id="intro-h">Problems I&rsquo;ve solved, and what each one taught me.</h1>
@@ -40,13 +39,16 @@
   <div class="toolbar" hidden>
     <label>Search<input type="search" placeholder="ID, title, topic, status or lesson"></label>
     <label>Status<select name="status"><option value="">All problems</option><option value="solved">Solved</option><option value="help">Solved with help</option><option value="unsolved">Not solved</option></select></label>
-    <label>Topic<select name="topic"><option value="">All topics</option>{% assign _tags = site.tags | sort %}{% for t in _tags %}<option value="{{ t[0] | escape }}">{{ t[0] }}</option>{% endfor %}</select></label>
-    <label>Sort<select name="sort"><option value="newest">Newest</option><option value="rating">Highest rating</option><option value="id">Problem ID</option></select></label>
+    <label class="rating-filter">Rating<span class="range"><select name="min" aria-label="Lowest rating"><option value="">Any</option></select><span aria-hidden="true">to</span><select name="max" aria-label="Highest rating"><option value="">Any</option></select></span></label>
+    <label>Sort<select name="sort"><option value="newest">Newest</option><option value="rating">Highest rating</option><option value="easiest">Lowest rating</option><option value="id">Problem ID</option></select></label>
+    <div class="chips topic-chips" role="group" aria-label="Topics: show problems with any of the chosen topics">
+      {%- for g in site.data.topics %}{% for t in g.topics %}{% assign _n = site.data.problems | where_exp: "x", "x.topics contains t.id" | size %}{% if _n > 0 %}<button type="button" class="chip" data-tag="{{ t.id }}" aria-pressed="false">{{ t.label }}<span class="n">{{ _n }}</span></button>{% endif %}{% endfor %}{% endfor -%}
+    </div>
   </div>
   <p class="count" aria-live="polite"></p>
   <div class="thead" aria-hidden="true"><span>Problem</span><span>Notes</span><span>Topics</span><span>Rating</span><span>Date</span></div>
-  <ul class="index">{% for g in _problems %}{% include problem-row.html g=g %}{% endfor %}</ul>
-  <p class="empty" hidden>No problems match &ldquo;<span></span>&rdquo;. <button type="button">Clear search and filters</button></p>
+  <ul class="index">{% for p in site.data.problems %}{% include problem-row.html p=p %}{% endfor %}</ul>
+  <p class="empty" hidden>No problems match these filters. <button type="button">Clear search and filters</button></p>
 </section>
 
 

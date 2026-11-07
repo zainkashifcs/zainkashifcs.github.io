@@ -4,7 +4,7 @@
   const root = document.querySelector('[data-heatmap]');
   const src = document.getElementById('activity-data');
   if (!root || !src) return;
-  const { start, today, base, events } = JSON.parse(src.textContent);
+  const { start, today, base, pages = {}, events } = JSON.parse(src.textContent);
   const LABEL = { solved: 'Solved', upsolved: 'Upsolved', redo: 'Redo', attempted: 'Attempted', practice: 'Practice', published: 'Published', milestone: 'Milestone' };
   const MONTHS = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ');
   const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -56,7 +56,7 @@
 
   const panel = document.querySelector('[data-dayview]');
   const item = e => {
-    const href = e.post ? (base || '') + e.post : e.source_url;
+    const page = e.post || pages[e.problem], href = page ? (base || '') + page : e.source_url;
     const name = e.type === 'milestone' ? esc(e.note) : `<span class="vh">${esc(e.problem)} </span>${esc(e.title)}`;
     const rb = e.type === 'milestone' ? '<span class="rb ms" aria-hidden="true"></span>' : `<span class="rb">${esc(e.problem)}</span>`;
     return `<li class="ev ${esc(e.type)}${e.assisted ? ' assisted' : ''}">${rb}`

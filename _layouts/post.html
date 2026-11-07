@@ -52,17 +52,7 @@ layout: default
     </nav>
     {%- endif %}
   </article>
-  {%- assign quiz = site.data.quizzes[page.slug] | where: "status", "approved" -%}
-  {%- if quiz.size > 0 %}
-  <section class="check" aria-labelledby="check-h">
-    <h2 id="check-h">Check your understanding</h2>
-    <p class="check-lede">{{ quiz.size }} question{% if quiz.size != 1 %}s{% endif %} on {{ pid }}. Check each answer to see the explanation and where it comes from.</p>
-    <form data-quiz onsubmit="return false">
-      {%- for q in quiz %}{% include quiz-question.html q=q i=forloop.index total=quiz.size name="p" slug=page.slug rating=rating %}{% endfor %}
-      <div class="score" hidden tabindex="-1"><h3></h3><p>Each explanation names the note or check it comes from.</p></div>
-    </form>
-  </section>
-  {%- endif %}
+  {%- include quiz-section.html slug=page.slug pid=pid rating=rating %}
 </div>
 <script src="{{ '/assets/js/quiz.js' | relative_url }}" defer></script>
 <script src="{{ '/assets/js/post.js' | relative_url }}" defer></script>

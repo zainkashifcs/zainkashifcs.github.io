@@ -1,0 +1,15 @@
+{%- comment -%}
+Approved questions for one problem, shown on its write-up or problem page.
+Usage: include quiz-section.html slug="1a-theatre-square" pid="1A" rating=rating
+{%- endcomment -%}
+{%- assign _quiz = site.data.quizzes[include.slug] | where: "status", "approved" -%}
+{%- if _quiz.size > 0 %}
+<section class="check" aria-labelledby="check-h">
+  <h2 id="check-h">Check your understanding</h2>
+  <p class="check-lede">{{ _quiz.size }} question{% if _quiz.size != 1 %}s{% endif %} on {{ include.pid }}. Check each answer to see the explanation and where it comes from.</p>
+  <form data-quiz onsubmit="return false">
+    {%- for q in _quiz %}{% include quiz-question.html q=q i=forloop.index total=_quiz.size name="p" slug=include.slug rating=include.rating %}{% endfor %}
+    <div class="score" hidden tabindex="-1"><h3></h3><p>Each explanation names the note or check it comes from.</p></div>
+  </form>
+</section>
+{%- endif %}

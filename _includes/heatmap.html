@@ -20,4 +20,4 @@
     <p class="stat-note">Counts are distinct problems. Assisted work and message-only entries never count as independent solves.</p>
   </div>
 </div>
-<script id="activity-data" type="application/json">{"start": {{ s.log_start | jsonify }}, "today": {{ site.time | date: "%Y-%m-%d" | jsonify }}, "base": {{ site.baseurl | default: "" | jsonify }}, "events": {{ site.data.activity | jsonify | replace: "</", "<\/" }}}</script>
+<script id="activity-data" type="application/json">{"start": {{ s.log_start | jsonify }}, "today": {{ site.time | date: "%Y-%m-%d" | jsonify }}, "base": {{ site.baseurl | default: "" | jsonify }}, "pages": { {%- for p in site.data.problems -%}{{ p.id | jsonify }}: {{ p.post | default: p.page | jsonify }}{% unless forloop.last %}, {% endunless %}{%- endfor -%} }, "events": {{ site.data.activity | jsonify | replace: "</", "<\/" }}}</script>
