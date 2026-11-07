@@ -3,6 +3,7 @@
 Usage:
     python _scripts/approve_quiz.py 1790d-matryoshkas 1790d-matryoshkas-q1 1790d-matryoshkas-q3
     python _scripts/approve_quiz.py 1790d-matryoshkas 1790d-matryoshkas-q2 --reviewed   # for needs-review drafts you checked
+    python _scripts/approve_quiz.py 1790d-matryoshkas --passed                           # every draft that passed verification
 
 Rules: the problem must be in the archive and solved independently; its topic tags must come from its write-up
 or Codeforces tags; a draft must have passed verify_quiz.py (or be
@@ -43,7 +44,8 @@ def approvable(q, reviewed):
 def main(argv=None):
     ap = argparse.ArgumentParser(description="Approve draft quiz questions")
     ap.add_argument("slug")
-    ap.add_argument("ids", nargs="+")
+    ap.add_argument("ids", nargs="*", help="draft ids to approve (or use --passed)")
+    ap.add_argument("--passed", action="store_true", help="approve every draft for this problem that passed verify_quiz.py")
     ap.add_argument("--reviewed", action="store_true", help="you have checked the needs-review drafts yourself")
     a = ap.parse_args(argv)
     problems = {p["slug"]: p for p in json.loads((SITE / "_data/problems.json").read_text(encoding="utf-8"))}
@@ -57,6 +59,10 @@ def main(argv=None):
     vocab = {t["id"] for g in json.loads((SITE / "_data/topics.json").read_text(encoding="utf-8")) for t in g["topics"]}
     draft_path, live_path = SITE / f"_review/quiz/{a.slug}.json", SITE / f"_data/quizzes/{a.slug}.json"
     drafts = json.loads(draft_path.read_text(encoding="utf-8"))
+    if a.passed:
+        a.ids = a.ids + [q["id"] for q in drafts if q.get("validation", {}).get("status") == "passed" and q["id"] not in a.ids]
+    if not a.ids:
+        sys.exit("nothing to approve: name draft ids, or use --passed")
     live = json.loads(live_path.read_text(encoding="utf-8")) if live_path.exists() else []
     taken = {q["id"] for q in live}
     by_id = {q["id"]: q for q in drafts}
