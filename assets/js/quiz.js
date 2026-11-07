@@ -7,6 +7,17 @@
   const ROUND = 5;
   const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 
+  // Revision history, kept in this browser only: { questionId: { right, wrong, last: 'right' | 'wrong', at } }.
+  const STORE = 'quiz-progress';
+  const history = () => { try { return JSON.parse(localStorage.getItem(STORE)) || {}; } catch (e) { return {}; } };
+  const record = (qid, ok) => {
+    if (!qid) return;
+    const h = history(), r = h[qid] || { right: 0, wrong: 0 };
+    r[ok ? 'right' : 'wrong']++; r.last = ok ? 'right' : 'wrong'; r.at = new Date().toISOString().slice(0, 10); h[qid] = r;
+    try { localStorage.setItem(STORE, JSON.stringify(h)); } catch (e) { /* storage unavailable: the quiz still works */ }
+    document.dispatchEvent(new CustomEvent('quiz:recorded'));
+  };
+
   function enhance(form) {
     const qs = [...form.querySelectorAll('.q')].filter(q => !q.hidden);
     const score = form.querySelector('.score');
@@ -35,6 +46,7 @@
         fb.innerHTML = `<strong>${ok ? 'Correct.' : `Not quite. The answer is “${esc(answerText)}”.`}</strong>` + fs.querySelector('.explain').innerHTML;
         fb.hidden = false; ev.currentTarget.remove(); actions.querySelector('.q-hint').textContent = '';
         done++; if (ok) right++;
+        record(fs.dataset.qid, ok);
         progress();
         if (score && done === qs.length) {
           score.querySelector('h2, h3').textContent = `You got ${right} of ${qs.length}`;
@@ -71,7 +83,12 @@
       if (!lo && !hi) return true;          // no rating chosen: rated and unrated questions alike
       return r > 0 && (!lo || r >= lo) && (!hi || r <= hi);
     };
-    const matching = () => bank.filter(q => (!chosen.size || tagsOf(q).some(t => chosen.has(t))) && inRange(q));
+    const mistakes = panel?.querySelector('[name=mistakes]');
+    const missed = () => { const h = history(); return new Set(Object.keys(h).filter(k => h[k].last === 'wrong')); };
+    const matching = () => {
+      const only = mistakes?.checked ? missed() : null;
+      return bank.filter(q => (!chosen.size || tagsOf(q).some(t => chosen.has(t))) && inRange(q) && (!only || only.has(q.dataset.qid)));
+    };
 
     const deal = () => {
       mixed.querySelectorAll('.q').forEach(q => q.remove());
@@ -94,14 +111,15 @@
         panel.querySelector('[data-diff]').hidden = false;
       }
       const refresh = () => {
+        const only = mistakes?.checked ? missed() : null;
         for (const c of chips) {
-          const n = bank.filter(q => tagsOf(q).includes(c.dataset.tag) && inRange(q)).length;
+          const n = bank.filter(q => tagsOf(q).includes(c.dataset.tag) && inRange(q) && (!only || only.has(q.dataset.qid))).length;
           c.hidden = !bank.some(q => tagsOf(q).includes(c.dataset.tag)); // topics with no questions yet stay out of the way
           c.querySelector('.n').textContent = n;
           c.setAttribute('aria-label', `${c.firstChild.textContent.trim()}, ${n} question${n === 1 ? '' : 's'}`);
         }
         panel.querySelectorAll('[data-group]').forEach(g => { g.hidden = !g.querySelector('.chip:not([hidden])'); });
-        const n = matching().length, what = chosen.size ? 'on the chosen topics' : 'across all topics';
+        const n = matching().length, what = (chosen.size ? 'on the chosen topics' : 'across all topics') + (only ? ' that you got wrong last time' : '');
         match.textContent = n ? `${n} question${n === 1 ? '' : 's'} ${what}. Each quiz deals up to ${ROUND}, spread across problems.` : 'No questions match these choices yet.';
         start.disabled = !n;
       };
@@ -118,6 +136,33 @@
         deal();
         mixed.querySelector('.q')?.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
       });
+      // Progress panel: what this browser remembers, the weakest topics, and a mistakes-only mode.
+      const revise = panel.querySelector('[data-revise]'), label = Object.fromEntries(chips.map(c => [c.dataset.tag, c.firstChild.textContent.trim()]));
+      const showProgress = () => {
+        const h = history(), seen = bank.filter(q => h[q.dataset.qid]);
+        revise.hidden = !seen.length;
+        if (!seen.length) { if (mistakes.checked) { mistakes.checked = false; refresh(); } return; }
+        const wrong = seen.filter(q => h[q.dataset.qid].last === 'wrong'), per = {};
+        for (const q of seen) for (const t of tagsOf(q)) { per[t] = per[t] || [0, 0]; per[t][1]++; if (h[q.dataset.qid].last === 'wrong') per[t][0]++; }
+        revise.querySelector('[data-stats]').textContent = `You've answered ${seen.length} of ${bank.length} questions. ${seen.length - wrong.length} were right on your latest try.`;
+        const weak = Object.entries(per).filter(([, [w]]) => w).sort((a, b) => b[1][0] / b[1][1] - a[1][0] / a[1][1]).slice(0, 3);
+        const weakEl = revise.querySelector('[data-weak]');
+        weakEl.hidden = !weak.length;
+        weakEl.textContent = weak.length ? 'Worth revisiting: ' + weak.map(([t, [w, n]]) => `${label[t] || t} (${w} of ${n} wrong last time)`).join(', ') + '.' : '';
+        revise.querySelector('[data-wrong-n]').textContent = wrong.length;
+        mistakes.disabled = !wrong.length;
+        if (!wrong.length && mistakes.checked) { mistakes.checked = false; refresh(); }
+      };
+      mistakes.addEventListener('change', refresh);
+      document.addEventListener('quiz:recorded', () => { showProgress(); refresh(); });
+      const confirmEl = revise.querySelector('[data-confirm]');
+      revise.querySelector('[data-clear]').addEventListener('click', () => { confirmEl.hidden = false; revise.querySelector('[data-clear-no]').focus(); });
+      revise.querySelector('[data-clear-no]').addEventListener('click', () => { confirmEl.hidden = true; revise.querySelector('[data-clear]').focus(); });
+      revise.querySelector('[data-clear-yes]').addEventListener('click', () => {
+        try { localStorage.removeItem(STORE); } catch (e) { /* nothing stored */ }
+        confirmEl.hidden = true; mistakes.checked = false; showProgress(); refresh();
+      });
+      showProgress();
       (new URLSearchParams(location.search).get('topics') || '').split(',').forEach(t => { // ?topics=a,b from the roadmap
         const c = chips.find(c => c.dataset.tag === t && bank.some(q => tagsOf(q).includes(t)));
         if (c) { chosen.add(t); c.setAttribute('aria-pressed', 'true'); }

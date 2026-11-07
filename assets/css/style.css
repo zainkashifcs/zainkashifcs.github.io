@@ -405,6 +405,18 @@ pre:focus-visible { outline-offset: -2px; }
 .cf-bars.dense .bar:nth-child(even) .k, .cf-bars.dense .v { visibility: hidden; }
 @media (max-width: 44rem) { .cf-facts { grid-template-columns: 1fr 1fr; row-gap: var(--s3); } .cf-facts div:nth-child(3) { padding-left: 0; border-left: 0; } }
 
+/* quiz progress (this browser only) */
+.revise { margin-top: var(--s4); padding-top: var(--s3); border-top: 1px solid var(--rule); }
+.revise h3 { margin: 0 0 var(--s2); font: 400 .875rem/1.4 var(--sans); color: var(--muted); letter-spacing: 0; }
+.revise p { margin: 0 0 var(--s2); font-size: .9375rem; color: var(--ink-2); }
+.revise .small { font-size: .875rem; color: var(--muted); }
+.check-row { display: inline-flex; align-items: center; gap: var(--s2); min-height: 2.5rem; font-size: .9375rem; cursor: pointer; }
+.check-row input { width: 1.1rem; height: 1.1rem; margin: 0; accent-color: var(--sig); }
+.check-row:has(input:disabled) { color: var(--muted); cursor: not-allowed; }
+.check-row .n { font-size: .8125rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.linkish { font: inherit; color: var(--ink); background: none; border: 0; padding: 0; text-decoration: underline; text-decoration-color: var(--link-line); text-underline-offset: .22em; cursor: pointer; }
+.linkish:hover { text-decoration-color: var(--sig); }
+
 @media (prefers-reduced-motion: reduce) { *, .theme-anim * { transition: none !important; scroll-behavior: auto !important; } }
 
 @media (max-width: 60rem) {

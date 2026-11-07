@@ -20,17 +20,24 @@ description: Practise by topic and difficulty with questions drawn from the publ
       <label>From <select name="min"><option value="">Any</option></select></label>
       <label>to <select name="max"><option value="">Any</option></select></label>
     </div>
+    <div class="revise" data-revise hidden>
+      <h3>Your progress</h3>
+      <p data-stats></p>
+      <p data-weak hidden></p>
+      <label class="check-row"><input type="checkbox" name="mistakes"> Only questions I got wrong last time <span class="n" data-wrong-n></span></label>
+      <p class="small">Saved in this browser only, so it doesn&rsquo;t follow you to another device. <button type="button" class="linkish" data-clear>Clear my progress</button><span data-confirm hidden> Clear everything? <button type="button" class="linkish" data-clear-yes>Yes, clear it</button> <button type="button" class="linkish" data-clear-no>Keep it</button></span></p>
+    </div>
     <div class="pickbar"><p data-match aria-live="polite"></p><button class="btn" type="button" data-start>Start quiz</button></div>
   </section>
   <div class="quizbar"><span data-progress aria-live="polite">Up to 5 questions per round</span><span class="meter" aria-hidden="true"><i></i></span><button class="btn quiet" type="button" data-deal hidden>New set of questions</button></div>
   <form data-mixed onsubmit="return false">
-    {%- for p in site.posts -%}
+    {%- for p in site.data.problems -%}
       {%- assign _qs = site.data.quizzes[p.slug] | where: "status", "approved" -%}
       {%- if _qs.size > 0 -%}
-        {%- assign _pid = p.title | split: " " | first -%}
-        {%- include rating.html pid=_pid rating=p.rating -%}
+        {%- include rating.html pid=p.id rating=p.rating -%}
+        {%- capture _title -%}{{ p.id }} {{ p.name }}{%- endcapture -%}{%- assign _url = p.post | default: p.page -%}
         {%- for q in _qs -%}{%- assign n = n | plus: 1 -%}{%- capture _label -%}Question {{ n }}{%- endcapture -%}
-          {% include quiz-question.html q=q i=n name="m" label=_label from_url=p.url from_title=p.title slug=p.slug rating=rating %}
+          {% include quiz-question.html q=q i=n name="m" label=_label from_url=_url from_title=_title slug=p.slug rating=rating %}
         {%- endfor -%}
       {%- endif -%}
     {%- endfor %}

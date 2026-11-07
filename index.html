@@ -3,7 +3,7 @@
 {%- assign s = site.data.activity_stats -%}
 {%- assign latest = site.posts | first -%}
 {%- assign quiz_total = 0 -%}
-{%- for p in site.posts -%}
+{%- for p in site.data.problems -%}
   {%- assign _qs = site.data.quizzes[p.slug] | where: "status", "approved" -%}
   {%- assign quiz_total = quiz_total | plus: _qs.size -%}
 {%- endfor -%}
@@ -62,11 +62,12 @@
     <a class="btn" href="{{ '/quiz/' | relative_url }}">Practise by topic</a></div>
   <form data-quiz data-try onsubmit="return false">
     {%- assign _t = 0 -%}
-    {%- for p in site.posts -%}
+    {%- for p in site.data.problems -%}
       {%- assign _qs = site.data.quizzes[p.slug] | where: "status", "approved" -%}
-      {%- if _qs.size > 0 -%}{%- assign _pid = p.title | split: " " | first -%}{%- include rating.html pid=_pid rating=p.rating -%}{%- endif -%}
+      {%- if _qs.size > 0 -%}{%- include rating.html pid=p.id rating=p.rating -%}{%- endif -%}
+      {%- capture _ptitle -%}{{ p.id }} {{ p.name }}{%- endcapture -%}
       {%- for q in _qs -%}{%- assign _t = _t | plus: 1 -%}
-        {%- assign _label = "Try one: from " | append: p.title %}
+        {%- assign _label = "Try one: from " | append: _ptitle %}
         <div class="try"{% if _t > 1 %} hidden{% endif %}>{% include quiz-question.html q=q i=_t total=1 name="t" label=_label slug=p.slug rating=rating %}</div>
       {%- endfor -%}
     {%- endfor %}
