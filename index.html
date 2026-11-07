@@ -61,9 +61,11 @@
     <p class="small">{{ quiz_total }} approved question{% if quiz_total != 1 %}s{% endif %} so far. Each answer is checked against the notes or by running the solution.</p>
     <a class="btn" href="{{ '/quiz/' | relative_url }}">Practise by topic</a></div>
   <form data-quiz data-try onsubmit="return false">
+    {%- comment -%} One question per problem, at most 12, so the homepage stays light as the bank grows. {%- endcomment -%}
     {%- assign _t = 0 -%}
     {%- for p in site.data.problems -%}
-      {%- assign _qs = site.data.quizzes[p.slug] | where: "status", "approved" -%}
+      {%- if _t >= 12 -%}{%- break -%}{%- endif -%}
+      {%- assign _qs = site.data.quizzes[p.slug] | where: "status", "approved" | slice: 0, 1 -%}
       {%- if _qs.size > 0 -%}{%- include rating.html pid=p.id rating=p.rating -%}{%- endif -%}
       {%- capture _ptitle -%}{{ p.id }} {{ p.name }}{%- endcapture -%}
       {%- for q in _qs -%}{%- assign _t = _t | plus: 1 -%}

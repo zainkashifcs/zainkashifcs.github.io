@@ -1,15 +1,31 @@
 ---
 title: Topics
 permalink: /tags/
+description: Every problem in the archive grouped by topic, with links to practise each topic.
 ---
-{% assign tags = site.tags | sort %}
+{%- comment -%}
+Topics come from _data/topics.json; a problem belongs to a topic through its write-up tags or Codeforces tags
+(_data/problems.json "topics"). Anchors (#greedy etc.) are the topic ids.
+{%- endcomment -%}
 <header class="page-head">
   <h1>Topics</h1>
-  <ul class="topic-index">{% for tag in tags %}<li><a href="#{{ tag[0] | slugify }}">{{ tag[0] }}</a><span>{{ tag[1].size }}</span></li>{% endfor %}</ul>
+  <p class="lede">Every problem in the archive, grouped by topic. A problem can sit under several topics; the tags come from my write-ups and from Codeforces.</p>
+  <ul class="topic-index">
+    {%- for g in site.data.topics %}{% for t in g.topics %}{% assign _n = site.data.problems | where_exp: "x", "x.topics contains t.id" | size %}{% if _n > 0 %}<li><a href="#{{ t.id }}">{{ t.label }}</a><span>{{ _n }}</span></li>{% endif %}{% endfor %}{% endfor -%}
+  </ul>
 </header>
-{% for tag in tags %}
-<section class="tag-group" aria-labelledby="{{ tag[0] | slugify }}">
-  <h2 id="{{ tag[0] | slugify }}">{{ tag[0] }} <span>{{ tag[1].size }} write-up{% if tag[1].size != 1 %}s{% endif %}</span></h2>
-  <ul class="index">{% for post in tag[1] %}{% include post-card.html post=post %}{% endfor %}</ul>
+{%- for g in site.data.topics %}
+  {%- for t in g.topics %}
+    {%- assign _ps = site.data.problems | where_exp: "x", "x.topics contains t.id" -%}
+    {%- if _ps.size > 0 %}
+<section class="tag-group" aria-labelledby="{{ t.id }}">
+  <h2 id="{{ t.id }}">{{ t.label }} <span>{{ _ps.size }} problem{% if _ps.size != 1 %}s{% endif %}</span></h2>
+  <p class="badges">
+    {%- for p in _ps %}<a class="rb{% unless p.solved %} open{% endunless %}{% if p.status == 'help' %} help{% endif %}" href="{{ p.post | default: p.page | relative_url }}" title="{{ p.name }}: {{ p.status_label }}">{{ p.id }}</a>{% endfor -%}
+  </p>
+  <p class="stage-links"><a href="{{ '/' | relative_url }}?topics={{ t.id }}#index">See them in the index</a><a href="{{ '/quiz/' | relative_url }}?topics={{ t.id }}">Practise {{ t.label }}</a></p>
 </section>
-{% endfor %}
+    {%- endif %}
+  {%- endfor %}
+{%- endfor %}
+<p class="provenance">Badge outlines show status: filled for solved, outlined for solved with help, dashed for not solved.</p>
