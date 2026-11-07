@@ -116,7 +116,7 @@
           const n = bank.filter(q => tagsOf(q).includes(c.dataset.tag) && inRange(q) && (!only || only.has(q.dataset.qid))).length;
           c.hidden = !bank.some(q => tagsOf(q).includes(c.dataset.tag)); // topics with no questions yet stay out of the way
           c.querySelector('.n').textContent = n;
-          c.setAttribute('aria-label', `${c.firstChild.textContent.trim()}, ${n} question${n === 1 ? '' : 's'}`);
+          c.querySelector('.vh').textContent = n === 1 ? ' question' : ' questions'; // accessible name: "Greedy 9 questions"
         }
         panel.querySelectorAll('[data-group]').forEach(g => { g.hidden = !g.querySelector('.chip:not([hidden])'); });
         const n = matching().length, what = (chosen.size ? 'on the chosen topics' : 'across all topics') + (only ? ' that you got wrong last time' : '');

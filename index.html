@@ -44,7 +44,7 @@
     <label class="rating-filter">Rating<span class="range"><select name="min" aria-label="Lowest rating"><option value="">Any</option></select><span aria-hidden="true">to</span><select name="max" aria-label="Highest rating"><option value="">Any</option></select></span></label>
     <label>Sort<select name="sort"><option value="newest">Newest</option><option value="rating">Highest rating</option><option value="easiest">Lowest rating</option><option value="id">Problem ID</option></select></label>
     <div class="chips topic-chips" role="group" aria-label="Topics: show problems with any of the chosen topics">
-      {%- for g in site.data.topics %}{% for t in g.topics %}{% assign _n = site.data.problems | where_exp: "x", "x.topics contains t.id" | size %}{% if _n > 0 %}<button type="button" class="chip" data-tag="{{ t.id }}" aria-pressed="false">{{ t.label }}<span class="n">{{ _n }}</span></button>{% endif %}{% endfor %}{% endfor -%}
+      {%- for g in site.data.topics %}{% for t in g.topics %}{% assign _n = site.data.problems | where_exp: "x", "x.topics contains t.id" | size %}{% if _n > 0 %}<button type="button" class="chip" data-tag="{{ t.id }}" aria-pressed="false">{{ t.label }}<span class="n">{{ _n }}</span><span class="vh"> problems</span></button>{% endif %}{% endfor %}{% endfor -%}
     </div>
   </div>
   <p class="count" aria-live="polite"></p>

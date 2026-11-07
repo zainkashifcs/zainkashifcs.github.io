@@ -12,7 +12,7 @@ description: Practise by topic and difficulty with questions drawn from the publ
     {%- for g in site.data.topics %}
     <div class="tgroup" data-group>
       <h3>{{ g.group }}</h3>
-      <div class="chips">{% for t in g.topics %}<button type="button" class="chip" data-tag="{{ t.id }}" aria-pressed="false" hidden>{{ t.label }}<span class="n"></span></button>{% endfor %}</div>
+      <div class="chips">{% for t in g.topics %}<button type="button" class="chip" data-tag="{{ t.id }}" aria-pressed="false" hidden>{{ t.label }}<span class="n"></span><span class="vh"> questions</span></button>{% endfor %}</div>
     </div>
     {%- endfor %}
     <div class="diff" data-diff hidden>

@@ -37,7 +37,7 @@
     for (const c of chips) {
       const n = rows.filter(li => passes(li, true) && topicsOf(li).includes(c.dataset.tag)).length;
       c.querySelector('.n').textContent = n;
-      c.setAttribute('aria-label', `${c.firstChild.textContent.trim()}, ${n} problem${n === 1 ? '' : 's'}`);
+      c.querySelector('.vh').textContent = n === 1 ? ' problem' : ' problems'; // accessible name: "Greedy 9 problems"
     }
     count.textContent = `Showing ${shown} of ${rows.length} problem${rows.length === 1 ? '' : 's'}`;
     empty.hidden = shown > 0;
