@@ -1,0 +1,156 @@
+[
+  {
+    "id": "451a-game-with-sticks-q1",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "implementation"
+    ],
+    "code": false,
+    "question": "The input is 3 5. What does the solution print?",
+    "choices": [
+      "Akshat",
+      "Malvika",
+      "3",
+      "15"
+    ],
+    "answer": 0,
+    "explanation": "The smaller value is 3, which is odd, so the code prints Akshat.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "3 5",
+      "output": "Akshat",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "451a-game-with-sticks-q2",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "implementation"
+    ],
+    "code": false,
+    "question": "The input is 4 7. What does the solution print?",
+    "choices": [
+      "Akshat",
+      "Malvika",
+      "4",
+      "28"
+    ],
+    "answer": 1,
+    "explanation": "The smaller value is 4, which is even, so the code prints Malvika.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "4 7",
+      "output": "Malvika",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "451a-game-with-sticks-q3",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "implementation"
+    ],
+    "code": false,
+    "question": "The input is 1 1, the smallest possible pair. What does the solution print?",
+    "choices": [
+      "Malvika",
+      "Akshat",
+      "Nothing",
+      "1"
+    ],
+    "answer": 1,
+    "explanation": "min(1, 1) = 1 is odd, so the code prints Akshat.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1 1",
+      "output": "Akshat",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "451a-game-with-sticks-q4",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "implementation"
+    ],
+    "code": false,
+    "question": "The input is 10 3 (the first number is larger). What does the solution print?",
+    "choices": [
+      "Akshat",
+      "Malvika",
+      "10",
+      "13"
+    ],
+    "answer": 0,
+    "explanation": "The code takes the smaller value, 3, which is odd, so it prints Akshat.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "10 3",
+      "output": "Akshat",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "451a-game-with-sticks-q5",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "complexity",
+    "tags": [
+      "implementation"
+    ],
+    "code": false,
+    "question": "What is the time complexity of the solution?",
+    "choices": [
+      "O(1)",
+      "O(n + m)",
+      "O(min(n, m))",
+      "O(n * m)"
+    ],
+    "answer": 0,
+    "explanation": "It reads two numbers, compares them and takes one remainder; there is no loop.",
+    "source": {
+      "type": "note",
+      "section": "Idea",
+      "quote": "Complexity: O(1)"
+    },
+    "validation": {
+      "method": "note",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  }
+]

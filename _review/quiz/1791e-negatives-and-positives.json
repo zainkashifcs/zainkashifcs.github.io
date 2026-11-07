@@ -1,0 +1,158 @@
+[
+  {
+    "id": "1791e-negatives-and-positives-q1",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "greedy"
+    ],
+    "code": false,
+    "question": "One test case is -1 -2 -3 (n = 3). What does the solution print?",
+    "choices": [
+      "6",
+      "4",
+      "-6",
+      "0"
+    ],
+    "answer": 1,
+    "explanation": "There are 3 negatives (odd), the sum of absolute values is 6 and the smallest absolute value is 1, so it prints 6 - 2*1 = 4.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1\n3\n-1 -2 -3",
+      "output": "4",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "1791e-negatives-and-positives-q2",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "greedy"
+    ],
+    "code": false,
+    "question": "One test case is -1 2 -3 4. What does the solution print?",
+    "choices": [
+      "10",
+      "6",
+      "2",
+      "8"
+    ],
+    "answer": 0,
+    "explanation": "There are 2 negatives (even), so the answer is the sum of absolute values, 1+2+3+4 = 10.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1\n4\n-1 2 -3 4",
+      "output": "10",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "1791e-negatives-and-positives-q3",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "greedy"
+    ],
+    "code": false,
+    "question": "One test case is -5 0 7. What does the solution print?",
+    "choices": [
+      "12",
+      "14",
+      "2",
+      "-12"
+    ],
+    "answer": 0,
+    "explanation": "The count of negatives is odd, but the smallest absolute value is 0, so nothing is subtracted: 5+0+7 = 12.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1\n3\n-5 0 7",
+      "output": "12",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "1791e-negatives-and-positives-q4",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "reasoning",
+    "tags": [
+      "greedy"
+    ],
+    "code": false,
+    "question": "Why does the parity of the number of negatives decide the answer?",
+    "choices": [
+      "Each flip changes the count of negatives by -2, 0 or +2, so its parity never changes",
+      "Each flip always removes exactly one negative",
+      "The array is sorted before the flips",
+      "Zeros can never be flipped"
+    ],
+    "answer": 0,
+    "explanation": "A flip of two neighbours changes the count of negatives by an even amount, so an odd count can never reach zero negatives.",
+    "source": {
+      "type": "note",
+      "section": "Idea",
+      "quote": "each flip changes the number of negatives by -2, 0 or +2, so its PARITY never changes"
+    },
+    "validation": {
+      "method": "note",
+      "status": "needs-review",
+      "reasons": [
+        "1791e-negatives-and-positives-q4: the answer follows from reasoning, not a check; check it yourself before approving"
+      ],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "1791e-negatives-and-positives-q5",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "greedy"
+    ],
+    "code": false,
+    "question": "Two test cases are given: the arrays [-4] and [-4 -4]. What does the solution print?",
+    "choices": [
+      "-4 then 8",
+      "4 then 8",
+      "-4 then -8",
+      "4 then 0"
+    ],
+    "answer": 0,
+    "explanation": "One negative (odd): 4 - 2*4 = -4. Two negatives (even): the sum of absolute values, 8.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "2\n1\n-4\n2\n-4 -4",
+      "output": "-4\n8",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  }
+]

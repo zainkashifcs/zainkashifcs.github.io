@@ -4,6 +4,9 @@
     "status": "draft",
     "origin": "human",
     "kind": "tracing",
+    "tags": [
+      "sorting"
+    ],
     "code": false,
     "question": "The columns are 3 2 1 2. What does the solution print after gravity flips right?",
     "choices": [
@@ -24,7 +27,7 @@
       "output": "1 2 2 3",
       "status": "passed",
       "reasons": [],
-      "checked": "2026-11-06"
+      "checked": "2026-11-07"
     }
   },
   {
@@ -32,6 +35,10 @@
     "status": "draft",
     "origin": "human",
     "kind": "reasoning",
+    "tags": [
+      "sorting",
+      "implementation"
+    ],
     "code": false,
     "question": "What actually changes when gravity flips?",
     "choices": [
@@ -53,7 +60,7 @@
       "reasons": [
         "405a-gravity-flip-q2: the answer follows from reasoning, not a check; check it yourself before approving"
       ],
-      "checked": "2026-11-06"
+      "checked": "2026-11-07"
     }
   },
   {
@@ -61,6 +68,9 @@
     "status": "draft",
     "origin": "human",
     "kind": "complexity",
+    "tags": [
+      "sorting"
+    ],
     "code": false,
     "question": "What is the time complexity of the solution?",
     "choices": [
@@ -80,7 +90,70 @@
       "method": "note",
       "status": "passed",
       "reasons": [],
-      "checked": "2026-11-06"
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "405a-gravity-flip-q4",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "sorting"
+    ],
+    "code": false,
+    "question": "Input is n = 1 and the single height 5. What does the solution print?",
+    "choices": [
+      "5",
+      "0",
+      "1",
+      "Nothing is printed"
+    ],
+    "answer": 0,
+    "explanation": "A single column sorts to itself and no separating space is printed.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1\n5",
+      "output": "5",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "405a-gravity-flip-q5",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "sorting",
+      "implementation"
+    ],
+    "code": false,
+    "question": "Input is n = 5 and the heights 4 4 1 9 1. What does the solution print?",
+    "choices": [
+      "1 1 4 4 9",
+      "9 4 4 1 1",
+      "1 4 9 4 1",
+      "1 1 4 9"
+    ],
+    "answer": 0,
+    "explanation": "Sorting ascending keeps duplicates and gives 1 1 4 4 9.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "5\n4 4 1 9 1",
+      "output": "1 1 4 4 9",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
     }
   }
 ]

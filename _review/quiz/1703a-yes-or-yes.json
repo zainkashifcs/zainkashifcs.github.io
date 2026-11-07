@@ -1,0 +1,167 @@
+[
+  {
+    "id": "1703a-yes-or-yes-q1",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "brute-force",
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "The program reads 3 words: YeS, noo, YES. What does it print (one per line)?",
+    "choices": [
+      "YES\nNO\nYES",
+      "YES\nYES\nYES",
+      "NO\nNO\nYES",
+      "YeS\nnoo\nYES"
+    ],
+    "answer": 0,
+    "explanation": "After lowercasing, yes and yes match the string yes while noo does not.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "3\nYeS\nnoo\nYES",
+      "output": "YES\nNO\nYES",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "1703a-yes-or-yes-q2",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "brute-force",
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "The program reads 3 words: YEZ, yes, SEY. What does it print?",
+    "choices": [
+      "NO\nYES\nNO",
+      "YES\nYES\nYES",
+      "NO\nYES\nYES",
+      "NO\nNO\nNO"
+    ],
+    "answer": 0,
+    "explanation": "YEZ becomes yez and SEY becomes sey, neither equals yes; yes matches.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "3\nYEZ\nyes\nSEY",
+      "output": "NO\nYES\nNO",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "1703a-yes-or-yes-q3",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "brute-force",
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "The program reads 2 words: yEs and yea. What does it print?",
+    "choices": [
+      "YES\nNO",
+      "YES\nYES",
+      "NO\nNO",
+      "NO\nYES"
+    ],
+    "answer": 0,
+    "explanation": "yEs lowercases to yes; yea lowercases to yea, which differs in the last letter.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "2\nyEs\nyea",
+      "output": "YES\nNO",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "1703a-yes-or-yes-q4",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "reasoning",
+    "tags": [
+      "brute-force",
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "Why is the comparison s == \"yes\" placed after the inner letter loop?",
+    "choices": [
+      "The whole word must be lowercased before it is compared",
+      "Comparison is only legal after a loop",
+      "The inner loop prints the answer",
+      "It lets the comparison run once per letter"
+    ],
+    "answer": 0,
+    "explanation": "Comparing early would see partly uppercase text and give NO for words like YeS.",
+    "source": {
+      "type": "code",
+      "detail": "line 30: s[j] = tolower(s[j]); line 33: if (s == \"yes\")"
+    },
+    "validation": {
+      "method": "code",
+      "status": "needs-review",
+      "reasons": [
+        "1703a-yes-or-yes-q4: code-only claim; check it yourself before approving"
+      ],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "1703a-yes-or-yes-q5",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "complexity",
+    "tags": [
+      "brute-force",
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "What is the time cost per test case for a word of length L?",
+    "choices": [
+      "O(1)",
+      "O(L)",
+      "O(L^2)",
+      "O(2^L)"
+    ],
+    "answer": 1,
+    "explanation": "One pass lowercases L letters and the comparison is also linear in L.",
+    "source": {
+      "type": "code",
+      "detail": "lines 28-31: loop over s.size(); line 33 comparison"
+    },
+    "validation": {
+      "method": "code",
+      "status": "needs-review",
+      "reasons": [
+        "1703a-yes-or-yes-q5: code-only claim; check it yourself before approving"
+      ],
+      "checked": "2026-11-07"
+    }
+  }
+]

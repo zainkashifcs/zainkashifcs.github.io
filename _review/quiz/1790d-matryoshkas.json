@@ -25,8 +25,11 @@
       "output": "2",
       "status": "passed",
       "reasons": [],
-      "checked": "2026-11-06"
-    }
+      "checked": "2026-11-07"
+    },
+    "tags": [
+      "greedy"
+    ]
   },
   {
     "id": "1790d-matryoshkas-q2",
@@ -54,8 +57,11 @@
       "reasons": [
         "1790d-matryoshkas-q2: the answer follows from reasoning, not a check; check it yourself before approving"
       ],
-      "checked": "2026-11-06"
-    }
+      "checked": "2026-11-07"
+    },
+    "tags": [
+      "greedy"
+    ]
   },
   {
     "id": "1790d-matryoshkas-q3",
@@ -84,8 +90,11 @@
       "reasons": [
         "1790d-matryoshkas-q3: the answer follows from reasoning, not a check; check it yourself before approving"
       ],
-      "checked": "2026-11-06"
-    }
+      "checked": "2026-11-07"
+    },
+    "tags": [
+      "data-structures"
+    ]
   },
   {
     "id": "1790d-matryoshkas-q4",
@@ -112,7 +121,42 @@
       "output": "2",
       "status": "passed",
       "reasons": [],
-      "checked": "2026-11-06"
+      "checked": "2026-11-07"
+    },
+    "tags": [
+      "greedy"
+    ]
+  },
+  {
+    "id": "1790d-matryoshkas-q5",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "greedy",
+      "data-structures"
+    ],
+    "code": false,
+    "question": "One test case has doll sizes 3 3 3 4 4. How many sets does the solution print?",
+    "choices": [
+      "2",
+      "3",
+      "5",
+      "0"
+    ],
+    "answer": 1,
+    "explanation": "Three dolls of size 3 start 3 sets; the two dolls of size 4 fit into existing sets, so no new set starts at 4.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1\n5\n3 3 3 4 4",
+      "output": "3",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
     }
   }
 ]

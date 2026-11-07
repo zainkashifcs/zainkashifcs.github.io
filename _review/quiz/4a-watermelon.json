@@ -1,0 +1,160 @@
+[
+  {
+    "id": "4a-watermelon-q1",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "math"
+    ],
+    "code": false,
+    "question": "Input is w = 8. What does the solution print?",
+    "choices": [
+      "YES",
+      "NO",
+      "4",
+      "8"
+    ],
+    "answer": 0,
+    "explanation": "8 is even and greater than 2.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "8",
+      "output": "YES",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "4a-watermelon-q2",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "math",
+      "brute-force"
+    ],
+    "code": false,
+    "question": "Input is w = 2. What does the solution print?",
+    "choices": [
+      "YES",
+      "NO",
+      "1",
+      "2"
+    ],
+    "answer": 1,
+    "explanation": "2 is even but fails the w > 2 test, since it cannot be split into two even positive parts.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "2",
+      "output": "NO",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "4a-watermelon-q3",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "math"
+    ],
+    "code": false,
+    "question": "Input is w = 7. What does the solution print?",
+    "choices": [
+      "YES",
+      "NO",
+      "3",
+      "7"
+    ],
+    "answer": 1,
+    "explanation": "7 is odd, so w % 2 == 0 is false.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "7",
+      "output": "NO",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "4a-watermelon-q4",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "math",
+      "brute-force"
+    ],
+    "code": false,
+    "question": "Input is w = 4. What does the solution print?",
+    "choices": [
+      "YES",
+      "NO",
+      "2",
+      "4"
+    ],
+    "answer": 0,
+    "explanation": "4 is even and greater than 2 (it is 2 + 2).",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "4",
+      "output": "YES",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "4a-watermelon-q5",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "math",
+    "tags": [
+      "math"
+    ],
+    "code": false,
+    "question": "Why must w be even for the answer to be YES?",
+    "choices": [
+      "Two even parts always add up to an even number",
+      "Odd numbers are too large",
+      "cin only reads even values",
+      "Because w % 2 == 1 is slow"
+    ],
+    "answer": 0,
+    "explanation": "The solution splits w into two even parts, and even + even is always even.",
+    "source": {
+      "type": "note",
+      "section": "Idea",
+      "quote": "Insight: even + even = even, so w must be even."
+    },
+    "validation": {
+      "method": "note",
+      "status": "needs-review",
+      "reasons": [
+        "4a-watermelon-q5: the answer follows from reasoning, not a check; check it yourself before approving"
+      ],
+      "checked": "2026-11-07"
+    }
+  }
+]

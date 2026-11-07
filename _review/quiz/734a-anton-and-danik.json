@@ -1,0 +1,162 @@
+[
+  {
+    "id": "734a-anton-and-danik-q1",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "The program reads n and a string of games. What does it print for this input?\n6\nADAAAD",
+    "choices": [
+      "Anton",
+      "Danik",
+      "Friendship",
+      "A"
+    ],
+    "answer": 0,
+    "explanation": "A appears 4 times and D appears 2 times, so countA > countD.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "6\nADAAAD",
+      "output": "Anton",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "734a-anton-and-danik-q2",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "What is printed for this input?\n4\nADAD",
+    "choices": [
+      "Anton",
+      "Danik",
+      "Friendship",
+      "Draw"
+    ],
+    "answer": 2,
+    "explanation": "Each letter appears twice, so neither counter is larger.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "4\nADAD",
+      "output": "Friendship",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "734a-anton-and-danik-q3",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "What is printed for this input?\n1\nA",
+    "choices": [
+      "Danik",
+      "Anton",
+      "Friendship",
+      "A"
+    ],
+    "answer": 1,
+    "explanation": "One A and no D gives countA = 1 > countD = 0.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1\nA",
+      "output": "Anton",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "734a-anton-and-danik-q4",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "What is printed for this input?\n5\nDDDAA",
+    "choices": [
+      "Anton",
+      "Friendship",
+      "D",
+      "Danik"
+    ],
+    "answer": 3,
+    "explanation": "D appears 3 times and A appears 2 times, so countD > countA.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "5\nDDDAA",
+      "output": "Danik",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "734a-anton-and-danik-q5",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "reasoning",
+    "tags": [
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "In the counting loop, which letters increase countD?",
+    "choices": [
+      "Any character that is not 'A'",
+      "Only the character 'D'",
+      "Only characters other than 'A' and 'D' at odd positions",
+      "Every character at an even index"
+    ],
+    "answer": 0,
+    "explanation": "The else branch has no condition, so every non-'A' character is counted toward countD.",
+    "source": {
+      "type": "code",
+      "detail": "line 29-40: if (x[i] == 'A') countA++ else countD++"
+    },
+    "validation": {
+      "method": "code",
+      "status": "needs-review",
+      "reasons": [
+        "734a-anton-and-danik-q5: code-only claim; check it yourself before approving"
+      ],
+      "checked": "2026-11-07"
+    }
+  }
+]

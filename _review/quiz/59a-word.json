@@ -1,0 +1,162 @@
+[
+  {
+    "id": "59a-word-q1",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "What does the program print for the input HoUse?",
+    "choices": [
+      "HOUSE",
+      "house",
+      "HoUse",
+      "hOuSE"
+    ],
+    "answer": 1,
+    "explanation": "There are 2 capitals out of 5 letters; 2 <= 5/2 (= 2), so it converts to lowercase.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "HoUse",
+      "output": "house",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "59a-word-q2",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "What does the program print for the input ViP?",
+    "choices": [
+      "vip",
+      "ViP",
+      "VIP",
+      "Vip"
+    ],
+    "answer": 2,
+    "explanation": "There are 2 capitals out of 3 letters; 3/2 is 1 in integer division, and 2 > 1, so it converts to uppercase.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "ViP",
+      "output": "VIP",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "59a-word-q3",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "With the input aBcD (2 capitals, 2 lowercase), what is printed?",
+    "choices": [
+      "abcd",
+      "ABCD",
+      "aBcD",
+      "AbCd"
+    ],
+    "answer": 0,
+    "explanation": "The capital count 2 is <= 4/2, so the tie goes to lowercase.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "aBcD",
+      "output": "abcd",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "59a-word-q4",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "What is printed for the input ABc?",
+    "choices": [
+      "abc",
+      "ABc",
+      "aBC",
+      "ABC"
+    ],
+    "answer": 3,
+    "explanation": "2 capitals, size/2 = 1, so 2 <= 1 is false and the word is made uppercase.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "ABc",
+      "output": "ABC",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "59a-word-q5",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "reasoning",
+    "tags": [
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "Why is the number of capitals counted in a separate loop before any letter is changed?",
+    "choices": [
+      "The decision needs the full count first, and changing letters while counting would distort it",
+      "The loop must run twice to avoid a compile error",
+      "Capitals cannot be counted and compared in one pass in C++",
+      "Lowercase letters need a separate pass to be counted"
+    ],
+    "answer": 0,
+    "explanation": "The choice between lower and upper depends on the total number of capitals, which is only known after the whole string is scanned.",
+    "source": {
+      "type": "code",
+      "detail": "line 18-27: counting loop, then if (total <= s.size() / 2)"
+    },
+    "validation": {
+      "method": "code",
+      "status": "needs-review",
+      "reasons": [
+        "59a-word-q5: code-only claim; check it yourself before approving"
+      ],
+      "checked": "2026-11-07"
+    }
+  }
+]

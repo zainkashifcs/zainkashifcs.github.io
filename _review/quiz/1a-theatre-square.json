@@ -1,0 +1,66 @@
+[
+  {
+    "id": "1a-theatre-square-q5",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "implementation",
+      "math"
+    ],
+    "code": false,
+    "question": "The input is 7 5 2. What does the solution print?",
+    "choices": [
+      "12",
+      "10",
+      "15",
+      "8"
+    ],
+    "answer": 0,
+    "explanation": "Rounded up, 7/2 gives 4 tiles and 5/2 gives 3 tiles, so 4 x 3 = 12.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "7 5 2",
+      "output": "12",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  },
+  {
+    "id": "1a-theatre-square-q6",
+    "status": "draft",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "implementation",
+      "math"
+    ],
+    "code": false,
+    "question": "The input is 1 1 2 (the tile is larger than the square). What does the solution print?",
+    "choices": [
+      "1",
+      "0",
+      "2",
+      "4"
+    ],
+    "answer": 0,
+    "explanation": "Each side is 1 % 2 != 0, so 1 / 2 + 1 = 1 tile; 1 x 1 = 1.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1 1 2",
+      "output": "1",
+      "status": "passed",
+      "reasons": [],
+      "checked": "2026-11-07"
+    }
+  }
+]
