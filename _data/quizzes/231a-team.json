@@ -1,0 +1,125 @@
+[
+  {
+    "id": "231a-team-q1",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "brute-force"
+    ],
+    "code": false,
+    "question": "Input is n = 3 followed by the rows 1 1 0, 1 0 0 and 0 1 1. What does the solution print?",
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "0"
+    ],
+    "answer": 1,
+    "explanation": "The row sums are 2, 1 and 2, and two of them are >= 2, so count ends at 2.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "3\n1 1 0\n1 0 0\n0 1 1",
+      "output": "2",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "231a-team-q2",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "brute-force"
+    ],
+    "code": false,
+    "question": "Input is n = 2 followed by the rows 0 0 1 and 1 1 1. What does the solution print?",
+    "choices": [
+      "0",
+      "1",
+      "2",
+      "3"
+    ],
+    "answer": 1,
+    "explanation": "Only the second row has a sum >= 2 (it is 3), so count is 1.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "2\n0 0 1\n1 1 1",
+      "output": "1",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "231a-team-q3",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "brute-force"
+    ],
+    "code": false,
+    "question": "Input is n = 1 and the single row 0 0 0. What does the solution print?",
+    "choices": [
+      "0",
+      "1",
+      "-1",
+      "Nothing is printed"
+    ],
+    "answer": 0,
+    "explanation": "The sum 0 is below 2, so count is never incremented and the initial 0 is printed.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1\n0 0 0",
+      "output": "0",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "231a-team-q5",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "complexity",
+    "tags": [
+      "brute-force"
+    ],
+    "code": false,
+    "question": "What is the time complexity of the solution in n?",
+    "choices": [
+      "O(1)",
+      "O(n)",
+      "O(n log n)",
+      "O(n^2)"
+    ],
+    "answer": 1,
+    "explanation": "It does a constant amount of work for each of the n rows.",
+    "source": {
+      "type": "note",
+      "section": "Lesson",
+      "quote": "Complexity: O(n)"
+    },
+    "validation": {
+      "method": "note",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  }
+]

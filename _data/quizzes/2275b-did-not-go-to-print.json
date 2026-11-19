@@ -1,0 +1,130 @@
+[
+  {
+    "id": "2275b-did-not-go-to-print-q1",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "data-structures",
+      "implementation"
+    ],
+    "code": false,
+    "question": "One test case has n = 4 and the string 1122. What does the solution print?",
+    "choices": [
+      "2 3 4",
+      "2 1 2",
+      "4 1 2 3 4",
+      "2 2 4"
+    ],
+    "answer": 0,
+    "explanation": "Each 2 pops the latest 1 and records its own position (3 and 4); the pile is then empty.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1\n4\n1122",
+      "output": "2\n3 4",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "2275b-did-not-go-to-print-q2",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "data-structures",
+      "implementation"
+    ],
+    "code": false,
+    "question": "One test case has n = 3 and the string 212. What does the solution print?",
+    "choices": [
+      "1 3",
+      "2 1 3",
+      "1 1",
+      "3 1 2 3"
+    ],
+    "answer": 0,
+    "explanation": "The first 2 finds the pile empty and is ignored; 1 is pushed at position 2; the last 2 pops it and records position 3.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1\n3\n212",
+      "output": "1\n3",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "2275b-did-not-go-to-print-q3",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "data-structures",
+      "implementation"
+    ],
+    "code": false,
+    "question": "One test case has n = 3 and the string 111. What does the solution print?",
+    "choices": [
+      "3 1 2 3",
+      "0",
+      "1 3",
+      "3 3 2 1"
+    ],
+    "answer": 0,
+    "explanation": "No 2 ever pops the pile, so all three positions are appended from the pile and printed sorted.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1\n3\n111",
+      "output": "3\n1 2 3",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "2275b-did-not-go-to-print-q4",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "data-structures",
+      "implementation"
+    ],
+    "code": false,
+    "question": "One test case has n = 2 and the string 21. What does the solution print?",
+    "choices": [
+      "1 2",
+      "1 1",
+      "2 1 2",
+      "0"
+    ],
+    "answer": 0,
+    "explanation": "The 2 at position 1 is ignored because the pile is empty; the 1 at position 2 stays in the pile and is printed.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1\n2\n21",
+      "output": "1\n2",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  }
+]

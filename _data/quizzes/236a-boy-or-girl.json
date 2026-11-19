@@ -1,0 +1,101 @@
+[
+  {
+    "id": "236a-boy-or-girl-q1",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "brute-force",
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "What does the program print for the username wjmzbmr?",
+    "choices": [
+      "CHAT WITH HER!",
+      "IGNORE HIM!",
+      "It prints 6",
+      "Nothing"
+    ],
+    "answer": 0,
+    "explanation": "The distinct letters are w, j, m, z, b, r, which is 6 (even), so it prints CHAT WITH HER!.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "wjmzbmr",
+      "output": "CHAT WITH HER!",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "236a-boy-or-girl-q2",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "brute-force",
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "What does the program print for xiaodao?",
+    "choices": [
+      "CHAT WITH HER!",
+      "IGNORE HIM!",
+      "It prints 5",
+      "Nothing"
+    ],
+    "answer": 1,
+    "explanation": "The distinct letters are x, i, a, o, d, which is 5 (odd), so it prints IGNORE HIM!.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "xiaodao",
+      "output": "IGNORE HIM!",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "236a-boy-or-girl-q3",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "brute-force",
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "What does the program print for the one-letter username a?",
+    "choices": [
+      "CHAT WITH HER!",
+      "IGNORE HIM!",
+      "It prints 1",
+      "Nothing"
+    ],
+    "answer": 1,
+    "explanation": "count starts at 1 and the loop does not run, so 1 is odd and IGNORE HIM! is printed.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "a",
+      "output": "IGNORE HIM!",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  }
+]

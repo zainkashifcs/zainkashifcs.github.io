@@ -1,0 +1,126 @@
+[
+  {
+    "id": "677a-vanya-and-fence-q1",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "implementation"
+    ],
+    "code": false,
+    "question": "The program reads n and h, then n heights. What does it print for this input?\n3 7\n4 8 7",
+    "choices": [
+      "4",
+      "3",
+      "5",
+      "6"
+    ],
+    "answer": 0,
+    "explanation": "Only 8 exceeds 7 and adds 2; the others add 1 each, giving 1 + 2 + 1.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "3 7\n4 8 7",
+      "output": "4",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "677a-vanya-and-fence-q2",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "implementation"
+    ],
+    "code": false,
+    "question": "What is printed for this input, where every height equals h?\n2 5\n5 5",
+    "choices": [
+      "4",
+      "3",
+      "2",
+      "1"
+    ],
+    "answer": 2,
+    "explanation": "The test is a > h, so equal heights count 1 each.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "2 5\n5 5",
+      "output": "2",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "677a-vanya-and-fence-q3",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "implementation"
+    ],
+    "code": false,
+    "question": "What is printed for this input?\n4 1\n1 2 3 1",
+    "choices": [
+      "4",
+      "6",
+      "5",
+      "8"
+    ],
+    "answer": 1,
+    "explanation": "Heights 2 and 3 exceed 1 and add 2 each; the two 1s add 1 each, giving 6.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "4 1\n1 2 3 1",
+      "output": "6",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "677a-vanya-and-fence-q4",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "implementation"
+    ],
+    "code": false,
+    "question": "What is printed for this input?\n5 3\n1 2 3 4 5",
+    "choices": [
+      "5",
+      "6",
+      "10",
+      "7"
+    ],
+    "answer": 3,
+    "explanation": "Heights 4 and 5 add 2 each and the other three add 1 each, giving 7.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "5 3\n1 2 3 4 5",
+      "output": "7",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  }
+]

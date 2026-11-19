@@ -1,0 +1,129 @@
+[
+  {
+    "id": "4c-registration-system-q1",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "data-structures",
+      "implementation"
+    ],
+    "code": false,
+    "question": "The requests are abacaba, acaba, abacaba, acab. What does the solution print?",
+    "choices": [
+      "OK OK abacaba1 OK",
+      "OK OK OK OK",
+      "OK OK abacaba2 OK",
+      "OK OK abacaba1 acab1"
+    ],
+    "answer": 0,
+    "explanation": "Only the repeated abacaba gets a suffix, and the first repeat gets 1.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "4\nabacaba\nacaba\nabacaba\nacab",
+      "output": "OK\nOK\nabacaba1\nOK",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "4c-registration-system-q2",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "data-structures",
+      "implementation"
+    ],
+    "code": false,
+    "question": "The requests are bob, bob, bob. What does the solution print?",
+    "choices": [
+      "OK bob1 bob2",
+      "OK bob2 bob3",
+      "OK OK OK",
+      "bob1 bob2 bob3"
+    ],
+    "answer": 0,
+    "explanation": "The counter is printed before it is incremented: 0 gives OK, then 1, then 2.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "3\nbob\nbob\nbob",
+      "output": "OK\nbob1\nbob2",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "4c-registration-system-q3",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "data-structures",
+      "implementation"
+    ],
+    "code": false,
+    "question": "The requests are a, b, a, a, b. What does the solution print?",
+    "choices": [
+      "OK OK a1 a2 b1",
+      "OK OK a1 a1 b1",
+      "OK OK a1 a2 b2",
+      "OK OK a1 a2 OK"
+    ],
+    "answer": 0,
+    "explanation": "Each name has its own counter: a is seen three times (OK, a1, a2) and b twice (OK, b1).",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "5\na\nb\na\na\nb",
+      "output": "OK\nOK\na1\na2\nb1",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "4c-registration-system-q5",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "complexity",
+    "tags": [
+      "data-structures",
+      "implementation"
+    ],
+    "code": false,
+    "question": "What is the time complexity of the solution for n requests?",
+    "choices": [
+      "O(n log n)",
+      "O(n)",
+      "O(n^2)",
+      "O(log n)"
+    ],
+    "answer": 0,
+    "explanation": "Each request does a few std::map operations, each logarithmic in the number of stored names (string comparison cost aside).",
+    "source": {
+      "type": "note",
+      "section": "Idea",
+      "quote": "Complexity: O(n log n), from the map operations"
+    },
+    "validation": {
+      "method": "note",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  }
+]
