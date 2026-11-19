@@ -46,6 +46,7 @@ layout: default
   </aside>
   <article class="post-body">
     {{ html }}
+    {%- include related.html pid=pid rating=rating %}
     {%- include problem-nav.html pid=pid %}
   </article>
   {%- include quiz-section.html slug=page.slug pid=pid rating=rating %}

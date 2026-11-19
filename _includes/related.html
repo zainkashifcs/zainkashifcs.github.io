@@ -1,0 +1,36 @@
+{%- comment -%}
+Up to four other problems from the archive (_data/problems.json) that share a topic with this one, built at build time.
+Score: 2 per shared topic, plus 1 when both ratings are known and within 200 of each other. Highest score first, ties by
+problem ID. Nothing is shown when no other problem shares a topic.
+Usage: include related.html pid=PROBLEM_ID rating=RATING
+{%- endcomment -%}
+{%- assign _me = site.data.problems | where: "id", include.pid | first -%}
+{%- if _me and _me.topics.size > 0 -%}
+{%- assign _mr = include.rating | default: _me.rating -%}
+{%- capture _keys -%}
+{%- for x in site.data.problems -%}
+  {%- if x.id == _me.id -%}{%- continue -%}{%- endif -%}
+  {%- assign _shared = "" | split: "" -%}
+  {%- for t in _me.topics -%}{%- if x.topics contains t -%}{%- assign _shared = _shared | push: t -%}{%- endif -%}{%- endfor -%}
+  {%- if _shared.size == 0 -%}{%- continue -%}{%- endif -%}
+  {%- assign _s = _shared.size | times: 2 -%}
+  {%- if _mr and x.rating -%}{%- assign _d = _mr | minus: x.rating | abs -%}{%- if _d <= 200 -%}{%- assign _s = _s | plus: 1 -%}{%- endif -%}{%- endif -%}
+  {%- comment -%} 900 - score, zero-padded, so an ascending string sort puts the highest score first, then the ID. {%- endcomment -%}
+  {{ 900 | minus: _s }}|{{ x.id }}|{{ _shared | join: "," }}~
+{%- endfor -%}
+{%- endcapture -%}
+{%- assign _rel = _keys | split: "~" | sort -%}
+{%- if _rel.size > 0 %}
+<section class="related" aria-labelledby="related-h">
+  <h2 id="related-h">Related problems</h2>
+  <ul class="rel-list">
+  {%- for k in _rel limit: 4 -%}
+    {%- assign _k = k | split: "|" -%}
+    {%- assign x = site.data.problems | where: "id", _k[1] | first -%}
+    {%- assign _ts = _k[2] | split: "," %}
+    <li><a href="{{ x.post | default: x.page | relative_url }}"><span class="rb{% unless x.solved %} open{% endunless %}">{{ x.id | escape }}</span> <span class="rel-name">{{ x.name | escape }}</span>{% if x.rating %} <span class="rk"><span class="vh">rated </span>{{ x.rating }}</span>{% endif %} <span class="rel-why">{% unless x.solved %}Not solved. {% endunless %}Shares {% for t in _ts %}{% assign _lab = t %}{% for g in site.data.topics %}{% assign _f = g.topics | where: "id", t | first %}{% if _f %}{% assign _lab = _f.label %}{% break %}{% endif %}{% endfor %}{{ _lab | escape }}{% unless forloop.last %}{% if forloop.rindex == 2 %} and {% else %}, {% endif %}{% endunless %}{% endfor %}</span></a></li>
+  {%- endfor %}
+  </ul>
+</section>
+{%- endif -%}
+{%- endif -%}

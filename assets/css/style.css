@@ -339,10 +339,6 @@ button.d[aria-pressed="true"] { outline: 2px solid var(--text); outline-offset: 
 .score h2, .score h3 { margin: 0 0 var(--s2); font-size: 1.75rem; }
 .score p { margin: 0 0 var(--s3); color: var(--text-2); }
 .score ul { margin: 0 0 var(--s4); padding-inline-start: 1.1rem; }
-.check-row { display: inline-flex; align-items: center; gap: var(--s2); min-height: 2.5rem; font-size: .9375rem; cursor: pointer; }
-.check-row input { width: 1.1rem; height: 1.1rem; margin: 0; accent-color: var(--accent); }
-.check-row:has(input:disabled) { color: var(--text-2); cursor: not-allowed; }
-.check-row .n { font-size: .8125rem; color: var(--text-2); font-variant-numeric: tabular-nums; }
 .feedback:not([hidden]), .score:not([hidden]) { animation: fade var(--t3) var(--ease); }
 .choice.correct .mark, .choice.wrong .mark { animation: fade var(--t2) var(--ease) both; }
 @keyframes fade { from { opacity: 0; } }
@@ -737,6 +733,53 @@ html.lenis, html.lenis body { height: auto; }
 @media (max-width: 30rem) { .cmdk-help .cmdk-fl > div { grid-template-columns: minmax(0, 1fr); gap: .25rem; } }
 /* third link under the previous/next pair, across the full row */
 .pn .pn-open { grid-column: 1 / -1; }
+
+/* ---------- B3: related problems (problem + post pages) ---------- */
+.related { margin-top: var(--s8); }
+.related h2 { margin-bottom: var(--s3); }
+.rel-list { list-style: none; margin: 0; padding: var(--s1); border-radius: var(--r-card); background: var(--tile); }
+.rel-list li + li { border-top: 1px solid var(--hair); }
+.rel-list a { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr) auto; align-items: baseline; gap: var(--s1) var(--s3); padding: var(--s3) var(--s4); border-radius: var(--r-ctl); color: var(--text); text-decoration: none; transition: background-color var(--t1) var(--ease); }
+.rel-list .rb { justify-self: start; min-width: 0; font-size: .8125rem; }
+.rel-name { font-weight: 600; letter-spacing: -.01em; overflow-wrap: anywhere; }
+.rel-list .rk { font-size: .9375rem; }
+.rel-why { grid-column: 2 / -1; color: var(--text-2); font-size: .875rem; }
+@media (hover: hover) { .rel-list a:hover { background: var(--fill); } .rel-list a:hover .rel-name { color: var(--accent); } }
+@media (max-width: 26rem) { .rel-list a { padding-inline: var(--s3); } }
+
+/* ---------- B3: roadmap quiz accuracy (added by roadmap.js only when this browser has quiz history) ---------- */
+.rm-acc { margin-top: var(--s4); }
+.rm-acc p { margin: 0 0 var(--s2); font-size: .9375rem; font-weight: 600; }
+.rm-acc .muted { font-weight: 400; color: var(--text-2); }
+.rm-acc-bar { display: block; max-width: 20rem; height: .5rem; border: 1px solid var(--field); border-radius: var(--r-pill); background: var(--fill-2); overflow: hidden; }
+.rm-acc-bar i { display: block; height: 100%; border-radius: inherit; background: var(--accent-display); }
+@media (forced-colors: active) { .rm-acc-bar i { background: CanvasText; } }
+
+/* A3: quiz review modes (/quiz/) and keyboard hints on quiz questions. Tokens only. */
+.qmode { margin: var(--s4) 0 var(--s3); padding: 0; border: 0; min-width: 0; }
+.qmode legend { padding: 0; margin-bottom: var(--s2); font-size: .875rem; font-weight: 600; color: var(--text-2); }
+.qmode-seg { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--field); border-radius: var(--r-pill); background: var(--fill); max-width: 100%; }
+.qmode-seg label { position: relative; display: inline-flex; align-items: center; gap: .4rem; min-height: 2.25rem; padding: 0 1rem;
+  border: 1px solid transparent; border-radius: var(--r-pill); font-size: .9375rem; color: var(--text-2); cursor: pointer;
+  transition-property: background-color, color; transition-duration: var(--t1); transition-timing-function: var(--ease); }
+.qmode-seg input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: inherit; }
+.qmode-seg .n { font-size: .8125rem; font-variant-numeric: tabular-nums; }
+.qmode-seg label:has(input:checked) { background: var(--tile); color: var(--text); font-weight: 600; box-shadow: var(--lift); }
+.qmode-seg label:has(input:checked)::before { content: "\2713"; font-size: .8125rem; color: var(--accent); }  /* a mark, not only a surface */
+.qmode-seg label:has(input:focus-visible) { outline: 2px solid var(--focus); outline-offset: 2px; }
+.qmode-seg label:has(input:disabled) { opacity: .55; cursor: not-allowed; }
+@media (hover: hover) { .qmode-seg label:not(:has(input:checked, input:disabled)):hover { background: var(--fill-2); color: var(--text); } }
+@media (forced-colors: active) { .qmode-seg label:has(input:checked) { border-color: Highlight; } }
+@media (max-width: 30rem) { .qmode-seg { display: flex; } .qmode-seg label { flex: 1 1 auto; justify-content: center; gap: .25rem; padding: 0 .5rem; font-size: .8125rem; white-space: nowrap; } }
+@media (max-width: 22rem) { .qmode-seg { border-radius: var(--r-ctl); } .qmode-seg label { flex: 1 1 0; min-width: 0; padding: .35rem .4rem; border-radius: calc(var(--r-ctl) - 3px); white-space: normal; text-align: center; line-height: 1.2; } }
+.qmode .small { margin: var(--s2) 0 0; max-width: 40rem; }
+
+/* Keyboard hint next to "Check answer": only where a keyboard is likely (fine pointer). */
+.q-keys { display: none; font-size: .8125rem; color: var(--text-2); }
+@media (pointer: fine) { .q-keys { display: inline; } }
+.q-keys kbd { display: inline-grid; place-items: center; min-width: 1.35rem; height: 1.35rem; padding: 0 .3rem; border-radius: .35rem;
+  background: var(--fill-2); color: var(--text); font: 500 .75rem var(--sans); }
+.q:focus-visible { outline: 2px solid var(--focus); outline-offset: 6px; border-radius: var(--r-card); }
 
 /* ---------- stats page, activity link and print styles (keep the print block last) ---------- */
 

@@ -42,6 +42,7 @@ build_problems.py. Nothing is generated in his voice. When a write-up is publish
     <h2>History</h2>
     <div class="panel hist">{% include feed.html items=_hist %}</div>
     <p class="provenance">Status and dates come from the practice log, each entry traced to a commit in the solutions repository. The rating and tags are Codeforces' own. {% if html contains "My notes" %}The notes and code above are copied from my solution file as I wrote them. {% endif %}{% if p.solved %}A full write-up has not been written yet.{% else %}This problem is not counted as solved, so there is no write-up or walkthrough.{% endif %}</p>
+    {%- include related.html pid=p.id rating=rating %}
     {%- include problem-nav.html pid=p.id %}
   </article>
   {%- include quiz-section.html slug=p.slug pid=p.id rating=rating %}

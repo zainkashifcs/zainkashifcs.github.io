@@ -4,7 +4,6 @@ permalink: /roadmap/
 description: The route from programming fundamentals to the topics a 1800 Codeforces rating needs, and what I have practised so far.
 ---
 {%- assign R = site.data.roadmap -%}
-{%- comment -%} Approved question tags, flattened once: "slug:kind:tag tag|..." {%- endcomment -%}
 <header class="page-head">
   <h1>Roadmap to {{ R.goal }}</h1>
   <p class="lede">The route from fundamentals to the topics a {{ R.goal }} Codeforces rating needs. Each stage shows what I&rsquo;ve practised so far, straight from the problem archive. Practising a topic is not the same as mastering it.</p>
@@ -14,13 +13,13 @@ description: The route from programming fundamentals to the topics a 1800 Codefo
 {%- for st in R.stages %}
   {%- assign _solved = "" | split: "" -%}{%- assign _posts = 0 -%}
   {%- for p in site.data.problems -%}{%- if p.solved and p.status != "help" -%}{%- for t in st.topics -%}{%- if p.topics contains t -%}{%- assign _solved = _solved | push: p -%}{%- if p.post -%}{%- assign _posts = _posts | plus: 1 -%}{%- endif -%}{%- break -%}{%- endif -%}{%- endfor -%}{%- endif -%}{%- endfor -%}
-  {%- assign _q = 0 -%}
+  {%- assign _q = 0 -%}{%- assign _qids = "" | split: "" -%}
   {%- for f in site.data.quizzes -%}{%- for q in f[1] -%}{%- if q.status == "approved" -%}
-    {%- if st.quiz_kind and q.kind == st.quiz_kind -%}{%- assign _q = _q | plus: 1 -%}{%- else -%}{%- for t in st.topics -%}{%- if q.tags contains t -%}{%- assign _q = _q | plus: 1 -%}{%- break -%}{%- endif -%}{%- endfor -%}{%- endif -%}
+    {%- if st.quiz_kind and q.kind == st.quiz_kind -%}{%- assign _q = _q | plus: 1 -%}{%- assign _qids = _qids | push: q.id -%}{%- else -%}{%- for t in st.topics -%}{%- if q.tags contains t -%}{%- assign _q = _q | plus: 1 -%}{%- assign _qids = _qids | push: q.id -%}{%- break -%}{%- endif -%}{%- endfor -%}{%- endif -%}
   {%- endif -%}{%- endfor -%}{%- endfor -%}
   {%- assign _topics = st.topics | join: "," -%}
   {%- assign _started = false -%}{%- if _solved.size > 0 -%}{%- assign _started = true -%}{%- elsif st.quiz_kind and _q > 0 -%}{%- assign _started = true -%}{%- endif %}
-  <li class="rm-stage{% if _started %} started{% endif %}" id="{{ st.id }}">
+  <li class="rm-stage{% if _started %} started{% endif %}" id="{{ st.id }}"{% if _q > 0 %} data-qids="{{ _qids | join: ' ' }}"{% endif %}>
     <div class="stage-head">
       <span class="stage-n" aria-hidden="true">{{ forloop.index }}</span>
       <div>
@@ -52,3 +51,4 @@ description: The route from programming fundamentals to the topics a 1800 Codefo
   </li>
 {%- endfor %}
 </ol>
+<script src="{{ '/assets/js/roadmap.js' | relative_url }}" defer></script>
