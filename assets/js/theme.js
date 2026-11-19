@@ -1,13 +1,13 @@
-// Theme toggle. First visit follows the OS (CSS media query); a manual choice is stored and wins afterwards.
+// Theme toggle. Dark is the default; a manual choice is stored and wins afterwards.
 // The switch is one cross-fade of the whole page (view transition). Where that is missing, or while it runs, colour
 // transitions are switched off for the swap so no element fades its colours on its own and the page never smears.
 (() => {
   const root = document.documentElement, btn = document.querySelector('.theme-toggle');
   if (!btn) return;
-  const mq = matchMedia('(prefers-color-scheme: dark)'), still = matchMedia('(prefers-reduced-motion: reduce)');
-  const current = () => root.dataset.theme || (mq.matches ? 'dark' : 'light');
+  const still = matchMedia('(prefers-reduced-motion: reduce)');
+  const current = () => root.dataset.theme || 'dark';
   const sync = () => btn.setAttribute('aria-pressed', String(current() === 'dark'));
-  btn.hidden = false; sync(); mq.addEventListener('change', sync);
+  btn.hidden = false; sync();
 
   // Turns transitions off, runs the change, forces a style flush, and restores them after the next frame.
   const withoutTransitions = change => {

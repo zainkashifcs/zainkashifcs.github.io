@@ -12,8 +12,8 @@ sitemap: false
   "start_url": {{ '/' | relative_url | jsonify }},
   "scope": {{ '/' | relative_url | jsonify }},
   "display": "standalone",
-  "background_color": "#f4f5f9",
-  "theme_color": "#0b1530",
+  "background_color": "#09090B",
+  "theme_color": "#09090B",
   "icons": [
     { "src": {{ '/assets/icon-192.png' | relative_url | jsonify }}, "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": {{ '/assets/icon-512.png' | relative_url | jsonify }}, "sizes": "512x512", "type": "image/png", "purpose": "any" },

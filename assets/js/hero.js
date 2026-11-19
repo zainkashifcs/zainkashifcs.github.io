@@ -52,7 +52,7 @@
         for (const b of nodes) if (!depth.has(b) && b.x > W * (narrow.matches ? .5 : .66) && Math.hypot(a.x - b.x, a.y - b.y) < reach) /* the search stays clear of the text column */ { depth.set(b, d + 1); parent.set(b, a); q.push(b); } }
       tree = { depth, parent }; born = t;
     };
-    const wave = (age, k) => smooth(1 - Math.abs(age - .6 - k * .55) / 1.4); // 0..1 glow as the wavefront passes depth k
+    const wave = (age, k) => smooth(1 - Math.abs(age - .6 - k * .55) / .8); // 0..1 glow as the wavefront passes depth k
     return t => {
       for (const a of nodes) {
         const ang = flow(a.x, a.y, t * .6 + a.p) * 1.6;
@@ -74,33 +74,41 @@
       });
       if (t - born > 9) bfs(t);
       const age = t - born;
-      ctx.lineWidth = 1.5;
+      ctx.lineWidth = 1;
       for (const [b, a] of tree.parent) {
         const glow = wave(age, tree.depth.get(b));
-        if (glow > 0 && Math.hypot(a.x - b.x, a.y - b.y) < reach * 1.25) { /* skip edges broken by wrap-around */ ctx.strokeStyle = rgba(col.hi, col.a * glow); ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
+        if (glow > 0 && Math.hypot(a.x - b.x, a.y - b.y) < reach * 1.25) { /* skip edges broken by wrap-around */ ctx.strokeStyle = rgba(col.hi, col.a * .9 * glow); ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
       }
       for (const a of nodes) {
         const k = tree.depth.get(a), lit = k === undefined ? 0 : wave(age, k);
-        ctx.fillStyle = rgba(lit ? col.hi : col.dot, col.a * (.55 + .45 * lit)); ctx.beginPath(); ctx.arc(a.x, a.y, 1.6 + lit * 1.2, 0, 6.2832); ctx.fill();
+        ctx.fillStyle = rgba(lit > .5 ? col.hi : col.dot, col.a * (.55 + .35 * lit)); ctx.beginPath(); ctx.arc(a.x, a.y, 1.5 + lit * .5, 0, 6.2832); ctx.fill();
       }
     };
   };
 
   /* 2. Surface: a slowly evolving function plotted as contour-like profiles, receding towards the top. */
   const mesh = () => {
-    const rows = W < 700 ? 18 : 26, step = W < 700 ? 10 : 12;
+    const rows = W < 700 ? 18 : 26, step = W < 700 ? 10 : 12, hiRow = Math.round(rows * .62);
     return t => {
       ctx.lineWidth = 1;
       for (let i = 0; i < rows; i++) {
         const v = i / (rows - 1), base = H * (.08 + .9 * v ** 1.15), amp = 8 + 34 * v;
-        ctx.strokeStyle = rgba(i === Math.round(rows * .62) ? col.hi : col.line, col.a * (.3 + .6 * v));
-        ctx.beginPath();
-        for (let x = -step; x <= W + step; x += step) {
-          let y = base + amp * (Math.sin(x * .0062 + t * .24 + i * .33) * .62 + Math.sin(x * .0115 - t * .17 + i * .21) * .38);
-          if (P.k > .01) { const dx = x - P.x, dy = base - P.y; y -= P.k * 26 * v * Math.exp(-(dx * dx + dy * dy) / 26000); }
-          x === -step ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-        }
+        const at = x => {
+          const y = base + amp * (Math.sin(x * .0062 + t * .24 + i * .33) * .62 + Math.sin(x * .0115 - t * .17 + i * .21) * .38);
+          if (P.k <= .01) return y;
+          const dx = x - P.x, dy = base - P.y; return y - P.k * 26 * v * Math.exp(-(dx * dx + dy * dy) / 26000);
+        };
+        ctx.strokeStyle = rgba(col.line, col.a * (.3 + .6 * v)); ctx.beginPath();
+        for (let x = -step; x <= W + step; x += step) x === -step ? ctx.moveTo(x, at(x)) : ctx.lineTo(x, at(x));
         ctx.stroke();
+        if (i === hiRow) { // a short amber front runs along one profile, then is gone for a while
+          const x0 = (t * 160) % (W * 2.2) - 160;
+          if (x0 < W) {
+            ctx.strokeStyle = rgba(col.hi, col.a * .9); ctx.beginPath();
+            for (let x = Math.round(x0 / step) * step; x <= x0 + 140; x += step) ctx.lineTo(x, at(x));
+            ctx.stroke();
+          }
+        }
       }
     };
   };
@@ -114,9 +122,9 @@
       for (let y = gap / 2; y < H; y += gap) for (let x = gap / 2; x < W; x += gap) {
         let a = flow(x, y, t) * 1.1, w = 0;
         if (P.k > .01) { const dx = x - P.x, dy = y - P.y; w = P.k * Math.exp(-(dx * dx + dy * dy) / 28000); a += (Math.atan2(dy, dx) + 1.5708 - a) * w; }
-        buckets[w > .5 ? 2 : w > .15 ? 1 : 0].push(x, y, a, len * (1 + .5 * w));
+        buckets[w > .8 ? 2 : w > .15 ? 1 : 0].push(x, y, a, len * (1 + .5 * w));
       }
-      [[col.line, .42, 1], [col.hi, .65, 1], [col.hi, .95, 1.5]].forEach(([c, al, lw], b) => {
+      [[col.line, .42, 1], [col.line, .75, 1], [col.hi, .8, 1]].forEach(([c, al, lw], b) => {
         const L = buckets[b]; if (!L.length) return;
         ctx.strokeStyle = rgba(c, col.a * al); ctx.lineWidth = lw; ctx.beginPath();
         for (let i = 0; i < L.length; i += 4) { const x = L[i], y = L[i + 1], c2 = Math.cos(L[i + 2]) * L[i + 3], s2 = Math.sin(L[i + 2]) * L[i + 3]; ctx.moveTo(x - c2, y - s2); ctx.lineTo(x + c2, y + s2); }
@@ -140,8 +148,8 @@
     const m = fade.getContext('2d'); m.setTransform(dpr, 0, 0, dpr, 0, 0);
     const ramp = (g, stops) => { stops.forEach(([at, a]) => g.addColorStop(at, `rgb(0 0 0 / ${a})`)); return g; };
     if (narrow.matches) { m.fillStyle = ramp(m.createLinearGradient(0, 0, 0, H), [[0, .34], [.6, .26], [1, 0]]); m.fillRect(0, 0, W, H); return; }
-    // the headline is centred: the graph is faint behind it and full strength at both sides
-    m.fillStyle = ramp(m.createLinearGradient(0, 0, W, 0), [[0, 1], [.24, .5], [.5, .1], [.76, .5], [1, 1]]); m.fillRect(0, 0, W, H);
+    // the headline sits in the left column: the scene is faintest behind it and returns towards the right margin
+    m.fillStyle = ramp(m.createLinearGradient(0, 0, W, 0), [[0, .8], [.12, .25], [.3, .1], [.5, .2], [.75, .55], [1, .85]]); m.fillRect(0, 0, W, H);
     m.globalCompositeOperation = 'destination-in';
     m.fillStyle = ramp(m.createLinearGradient(0, 0, 0, H), [[0, 1], [.62, 1], [1, 0]]); m.fillRect(0, 0, W, H);
   };

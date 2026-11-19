@@ -6,6 +6,8 @@ sitemap: false
 // Offline reading. Pages: network first, so an online visit always gets the current HTML; each page that loads is
 // saved, and offline the saved copy (or /offline/) is shown. Assets: cache first inside this build's cache, which is
 // renamed on every Jekyll build, so a new deploy starts a fresh cache and drops the old one.
+// To retire offline support, do NOT delete this file: replace its body with a worker that deletes every 'cp-*' cache and
+// calls self.registration.unregister(), and keep it deployed until visitors have picked it up.
 {% assign VERSION = site.time | date: '%s' | prepend: '?v=' %}
 const CACHE = 'cp-{{ site.time | date: "%s" }}';  // the stylesheet and shared scripts carry the same ?v= (default.html)
 const OFFLINE = {{ '/offline/' | relative_url | jsonify }};

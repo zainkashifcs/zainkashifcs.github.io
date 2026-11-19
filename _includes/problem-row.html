@@ -11,13 +11,13 @@ Usage: include problem-row.html p=problem
 {%- assign _labels = _labels | split: "|" -%}
 {%- capture _hay -%}{{ p.id }} {{ p.name }} {{ p.status_label }} {% if _key == "unsolved" %}sorry not solved unsolved{% endif %} {{ summary }} {{ _labels | join: " " }} {{ p.cf_tags | join: " " }}{%- endcapture -%}
 {%- include rating.html pid=p.id rating=p.rating -%}
-<li data-id="{{ p.id }}" data-date="{{ p.last_date }}" data-rating="{{ p.rating }}" data-topics="{{ p.topics | join: ' ' }}" data-status="{{ _key }}" data-search="{{ _hay | downcase | escape }}">
+<li data-id="{{ p.id }}" data-date="{{ p.last_date }}" data-rating="{{ p.rating }}" data-topics="{{ p.topics | join: ' ' }}" data-status="{{ _key }}"{% if site.data.activity_stats.independent_upsolves contains p.id %} data-upsolve="1"{% endif %} data-search="{{ _hay | downcase | escape }}">
   <a class="row st-{{ _key }}" href="{{ p.post | default: p.page | relative_url }}">
     <span class="pid"><span class="rb">{{ p.id }}</span></span>
     <span class="what"><span class="name">{{ p.name }}</span>
       {%- if _key == "unsolved" %}<span class="nosolve">Sorry, not solved.</span>{% elsif summary != "" %}<span class="summary">{{ summary }}</span>{% endif -%}
       <span class="state">{{ p.status_label }}{% if p.post %}. Write-up{% elsif p.solved %}. No write-up yet{% endif %}</span></span>
-    <span class="topics">{{ _labels | join: ", " }}</span>
+    <span class="topics">{{ _labels | join: " · " }}</span>
     <span class="rating">{% if rating %}<span class="rk t-{{ rank_tier }}">{{ rating }}</span>{% else %}<span class="na">Unrated</span>{% endif %}</span>
     <time datetime="{{ p.last_date }}">{{ p.last_date | date: "%-d %b %Y" }}</time>
   </a>

@@ -55,4 +55,4 @@ description: Practise by topic and difficulty with questions drawn from the publ
     <div class="score" hidden tabindex="-1"><h2></h2><p>Problems worth another look:</p><ul></ul><button class="btn" type="button" data-deal>Try another set</button></div>
   </form>
 </div>
-<script src="{{ '/assets/js/quiz.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/quiz.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>

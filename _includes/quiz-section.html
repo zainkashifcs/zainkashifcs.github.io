@@ -4,7 +4,7 @@ Usage: include quiz-section.html slug="1a-theatre-square" pid="1A" rating=rating
 {%- endcomment -%}
 {%- assign _quiz = site.data.quizzes[include.slug] | where: "status", "approved" -%}
 {%- if _quiz.size > 0 %}
-<section class="check inverse bleed" aria-labelledby="check-h">
+<section class="check bleed" aria-labelledby="check-h">
   <h2 id="check-h">Check your understanding</h2>
   <p class="check-lede">{{ _quiz.size }} question{% if _quiz.size != 1 %}s{% endif %} on {{ include.pid }}. Check each answer to see the explanation and where it comes from.</p>
   <form data-quiz onsubmit="return false">

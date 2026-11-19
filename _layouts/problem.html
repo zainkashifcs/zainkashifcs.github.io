@@ -47,5 +47,5 @@ build_problems.py. Nothing is generated in his voice. When a write-up is publish
   </article>
   {%- include quiz-section.html slug=p.slug pid=p.id rating=rating %}
 </div>
-<script src="{{ '/assets/js/quiz.js' | relative_url }}" defer></script>
-<script src="{{ '/assets/js/post.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/quiz.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+<script src="{{ '/assets/js/post.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>

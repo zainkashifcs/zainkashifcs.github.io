@@ -16,4 +16,4 @@ description: Every recorded day of competitive programming practice, traced to t
   <div class="section-head"><h2 id="log-h">Full log</h2><p>{{ site.data.activity.size }} entries, newest first.</p></div>
   <div class="panel">{% include feed.html %}</div>
 </section>
-<script src="{{ '/assets/js/activity.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/activity.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>

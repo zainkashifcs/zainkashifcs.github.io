@@ -1,7 +1,7 @@
 // Motion layer. Lenis smooths wheel scrolling on every page; the header gains its hairline once the page scrolls.
 // On the homepage GSAP plays the hero entrance once per tab, reveals the bento tiles and section titles as they scroll
 // in, counts the stat numbers up once, fades the hero canvas out as the hero scrolls away, draws the climb chart and
-// replays the activity calendar once in view. Nothing here runs under prefers-reduced-motion (the head
+// replays the activity calendar once in view. The Road to 1800 card tilts toward a fine pointer. Nothing here runs under prefers-reduced-motion (the head
 // script then never adds .motion), and without JS every element stays visible. style.css holds the hero chunks back
 // until .motion-ready is set, with a 2.5 s CSS fallback.
 (() => {
@@ -25,7 +25,7 @@
     if (lenis) lenis.on('scroll', ScrollTrigger.update);
   }
 
-  const EASE = 'expo.out'; // the site's --ease (cubic-bezier(.2,0,0,1)) is close to this
+  const EASE = 'expo.out'; // the site's --ease, cubic-bezier(.16, 1, .3, 1), is this curve
   const mm = gsap.matchMedia();
   mm.add('(prefers-reduced-motion: no-preference)', () => {
     if (firstLookThisTab()) playEntrance(gsap);
@@ -34,7 +34,7 @@
       revealHeads(gsap);
       drawClimb(gsap);
       replayCalendar(gsap);
-      const undo = [countUp(gsap), scrubHero()];
+      const undo = [countUp(gsap), scrubHero(), tilt()];
       const refresh = () => ScrollTrigger.refresh();
       if (document.fonts) document.fonts.ready.then(refresh);
       return () => undo.forEach(fn => fn());
@@ -71,25 +71,26 @@
 
   // Tiles that start below the fold fade up as they arrive. Opacity only, so the content stays in the accessibility
   // tree and in find-in-page. Anything already visible at load is left alone, so nothing above the fold flashes.
+  // 12px rise over 480ms, once, when 12% of the element is in view; 50ms between siblings. Transform and opacity only.
   function revealTiles(g) {
     const below = g.utils.toArray('[data-reveal]').filter(el => el.getBoundingClientRect().top > innerHeight * 0.95);
     if (!below.length) return;
-    g.set(below, { opacity: 0, y: 24 });
+    g.set(below, { opacity: 0, y: 12 });
     ScrollTrigger.batch(below, {
-      start: 'top 92%', once: true, interval: 0.1,
-      onEnter: els => g.to(els, { opacity: 1, y: 0, duration: 0.6, ease: EASE, stagger: 0.08, overwrite: true, clearProps: 'opacity,transform' }),
+      start: 'top 88%', once: true, interval: 0.1,
+      onEnter: els => g.to(els, { opacity: 1, y: 0, duration: 0.48, ease: EASE, stagger: 0.05, overwrite: true, clearProps: 'opacity,transform' }),
     });
   }
 
   // Section titles and their lines rise in one after another as they arrive (same rule as the tiles: opacity and a short
   // rise, only for what starts below the fold). Chips are left alone: they are filter controls, not decoration.
   function revealHeads(g) {
-    const below = g.utils.toArray('.section-title, .section-head > *').filter(el => el.getBoundingClientRect().top > innerHeight * 0.95);
+    const below = g.utils.toArray('.section-head > *').filter(el => el.getBoundingClientRect().top > innerHeight * 0.95);
     if (!below.length) return;
-    g.set(below, { opacity: 0, y: 14 });
+    g.set(below, { opacity: 0, y: 12 });
     ScrollTrigger.batch(below, {
-      start: 'top 92%', once: true, interval: 0.1,
-      onEnter: els => g.to(els, { opacity: 1, y: 0, duration: 0.55, ease: EASE, stagger: 0.07, overwrite: true, clearProps: 'opacity,transform' }),
+      start: 'top 88%', once: true, interval: 0.1,
+      onEnter: els => g.to(els, { opacity: 1, y: 0, duration: 0.48, ease: EASE, stagger: 0.05, overwrite: true, clearProps: 'opacity,transform' }),
     });
   }
 
@@ -98,7 +99,7 @@
   // steady. The goal tile is a target, not a count, so it stays as written.
   function countUp(g) {
     const saved = [];
-    g.utils.toArray('.stat:not(.inverse) dd, .tile-quiz .big').forEach(el => {
+    g.utils.toArray('.stat:not(.stat-goal) dd, .tile-quiz .big').forEach(el => {
       const node = [...el.childNodes].find(n => n.nodeType === 3 && /\d/.test(n.nodeValue));
       const m = node && /^(\s*)(\d+)/.exec(node.nodeValue);
       if (!m) return;
@@ -132,7 +133,7 @@
     return () => { st.kill(); hero.removeAttribute('data-scrub'); hero.style.removeProperty('--hero-out'); };
   }
 
-  // The climb chart: marks scale in, the "hardest solved" line wipes across, the goal line draws. Once, when it arrives.
+  // The climb chart: marks scale in, the "hardest solved" line and its wash wipe across, the goal rule draws. Once, when it arrives.
   function drawClimb(g) {
     const chart = document.querySelector('.ladder-plot');
     if (!chart) return;
@@ -146,6 +147,32 @@
     if (points.length) tl.from(points, { scale: 0, opacity: 0, duration: 0.4, stagger: { amount: 0.6 } }, 0);
     if (best) tl.fromTo(best, { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.9, ease: 'power1.inOut' }, 0.1);
     if (goal) tl.from(goal, { scaleX: 0, transformOrigin: '0% 50%', duration: 0.6 }, 0.3);
+  }
+
+  // The Road to 1800 card leans up to 6 degrees toward a fine pointer and its specular follows; it settles back on leave.
+  // Eased with a 0.12 lerp in rAF, idle when still. Touch, coarse pointers and reduced motion keep it flat.
+  function tilt() {
+    const card = document.querySelector('[data-tilt]');
+    if (!card || !matchMedia('(hover: hover) and (pointer: fine)').matches) return () => {};
+    let x = 0, y = 0, tx = 0, ty = 0, raf = 0;
+    const step = () => {
+      x += (tx - x) * 0.12; y += (ty - y) * 0.12;
+      card.style.transform = `perspective(900px) rotateX(${y.toFixed(2)}deg) rotateY(${x.toFixed(2)}deg)`;
+      raf = Math.abs(tx - x) + Math.abs(ty - y) > 0.01 ? requestAnimationFrame(step) : 0;
+    };
+    const kick = () => { if (!raf) raf = requestAnimationFrame(step); };
+    const move = e => {
+      const r = card.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+      tx = (px - 0.5) * 12; ty = (0.5 - py) * 12;
+      card.style.setProperty('--mx', `${(px * 100).toFixed(1)}%`); card.style.setProperty('--my', `${(py * 100).toFixed(1)}%`);
+      card.classList.add('lit'); kick();
+    };
+    const leave = () => { tx = 0; ty = 0; card.classList.remove('lit'); kick(); };
+    card.addEventListener('pointermove', move); card.addEventListener('pointerleave', leave);
+    return () => {
+      card.removeEventListener('pointermove', move); card.removeEventListener('pointerleave', leave);
+      cancelAnimationFrame(raf); card.classList.remove('lit'); card.style.transform = '';
+    };
   }
 
   function replayCalendar(g) {

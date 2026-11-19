@@ -35,8 +35,7 @@
   <meta name="robots" content="noindex">
   {%- endif %}
   <link rel="preload" href="{{ '/assets/fonts/Inter-Variable-latin.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
-  <meta name="theme-color" content="#f4f5f9" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0b1530" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#09090B">
   <script>(function(){var r=document.documentElement;r.classList.add('js');try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')r.dataset.theme=t}catch(e){}
   if(!matchMedia('(prefers-reduced-motion: reduce)').matches)r.classList.add('motion')})()</script>
   {%- comment -%} homepage: pick the hero scene once per tab, never the one shown last time (assets/js/hero.js) {%- endcomment %}
@@ -65,8 +64,8 @@ r.dataset.hero=h})()</script>
         <a href="{{ '/journal/' | relative_url }}"{% if page.url contains '/journal/' %} aria-current="page"{% endif %}>Journal</a>
         <a href="{{ '/about/' | relative_url }}"{% if page.url == '/about/' %} aria-current="page"{% endif %}>About</a>
       </nav>
-      <button class="palette-btn" type="button" data-palette data-src="{{ '/search.json' | relative_url }}" aria-haspopup="dialog" aria-label="Search" hidden><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m12.8 12.8 4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span class="palette-label">Search</span><kbd class="palette-kbd" aria-hidden="true"></kbd></button>
-      <button class="theme-toggle" type="button" aria-pressed="false" hidden><span class="vh">Dark theme</span><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 2a8 8 0 0 1 0 16z" fill="currentColor"/></svg></button>
+      <button class="palette-btn" type="button" data-palette data-src="{{ '/search.json' | relative_url }}" aria-haspopup="dialog" aria-label="Search" hidden><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="m12.8 12.8 4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="palette-label">Search</span><kbd class="palette-kbd" aria-hidden="true"></kbd></button>
+      <button class="theme-toggle" type="button" aria-pressed="false" hidden><span class="vh">Dark theme</span><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 2.75a7.25 7.25 0 0 1 0 14.5z" fill="currentColor"/></svg></button>
     </div>
   </header>
   <main id="main">

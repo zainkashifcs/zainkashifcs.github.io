@@ -1,6 +1,6 @@
 // Two more hero scenes, registered for hero.js as window.HeroScenes.<name> = env => (t) => void.
-// Same language as the other scenes: thin marks drawn from the CSS colour tokens (env.col), faint most of the time, saffron
-// only where something is being decided. Each run is computed once, up front, with the real algorithm; the frame
+// Same language as the other scenes: thin marks drawn from the CSS colour tokens (env.col), faint most of the time, amber
+// only as a thin, brief line where something is being decided. Each run is computed once, up front, with the real algorithm; the frame
 // function only replays it. Nothing is allocated per frame except a few paths. hero.js applies the fade that keeps the
 // centred headline readable.
 (() => {
@@ -10,7 +10,7 @@
   // one run = fade in, play, fade out; the next run is planned the moment this one is gone
   const envelope = (local, cycle) => smooth(local / .9) * (1 - smooth((local - (cycle - 1.1)) / 1.1));
 
-  /* Search grid: breadth-first search on a sparse wall grid. A saffron wavefront leaves the cell nearest the cursor
+  /* Search grid: breadth-first search on a sparse wall grid. A thin amber wavefront leaves the cell nearest the cursor
      (a drifting point without a fine pointer), visited cells keep a faint tint, and the shortest path to a far target
      traces at the end. Then a pause, and a new layout. */
   const grid = env => {
@@ -49,35 +49,40 @@
 
     const draw = local => {
       const { col } = env, g = envelope(local, CYCLE), q = run;
-      const cellsIn = (style, a, b, inset) => { // one path, one fill, for any run of the visit order
+      const dotsIn = (style, a, b) => { // a 1.5px dot at the centre of each cell in a run of the visit order
         if (b <= a) return;
         ctx.fillStyle = style; ctx.beginPath();
-        for (let i = a; i < b; i++) { const c = q.order[i]; ctx.rect((c % cols) * cell + inset, Math.floor(c / cols) * cell + inset, cell - 2 * inset, cell - 2 * inset); }
+        for (let i = a; i < b; i++) { const c = q.order[i]; ctx.rect((c % cols) * cell + cell / 2 - .75, Math.floor(c / cols) * cell + cell / 2 - .75, 1.5, 1.5); }
         ctx.fill();
+      };
+      const ringIn = (style, a, b) => { // hairline outlines: the wavefront, never a filled block
+        if (b <= a) return;
+        ctx.strokeStyle = style; ctx.lineWidth = 1; ctx.beginPath();
+        for (let i = a; i < b; i++) { const c = q.order[i]; ctx.rect((c % cols) * cell + 4.5, Math.floor(c / cols) * cell + 4.5, cell - 9, cell - 9); }
+        ctx.stroke();
       };
       const lim = d => q.upTo[clamp(d, 0, q.maxD + 1)];
       const p = clamp(local / SPREAD, 0, 1), f = Math.floor((q.maxD + 8) * (p * .8 + smooth(p) * .2));
 
-      ctx.fillStyle = rgba(col.line, col.a * g * .3); ctx.beginPath(); // the walls
-      for (const c of q.walls) ctx.rect((c % cols) * cell + 2, Math.floor(c / cols) * cell + 2, cell - 4, cell - 4);
-      ctx.fill();
-      cellsIn(rgba(col.line, col.a * g * .085), 0, lim(f - 6), 1.5);       // visited: a faint tint that stays
-      cellsIn(rgba(col.hi, col.a * g * .3), lim(f - 6), lim(f - 3), 1.5);  // the wavefront and its afterglow
-      cellsIn(rgba(col.hi, col.a * g * .62), lim(f - 3), lim(f - 1), 1.5);
-      cellsIn(rgba(col.hi, col.a * g), lim(f - 1), lim(f + 1), 0);
+      ctx.strokeStyle = rgba(col.line, col.a * g * .45); ctx.lineWidth = 1; ctx.beginPath(); // the walls: small hairline squares
+      for (const c of q.walls) ctx.rect((c % cols) * cell + 6.5, Math.floor(c / cols) * cell + 6.5, cell - 13, cell - 13);
+      ctx.stroke();
+      dotsIn(rgba(col.line, col.a * g * .9), 0, lim(f - 2));         // visited: a dot that stays
+      ringIn(rgba(col.line, col.a * g * .8), lim(f - 2), lim(f - 1)); // just behind the front: zinc
+      ringIn(rgba(col.hi, col.a * g * .9), lim(f - 1), lim(f + 1));   // the front itself: a thin amber ring
 
       if (!q.path.length) return; // a zero-size canvas plans no path
       const [sx, sy] = q.path[0];
-      ctx.fillStyle = rgba(col.hi, col.a * g); ctx.beginPath(); ctx.arc(sx, sy, 3.4, 0, 6.2832); ctx.fill();
-      const tr = sine((local - SPREAD) / TRACE); // the shortest path, drawn at the end
+      ctx.fillStyle = rgba(col.dot, col.a * g); ctx.beginPath(); ctx.arc(sx, sy, 2.2, 0, 6.2832); ctx.fill();
+      const tr = sine((local - SPREAD) / TRACE), lit = local < SPREAD + TRACE + .6; // the shortest path: amber while it draws, then zinc
       if (tr > 0 && q.path.length > 1) {
         const at = tr * (q.path.length - 1), whole = Math.floor(at), frac = at - whole;
-        ctx.strokeStyle = rgba(col.hi, col.a * g); ctx.lineWidth = 2.4; ctx.lineJoin = ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(sx, sy);
+        ctx.strokeStyle = rgba(lit ? col.hi : col.line, col.a * g); ctx.lineWidth = 1.25; ctx.lineJoin = ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(sx, sy);
         for (let i = 1; i <= whole; i++) ctx.lineTo(q.path[i][0], q.path[i][1]);
         if (whole < q.path.length - 1) ctx.lineTo(q.path[whole][0] + (q.path[whole + 1][0] - q.path[whole][0]) * frac, q.path[whole][1] + (q.path[whole + 1][1] - q.path[whole][1]) * frac);
         ctx.stroke();
         const [tx, ty] = q.path[q.path.length - 1];
-        ctx.lineWidth = 1.6; ctx.strokeStyle = rgba(col.hi, col.a * g * tr); ctx.beginPath(); ctx.arc(tx, ty, 3 + 4 * tr, 0, 6.2832); ctx.stroke();
+        ctx.lineWidth = 1; ctx.strokeStyle = rgba(col.line, col.a * g * tr); ctx.beginPath(); ctx.arc(tx, ty, 3 + 4 * tr, 0, 6.2832); ctx.stroke();
       }
     };
     return t => {
@@ -87,7 +92,7 @@
     };
   };
 
-  /* Merge sort: thin bars, a bottom-up merge sort replayed step by step. The two bars being compared flash saffron, the
+  /* Merge sort: thin bars, a bottom-up merge sort replayed step by step. The two bars being compared turn amber, the
      runs merged in the current pass dim, and the cursor gently lifts the bars near it. A sweep confirms the order. */
   const sort = env => {
     const { ctx, rgba, P } = env;
@@ -134,7 +139,7 @@
         cls[i] = finished ? (sweep < i ? 1 : sweep - i < 3 ? 2 : sweep - i < 7 ? 3 : 0) : i === q.a || i === q.b ? 2 : i <= q.k && i > q.k - 4 ? 3 : q.mark[i] ? 1 : 0; // the last few writes trail behind the head
       }
       ctx.lineCap = 'butt';
-      [[col.line, .62, 0, 1], [col.line, .26, 1, 1], [col.hi, 1, 2, 1.7], [col.hi, .55, 3, 1.3]].forEach(([c, al, kind, wide]) => {
+      [[col.line, .62, 0, 1], [col.line, .26, 1, 1], [col.hi, .9, 2, 1], [col.line, .95, 3, 1]].forEach(([c, al, kind, wide]) => {
         ctx.strokeStyle = rgba(c, col.a * g * al); ctx.lineWidth = barW * wide; ctx.beginPath();
         for (let i = 0; i < n; i++) {
           if (cls[i] !== kind) continue;

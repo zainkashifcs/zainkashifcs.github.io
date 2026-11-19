@@ -42,7 +42,7 @@ description: Zain Kashif, a first-year Computer Science student at the Universit
 
   {% include codeforces-profile.html class="about-cf" %}
 
-  <section class="so-far inverse" aria-labelledby="now-h">
+  <section class="so-far" aria-labelledby="now-h">
     <h2 id="now-h">So far</h2>
     <p class="about-facts">{{ solved.size }} of the {{ site.data.problems.size }} problems in the log solved ({{ s.assisted_solves.size }} with help), over {{ s.active_days }} active days. My highest-rated solve is {{ s.highest_rating[1] }} at {{ s.highest_rating[0] }}, and my longest streak is {{ s.longest_streak.days }} days. The log updates itself from my solutions repository.</p>
     <p><a href="https://github.com/zainkashifcs">GitHub</a></p>

@@ -9,18 +9,21 @@
 {%- assign latest = site.posts.first -%}
 <section class="hero" aria-labelledby="intro-h">
   <canvas class="hero-bg" aria-hidden="true"></canvas>
+  <div class="hero-text">
   <h1 id="intro-h">Problems I&rsquo;ve solved, and what each one taught&nbsp;me.</h1>
   <p class="lede">I&rsquo;m Zain, a first-year Computer Science student at the University of Nottingham. This is the record of my climb from beginner towards a 1800 Codeforces rating: every problem I&rsquo;ve attempted, what each one taught me, and the ones I haven&rsquo;t solved yet.</p>
   <p class="cta" data-enter><a class="btn" href="#index">Browse the problems</a><a class="more" href="{{ '/roadmap/' | relative_url }}">Roadmap to 1800</a></p>
+  </div>
+  {% include rating-card.html %}
 </section>
 
 <section class="highlights" aria-labelledby="hl-h">
-  <h2 id="hl-h" class="section-title">The climb so far.</h2>
+  <h2 id="hl-h" class="vh">The climb so far</h2>
   <div class="bento">
-    <div class="tile stat stat-lead" data-reveal><dl><dt>Solved independently</dt><dd>{{ s.independent_total.size }}<small>incl. {{ s.independent_upsolves.size }} upsolve{% if s.independent_upsolves.size != 1 %}s{% endif %}; plus {{ s.assisted_solves.size }} with help</small></dd></dl></div>
+    <div class="tile stat" data-reveal><dl><dt>Solved independently</dt><dd>{{ s.independent_total.size }}<small>incl. {{ s.independent_upsolves.size }} upsolve{% if s.independent_upsolves.size != 1 %}s{% endif %}; plus {{ s.assisted_solves.size }} with help</small></dd></dl></div>
     <div class="tile stat" data-reveal><dl><dt>Active days</dt><dd>{{ s.active_days }}<small>since {{ s.first_day | date: "%-d %b %Y" }}</small></dd></dl></div>
     <div class="tile stat" data-reveal><dl><dt>Longest streak</dt><dd>{{ s.longest_streak.days }}<span class="unit"> day{% if s.longest_streak.days != 1 %}s{% endif %}</span><small>{{ s.longest_streak.start | date: "%-d %b" }} to {{ s.longest_streak.end | date: "%-d %b" }}</small></dd></dl></div>
-    <div class="tile stat inverse" data-reveal><dl><dt>Goal</dt><dd>1800<small>Codeforces rating</small></dd></dl><a class="more" href="{{ '/roadmap/' | relative_url }}">See the roadmap</a></div>
+    <div class="tile stat stat-goal" data-reveal><dl><dt>Goal</dt><dd>{{ site.data.roadmap.goal | default: 1800 }}<small>{% if s.highest_rating %}hardest solved {{ s.highest_rating[0] }} ({{ s.highest_rating[1] }}){% else %}Codeforces rating{% endif %}</small></dd></dl><a class="more" href="{{ '/roadmap/' | relative_url }}">See the roadmap</a></div>
     <div class="tile tile-wide" data-reveal>
       <h3>The climb, problem by problem</h3>
       {% include ladder.html %}
@@ -36,10 +39,10 @@
     </div>
     {%- endif %}
     {%- if quiz_total > 0 %}
-    <div class="tile tile-quiz inverse" data-reveal>
+    <div class="tile tile-quiz" data-reveal>
       <h3>Test your knowledge</h3>
       <p><span class="big">{{ quiz_total }}</span> question{% if quiz_total != 1 %}s{% endif %} from the write-ups, each checked against the notes or by running the solution.</p>
-      <a class="btn" href="{{ '/quiz/' | relative_url }}">Practise by topic</a>
+      <a class="btn quiet" href="{{ '/quiz/' | relative_url }}">Practise by topic</a>
     </div>
     {%- endif %}
   </div>
@@ -49,8 +52,9 @@
   <div class="section-head"><h2 id="index-h">Problem index</h2><p>Every problem in the log, with write-ups where they exist.</p></div>
   <div class="panel">
     <div class="toolbar" hidden>
-      <label>Search<input type="search" placeholder="ID, title, topic, status or lesson"></label>
-      <label>Status<select name="status"><option value="">All problems</option><option value="solved">Solved</option><option value="help">Solved with help</option><option value="unsolved">Not solved</option></select></label>
+      <div class="segmented" role="group" aria-label="Show problems"><button type="button" data-seg="" aria-pressed="true">All</button><button type="button" data-seg="solved" aria-pressed="false">Solved myself</button><button type="button" data-seg="upsolved" aria-pressed="false">Upsolved</button><button type="button" data-seg="help" aria-pressed="false">With help</button><button type="button" data-seg="unsolved" aria-pressed="false">Not solved</button></div>
+      <label class="search-field">Search<input type="search" placeholder="ID, title, topic, status or lesson"></label>
+      <label class="vh">Status<select name="status" tabindex="-1" aria-hidden="true"><option value="">All problems</option><option value="solved">Solved</option><option value="upsolved">Upsolved</option><option value="help">Solved with help</option><option value="unsolved">Not solved</option></select></label>
       <label class="rating-filter">Rating<span class="range"><select name="min" aria-label="Lowest rating"><option value="">Any</option></select><span aria-hidden="true">to</span><select name="max" aria-label="Highest rating"><option value="">Any</option></select></span></label>
       <label>Sort<select name="sort"><option value="newest">Newest</option><option value="rating">Highest rating</option><option value="easiest">Lowest rating</option><option value="id">Problem ID</option></select></label>
       <button class="btn quiet idx-random" type="button" data-random>Random problem</button>
@@ -78,7 +82,7 @@
 </section>
 
 {% if quiz_total > 0 %}
-<section class="section quiz-band inverse bleed" aria-labelledby="quiz-h">
+<section class="section quiz-band bleed" aria-labelledby="quiz-h">
   <div class="quiz-intro"><h2 id="quiz-h">Try a question.</h2>
     <p>Questions drawn from the published write-ups: edge cases, complexity, tracing the code and the reasoning behind each choice.</p>
     <p class="small">{{ quiz_total }} approved question{% if quiz_total != 1 %}s{% endif %} so far.</p>
@@ -99,10 +103,10 @@
   </form>
 </section>
 {% endif %}
-<script src="{{ '/assets/js/lib/gsap.min.js' | relative_url }}" defer></script>
-<script src="{{ '/assets/js/lib/ScrollTrigger.min.js' | relative_url }}" defer></script>
-<script src="{{ '/assets/js/hero-scenes.js' | relative_url }}" defer></script>
-<script src="{{ '/assets/js/hero.js' | relative_url }}" defer></script>
-<script src="{{ '/assets/js/activity.js' | relative_url }}" defer></script>
-<script src="{{ '/assets/js/index.js' | relative_url }}" defer></script>
-<script src="{{ '/assets/js/quiz.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/lib/gsap.min.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+<script src="{{ '/assets/js/lib/ScrollTrigger.min.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+<script src="{{ '/assets/js/hero-scenes.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+<script src="{{ '/assets/js/hero.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+<script src="{{ '/assets/js/activity.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+<script src="{{ '/assets/js/index.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+<script src="{{ '/assets/js/quiz.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>

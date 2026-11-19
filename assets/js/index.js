@@ -2,6 +2,7 @@
 // applies). Topic counts show how many problems each topic would give with the other filters as they are.
 // The optional [data-random] button opens a random problem among the rows the filters show.
 // The view is mirrored in the URL (q, status, min, max, sort, topics) so it can be linked and survives reload.
+// The status tabs (.segmented) drive the visually hidden status select, which stays the single source of truth.
 // Without JS the full list shows and the toolbar stays hidden.
 (() => {
   const box = document.querySelector('[data-index]'); if (!box) return;
@@ -12,6 +13,7 @@
   const q = bar.querySelector('input'), status = bar.querySelector('[name=status]'), sort = bar.querySelector('[name=sort]');
   const lo = bar.querySelector('[name=min]'), hi = bar.querySelector('[name=max]');
   const chips = [...bar.querySelectorAll('.chip')], chosen = new Set();
+  const tabs = [...bar.querySelectorAll('[data-seg]')];
   const rand = bar.querySelector('[data-random]'); // "Random problem": opens one of the rows the filters currently show
   const ratings = [...new Set(rows.map(li => Number(li.dataset.rating)).filter(Boolean))].sort((a, b) => a - b);
   for (const s of [lo, hi]) s.insertAdjacentHTML('beforeend', ratings.map(r => `<option value="${r}">${r}</option>`).join(''));
@@ -33,7 +35,7 @@
     const words = q.value.toLowerCase().trim().split(/\s+/).filter(Boolean), r = Number(li.dataset.rating) || 0;
     const a = Number(lo.value) || 0, b = Number(hi.value) || 0;
     return words.every(w => li.dataset.search.includes(w))
-      && (!status.value || li.dataset.status === status.value)
+      && (!status.value || (status.value === 'upsolved' ? li.dataset.upsolve === '1' : li.dataset.status === status.value))
       && ((!a && !b) || (r > 0 && (!a || r >= a) && (!b || r <= b)))
       && (skipTopics || !chosen.size || topicsOf(li).some(t => chosen.has(t)));
   };
@@ -49,6 +51,7 @@
       c.querySelector('.n').textContent = n;
       c.querySelector('.vh').textContent = n === 1 ? ' problem' : ' problems'; // accessible name: "Greedy 9 problems"
     }
+    for (const b of tabs) b.setAttribute('aria-pressed', String(b.dataset.seg === status.value));
     count.textContent = `Showing ${shown} of ${rows.length} problem${rows.length === 1 ? '' : 's'}`;
     empty.hidden = shown > 0;
     if (rand) rand.disabled = shown === 0;
@@ -78,6 +81,9 @@
     if (on) chosen.add(c.dataset.tag); else chosen.delete(c.dataset.tag);
     smooth(); sync();
   }));
+  tabs.forEach(b => b.addEventListener('click', () => {
+    status.value = b.dataset.seg; status.dispatchEvent(new Event('input'));
+  }));
   if (rand) rand.addEventListener('click', () => {
     const shown = rows.filter(li => !li.hidden);
     if (shown.length) location.assign(shown[Math.floor(Math.random() * shown.length)].querySelector('a.row').href);
@@ -87,4 +93,16 @@
     chips.forEach(c => c.setAttribute('aria-pressed', 'false')); apply(); sync(); q.focus();
   });
   apply();
+
+  // The climb chart's dot tooltips: Esc hides the one being shown (WCAG 1.4.13) until the pointer or focus leaves that dot.
+  const plot = document.querySelector('.ladder-plot');
+  if (plot) {
+    const hush = el => { el.dataset.hush = ''; const off = () => { delete el.dataset.hush; el.removeEventListener('pointerleave', off); el.removeEventListener('blur', off); };
+      el.addEventListener('pointerleave', off); el.addEventListener('blur', off); };
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Escape') return;
+      const on = plot.querySelector('.pt:focus-visible') || plot.querySelector('.pt:hover');
+      if (on) hush(on);
+    });
+  }
 })();

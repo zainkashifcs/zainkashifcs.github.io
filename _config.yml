@@ -29,4 +29,4 @@ defaults:
   - scope: { type: journal }
     values: { layout: journal-entry }
 
-exclude: [README.md, make_post.py, skills-lock.json, Gemfile, Gemfile.lock, vendor]
+exclude: [README.md, DESIGN.md, make_post.py, skills-lock.json, Gemfile, Gemfile.lock, vendor]

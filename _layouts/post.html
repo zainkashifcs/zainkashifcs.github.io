@@ -51,5 +51,5 @@ layout: default
   </article>
   {%- include quiz-section.html slug=page.slug pid=pid rating=rating %}
 </div>
-<script src="{{ '/assets/js/quiz.js' | relative_url }}" defer></script>
-<script src="{{ '/assets/js/post.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/quiz.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+<script src="{{ '/assets/js/post.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
