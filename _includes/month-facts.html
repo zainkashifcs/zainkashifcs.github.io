@@ -4,7 +4,7 @@ attempts that are not solved, active days. Usage: include month-facts.html m=mon
 {%- endcomment -%}
 {%- assign m = include.m -%}
 <dl class="month-facts">
-  <div><dt>Solved</dt><dd>{{ m.solved.size }} problem{% if m.solved.size != 1 %}s{% endif %}</dd></div>
+  <div><dt>Solved</dt><dd>{{ m.solved.size }}<small>problem{% if m.solved.size != 1 %}s{% endif %}</small></dd></div>
   <div><dt>Active days</dt><dd>{{ m.active_days }}</dd></div>
   {%- if m.attempted.size > 0 %}<div><dt>Attempted, not solved</dt><dd>{{ m.attempted.size }}</dd></div>{% endif %}
 </dl>

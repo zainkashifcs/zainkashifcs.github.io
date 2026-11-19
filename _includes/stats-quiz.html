@@ -1,0 +1,33 @@
+{%- comment -%}
+Approved quiz questions per topic (a question counts under every tag it carries), from _data/quizzes/*.json.
+Fewer than three topics: one sentence instead of a chart.
+{%- endcomment -%}
+{%- assign _total = 0 -%}{%- assign _files = 0 -%}{%- assign _max = 0 -%}{%- assign _rows = "" -%}
+{%- for f in site.data.quizzes -%}
+  {%- assign _ok = f[1] | where: "status", "approved" -%}
+  {%- if _ok.size > 0 -%}{%- assign _files = _files | plus: 1 -%}{%- assign _total = _total | plus: _ok.size -%}{%- endif -%}
+{%- endfor -%}
+{%- for g in site.data.topics -%}{%- for t in g.topics -%}
+  {%- assign _n = 0 -%}
+  {%- for f in site.data.quizzes -%}{%- assign _n = f[1] | where: "status", "approved" | where_exp: "q", "q.tags contains t.id" | size | plus: _n -%}{%- endfor -%}
+  {%- if _n > 0 -%}
+    {%- if _n > _max -%}{%- assign _max = _n -%}{%- endif -%}
+    {%- assign _key = 1000 | minus: _n | prepend: "000" | slice: -4, 4 -%}
+    {%- capture _rows -%}{{ _rows }}{{ _key }}~{{ t.label }}~{{ _n }}^{%- endcapture -%}
+  {%- endif -%}
+{%- endfor -%}{%- endfor -%}
+{%- assign _list = _rows | split: "^" | sort -%}
+{%- if _total == 0 %}
+<p class="stats-note">No quiz questions are approved yet.</p>
+{%- elsif _list.size < 3 %}
+<p class="stats-note">{{ _total }} approved question{% if _total != 1 %}s{% endif %} so far, on {{ _files }} problem{% if _files != 1 %}s{% endif %}. Only {{ _list.size }} topic{% if _list.size != 1 %}s have{% else %} has{% endif %} questions, too few to chart. Tagged:
+  {%- for r in _list %}{% assign _f = r | split: "~" %} {{ _f[1] }} {{ _f[2] }}{% unless forloop.last %},{% endunless %}{% endfor %}. A question can carry several tags.</p>
+{%- else %}
+<ol class="stats-bars" style="--max:{{ _max }}">
+  {%- for r in _list -%}{%- assign _f = r | split: "~" -%}
+    {%- assign _a = _f[1] -%}{%- assign _b = _f[2] | plus: 0 -%}
+    {%- include stats-row.html label=_a s=_b h=0 u=0 unit="question" plain=true -%}
+  {%- endfor %}
+</ol>
+<p class="stats-note">{{ _total }} approved question{% if _total != 1 %}s{% endif %} on {{ _files }} problem{% if _files != 1 %}s{% endif %}. A question can carry several tags.</p>
+{%- endif %}

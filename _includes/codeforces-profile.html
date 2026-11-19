@@ -5,13 +5,13 @@ Usage: include codeforces-profile.html
 {%- endcomment -%}
 {%- assign cf = site.data.codeforces -%}
 {%- if cf.status == "ok" %}
-{%- include rating.html rating=cf.rating -%}{%- assign _now = rank_colour -%}
-{%- include rating.html rating=cf.max_rating -%}{%- assign _max = rank_colour -%}
+{%- include rating.html rating=cf.rating -%}{%- assign _now = rank_tier -%}
+{%- include rating.html rating=cf.max_rating -%}{%- assign _max = rank_tier -%}
 <section class="{{ include.class | default: 'section' }} cf-profile" aria-labelledby="cf-h">
   <div class="section-head"><h2 id="cf-h">On Codeforces</h2><a href="https://codeforces.com/profile/{{ cf.handle }}">{{ cf.handle }} on Codeforces</a></div>
   <dl class="cf-facts">
-    <div><dt>Rating</dt><dd>{% if cf.rating %}<i class="rk" style="background:{{ _now }}"></i>{{ cf.rating }}{% else %}<span class="na">Unrated</span>{% endif %}<small>{{ cf.rank | default: "no rank yet" }}</small></dd></div>
-    <div><dt>Highest</dt><dd>{% if cf.max_rating %}<i class="rk" style="background:{{ _max }}"></i>{{ cf.max_rating }}{% else %}<span class="na">None yet</span>{% endif %}<small>{{ cf.max_rank | default: "" }}</small></dd></div>
+    <div><dt>Rating</dt><dd>{% if cf.rating %}<span class="rk t-{{ _now }}">{{ cf.rating }}</span>{% else %}<span class="na">Unrated</span>{% endif %}<small>{{ cf.rank | default: "no rank yet" }}</small></dd></div>
+    <div><dt>Highest</dt><dd>{% if cf.max_rating %}<span class="rk t-{{ _max }}">{{ cf.max_rating }}</span>{% else %}<span class="na">None yet</span>{% endif %}<small>{{ cf.max_rank | default: "" }}</small></dd></div>
     <div><dt>Rated contests</dt><dd>{{ cf.contests }}</dd></div>
     <div><dt>Accepted problems</dt><dd>{{ cf.accepted_count }}</dd></div>
   </dl>

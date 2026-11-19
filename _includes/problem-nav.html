@@ -1,0 +1,33 @@
+{%- comment -%}
+Previous and next problem across the whole archive, ordered by the date each problem was first attempted (_data/problems.json,
+the same data as the problem index). Each link goes to the write-up when there is one, otherwise to the archive page.
+A third link goes to the next problem that is not solved yet, in the same order, wrapping round and skipping this one.
+Usage: include problem-nav.html pid=PROBLEM_ID
+{%- endcomment -%}
+{%- capture _keys -%}{%- for x in site.data.problems -%}{{ x.first_date }}|{{ x.id }}~{%- endfor -%}{%- endcapture -%}
+{%- assign _order = _keys | split: "~" | sort -%}
+{%- assign _prev = nil -%}{%- assign _next = nil -%}
+{%- for k in _order -%}
+  {%- assign _id = k | split: "|" | last -%}
+  {%- if _id == include.pid -%}
+    {%- assign _cur = forloop.index0 -%}
+    {%- assign _i = forloop.index0 | minus: 1 -%}
+    {%- unless forloop.first -%}{%- assign _prev = _order[_i] | split: "|" | last -%}{%- endunless -%}
+    {%- unless forloop.last -%}{%- assign _next = _order[forloop.index] | split: "|" | last -%}{%- endunless -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if _prev or _next -%}
+{%- assign _uo = nil -%}{%- assign _uc = _order | size -%}{%- assign _ul = _uc | minus: 1 -%}
+{%- for _us in (1.._ul) -%}
+  {%- assign _uj = _cur | plus: _us | modulo: _uc -%}
+  {%- assign _ux = _order[_uj] | split: "|" | last -%}
+  {%- assign _up = site.data.problems | where: "id", _ux | first -%}
+  {%- unless _up.solved -%}{%- assign _uo = _up -%}{%- break -%}{%- endunless -%}
+{%- endfor %}
+<nav class="pn" aria-label="Other problems in the archive">
+  {%- if _prev -%}{%- assign _p = site.data.problems | where: "id", _prev | first -%}<a rel="prev" href="{{ _p.post | default: _p.page | relative_url }}"><span>Previous problem</span><b>{{ _p.id | escape }} {{ _p.name | escape }}</b></a>{%- endif -%}
+  {%- if _next -%}{%- assign _n = site.data.problems | where: "id", _next | first -%}<a class="next" rel="next" href="{{ _n.post | default: _n.page | relative_url }}"><span>Next problem</span><b>{{ _n.id | escape }} {{ _n.name | escape }}</b></a>{%- endif -%}
+  {%- if _uo and _uo.id != _next -%}<a class="pn-open" href="{{ _uo.post | default: _uo.page | relative_url }}"><span>Next unsolved problem</span><b>{{ _uo.id | escape }} {{ _uo.name | escape }}</b></a>{%- endif -%}
+</nav>
+{%- endif -%}

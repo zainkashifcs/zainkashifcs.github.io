@@ -18,7 +18,7 @@ Usage: include problem-row.html p=problem
       {%- if _key == "unsolved" %}<span class="nosolve">Sorry, not solved.</span>{% elsif summary != "" %}<span class="summary">{{ summary }}</span>{% endif -%}
       <span class="state">{{ p.status_label }}{% if p.post %}. Write-up{% elsif p.solved %}. No write-up yet{% endif %}</span></span>
     <span class="topics">{{ _labels | join: ", " }}</span>
-    <span class="rating">{% if rating %}<i class="rk" style="background:{{ rank_colour }}"></i>{{ rating }}{% else %}<span class="na">Unrated</span>{% endif %}</span>
+    <span class="rating">{% if rating %}<span class="rk t-{{ rank_tier }}">{{ rating }}</span>{% else %}<span class="na">Unrated</span>{% endif %}</span>
     <time datetime="{{ p.last_date }}">{{ p.last_date | date: "%-d %b %Y" }}</time>
   </a>
 </li>

@@ -10,7 +10,7 @@
     <span class="pid"><span class="rb">{{ pid }}</span></span>
     <span class="what"><span class="name">{{ name }}</span>{% if summary != "" %}<span class="summary">{{ summary }}</span>{% endif %}</span>
     <span class="topics">{{ _p.tags | join: ", " }}</span>
-    <span class="rating">{% if rating %}<i class="rk" style="background:{{ rank_colour }}"></i>{{ rating }}{% else %}<span class="na">Unrated</span>{% endif %}</span>
+    <span class="rating">{% if rating %}<span class="rk t-{{ rank_tier }}">{{ rating }}</span>{% else %}<span class="na">Unrated</span>{% endif %}</span>
     <time datetime="{{ _p.date | date_to_xmlschema }}">{{ _p.date | date: "%-d %b %Y" }}</time>
   </a>
 </li>

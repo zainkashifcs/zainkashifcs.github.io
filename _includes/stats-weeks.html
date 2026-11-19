@@ -1,0 +1,31 @@
+{%- comment -%}
+File-verified log entries per week (Monday to Sunday), from _data/activity.json entries whose verification is "file".
+Dates are read at noon UTC so the week a day falls in does not depend on the build machine's time zone;
+day 0 of the Unix epoch was a Thursday, so (day + 3) / 7 numbers the Monday-start weeks.
+{%- endcomment -%}
+{%- assign _ev = site.data.activity | where: "verification", "file" | sort: "date" -%}
+{%- assign _first = _ev.first.date | append: " 12:00:00 +0000" | date: "%s" | divided_by: 86400 | plus: 3 | divided_by: 7 -%}
+{%- assign _last = _ev.last.date | append: " 12:00:00 +0000" | date: "%s" | divided_by: 86400 | plus: 3 | divided_by: 7 -%}
+{%- capture _wk -%}{%- for e in _ev -%}{{ e.date | append: " 12:00:00 +0000" | date: "%s" | divided_by: 86400 | plus: 3 | divided_by: 7 }} {% endfor -%}{%- endcapture -%}
+{%- assign _wk = _wk | strip | split: " " -%}
+{%- assign _span = _last | minus: _first -%}
+{%- assign _max = 0 -%}{%- assign _cols = "" -%}
+{%- for i in (0.._span) -%}
+  {%- assign _w = _first | plus: i -%}{%- assign _ws = _w | append: "" -%}
+  {%- assign _n = 0 -%}{%- for x in _wk -%}{%- if x == _ws -%}{%- assign _n = _n | plus: 1 -%}{%- endif -%}{%- endfor -%}
+  {%- if _n > _max -%}{%- assign _max = _n -%}{%- endif -%}
+  {%- assign _mon = _w | times: 7 | minus: 3 | times: 86400 | plus: 43200 -%}
+  {%- capture _cols -%}{{ _cols }}{{ _mon | date: "%-d %b" }}~{{ _n }}^{%- endcapture -%}
+{%- endfor -%}
+{%- assign _cols = _cols | split: "^" -%}
+{%- if _cols.size < 3 %}
+<p class="stats-note">The log covers fewer than three weeks so far, too few to chart.</p>
+{%- else %}
+<ol class="stats-cols" style="--max:{{ _max }}">
+  {%- for c in _cols -%}{%- assign _f = c | split: "~" %}
+  <li><span class="vh">Week of {{ _f[0] }}: {{ _f[1] }} entr{% if _f[1] == "1" %}y{% else %}ies{% endif %}.</span>
+    <span class="stats-n" aria-hidden="true">{{ _f[1] }}</span><span class="stats-col" aria-hidden="true" style="--v:{{ _f[1] }}"></span><span class="stats-k" aria-hidden="true">{{ _f[0] }}</span></li>
+  {%- endfor %}
+</ol>
+<p class="stats-note">Each bar is one week starting on the Monday shown. Only entries backed by a solution file are counted; weeks with no entries show as zero.</p>
+{%- endif %}

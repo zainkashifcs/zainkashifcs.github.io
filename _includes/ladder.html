@@ -1,0 +1,50 @@
+{%- comment -%}
+The climb: every rated problem in the archive in the order I started it (left to right), placed by its Codeforces
+rating (bottom 700, top 1900) over the Codeforces rank bands. The line steps up to the hardest problem solved
+independently so far. Built at build time from _data/problems.json; positions are percentages so the figure scales
+without distorting its marks, and the same facts are in the caption and the problem index for screen readers.
+{%- endcomment -%}
+{%- assign _ps = site.data.problems | where_exp: "p", "p.rating != nil" | sort: "first_date" -%}
+{%- assign _n = _ps.size -%}
+{%- assign _best = 0 -%}{%- assign _path = "" -%}{%- assign _marks = "" -%}
+{%- for p in _ps -%}
+  {%- include rating.html pid=p.id rating=p.rating -%}
+  {%- assign _x = forloop.index0 | times: 100.0 | plus: 50.0 | divided_by: _n | round: 2 -%}
+  {%- assign _y = 1900 | minus: rating | times: 100.0 | divided_by: 1200 | round: 2 -%}
+  {%- if p.solved and p.status != "help" -%}{%- assign _kind = "solved" -%}{%- elsif p.solved -%}{%- assign _kind = "help" -%}{%- else -%}{%- assign _kind = "open" -%}{%- endif -%}
+  {%- if _kind == "solved" and rating > _best -%}
+    {%- if _path == "" -%}{%- capture _path -%}M{{ _x }} {{ _y }}{%- endcapture -%}
+    {%- else -%}{%- capture _path -%}{{ _path }} H{{ _x }} V{{ _y }}{%- endcapture -%}{%- endif -%}
+    {%- assign _best = rating -%}
+  {%- endif -%}
+  {%- capture _marks -%}{{ _marks }}<span class="pt {{ _kind }} t-{{ rank_tier }}" style="left:{{ _x }}%;top:{{ _y }}%" title="{{ p.id | escape }} {{ p.name | escape }}: {{ rating }}"></span>{%- endcapture -%}
+{%- endfor -%}
+{%- capture _path -%}{{ _path }} H100{%- endcapture -%}
+<figure class="ladder" data-enter>
+  <div class="ladder-chart" aria-hidden="true">
+    <div class="ladder-plot">
+      <div class="band t-expert" style="top:0;height:25%"></div>
+      <div class="band t-specialist" style="top:25%;height:16.67%"></div>
+      <div class="band t-pupil" style="top:41.67%;height:16.67%"></div>
+      <div class="band t-newbie" style="top:58.33%;height:41.67%"></div>
+      <div class="goal" style="top:8.33%"></div>
+      <svg class="best" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="{{ _path }}"/></svg>
+      {{ _marks }}
+    </div>
+    <ul class="ladder-axis">
+      <li class="goal-label" style="top:8.33%">Goal 1800</li>
+      <li class="t-expert" style="top:19%">Expert</li>
+      <li class="t-specialist" style="top:33.33%">Specialist</li>
+      <li class="t-pupil" style="top:50%">Pupil</li>
+      <li class="t-newbie" style="top:79.17%">Newbie</li>
+    </ul>
+    <p class="ladder-time"><span>{{ _ps.first.first_date | date: "%-d %b" }}</span><span>{{ _ps.last.first_date | date: "%-d %b %Y" }}</span></p>
+  </div>
+  <figcaption>
+    <span class="key"><i class="pt solved"></i>Solved myself</span>
+    <span class="key"><i class="pt help"></i>Solved with help</span>
+    <span class="key"><i class="pt open"></i>Not solved yet</span>
+    <span class="key"><i class="line"></i>Hardest solved myself: {{ _best }}</span>
+    <span class="ladder-note">{{ _n }} problems in the order I started them, placed by Codeforces rating over its rank bands.</span>
+  </figcaption>
+</figure>

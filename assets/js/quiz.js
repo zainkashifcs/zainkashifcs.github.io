@@ -171,6 +171,7 @@
     }
     document.querySelectorAll('[data-deal]').forEach(b => b.addEventListener('click', deal));
     if (bank.length) deal();
+    document.querySelector('.quizpage')?.classList.add('quiz-ready'); // style.css keeps the quiz invisible (but in place) until now
   }
   document.querySelectorAll('[data-quiz]').forEach(enhance);
 })();

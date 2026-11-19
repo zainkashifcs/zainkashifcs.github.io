@@ -20,7 +20,7 @@ description: The route from programming fundamentals to the topics a 1800 Codefo
   {%- endif -%}{%- endfor -%}{%- endfor -%}
   {%- assign _topics = st.topics | join: "," -%}
   {%- assign _started = false -%}{%- if _solved.size > 0 -%}{%- assign _started = true -%}{%- elsif st.quiz_kind and _q > 0 -%}{%- assign _started = true -%}{%- endif %}
-  <li class="stage{% if _started %} started{% endif %}" id="{{ st.id }}">
+  <li class="rm-stage{% if _started %} started{% endif %}" id="{{ st.id }}">
     <div class="stage-head">
       <span class="stage-n" aria-hidden="true">{{ forloop.index }}</span>
       <div>

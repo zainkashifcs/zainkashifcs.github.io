@@ -5,7 +5,7 @@ description: How Zain's Blog handles information when you visit.
 ---
 # Privacy Policy
 
-**Last updated: 7 November 2026**
+**Last updated: 18 November 2026**
 
 Welcome to Zain's Blog. Your privacy matters, and this policy explains how information is handled when you visit this website.
 
@@ -19,7 +19,7 @@ Any search, filtering or quiz interactions are designed to run within your brows
 
 This website does not intentionally use advertising or analytics cookies, or third-party visitor-tracking services. Its fonts and scripts are served from this website itself, so browsing it does not load content from other services.
 
-Your theme preference may be saved locally in your browser to remember your preferred appearance. The homepage also remembers which of its three background animations it last showed you, so that your next visit can show a different one. If you use the quizzes, your answers (right or wrong, and the date) are remembered so you can review your mistakes; you can clear them at any time from the quiz page. All of this stays in your browser and is not sent anywhere.
+Your theme preference may be saved locally in your browser to remember your preferred appearance. The homepage also notes, for the current browser tab only, which background animation it is showing and that its opening animation has played, and it remembers in your browser which background animation it showed last time, so that your next visit shows a different one. If you use the quizzes, your answers (right or wrong, and the date) are remembered so you can review your mistakes; you can clear them at any time from the quiz page. All of this stays in your browser and is not sent anywhere.
 
 ## 3. Website Hosting
 

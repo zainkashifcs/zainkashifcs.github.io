@@ -21,8 +21,8 @@ description: Software I have built alongside competitive programming.
       {%- if pr.learned != "" %}<div><dt>What I learned</dt><dd>{{ pr.learned }}</dd></div>{% endif %}
     </dl>
     <p class="links">
-      {%- if pr.repo != "" %}<a href="{{ pr.repo }}">Repository on GitHub</a>{% endif -%}
-      {%- if pr.demo != "" %}<a href="{{ pr.demo }}">Live site</a>{% endif -%}
+      {%- if pr.repo != "" %}<a class="btn quiet" href="{{ pr.repo }}">Repository on GitHub</a>{% endif -%}
+      {%- if pr.demo != "" %}<a class="btn quiet" href="{{ pr.demo }}">Live site</a>{% endif -%}
     </p>
   </article>
 {%- endfor %}

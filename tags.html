@@ -14,6 +14,7 @@ Topics come from _data/topics.json; a problem belongs to a topic through its wri
     {%- for g in site.data.topics %}{% for t in g.topics %}{% assign _n = site.data.problems | where_exp: "x", "x.topics contains t.id" | size %}{% if _n > 0 %}<li><a href="#{{ t.id }}">{{ t.label }}</a><span>{{ _n }}</span></li>{% endif %}{% endfor %}{% endfor -%}
   </ul>
 </header>
+<div class="tag-groups">
 {%- for g in site.data.topics %}
   {%- for t in g.topics %}
     {%- assign _ps = site.data.problems | where_exp: "x", "x.topics contains t.id" -%}
@@ -28,4 +29,5 @@ Topics come from _data/topics.json; a problem belongs to a topic through its wri
     {%- endif %}
   {%- endfor %}
 {%- endfor %}
+</div>
 <p class="provenance">Badge outlines show status: filled for solved, outlined for solved with help, dashed for not solved.</p>

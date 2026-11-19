@@ -5,8 +5,10 @@ description: Practise by topic and difficulty with questions drawn from the publ
 ---
 {%- assign n = 0 -%}
 <div class="quizpage">
-  <h1>Test your knowledge</h1>
-  <p class="lede">Choose the topics you want to practise, or take a mix of everything. Check each answer to see the explanation and where it comes from.</p>
+  <header class="page-head">
+    <h1>Test your knowledge</h1>
+    <p class="lede">Choose the topics you want to practise, or take a mix of everything. Check each answer to see the explanation and where it comes from.</p>
+  </header>
   <section class="quizfilter" data-filter hidden aria-labelledby="pick-h">
     <h2 id="pick-h" class="vh">Choose what to practise</h2>
     {%- for g in site.data.topics %}

@@ -31,7 +31,7 @@ layout: default
   <aside class="spec" aria-label="Problem details">
     <dl>
       {% if page.link %}<div><dt>Source</dt><dd><a href="{{ page.link }}">Codeforces {{ pid }}</a></dd></div>{% endif %}
-      <div><dt>Rating</dt><dd>{% if rating %}<i class="rk" style="background:{{ rank_colour }}"></i>{{ rating }}{% else %}<span class="na">Unrated</span>{% endif %}</dd></div>
+      <div><dt>Rating</dt><dd>{% if rating %}<span class="rk t-{{ rank_tier }}">{{ rating }}</span>{% else %}<span class="na">Unrated</span>{% endif %}</dd></div>
       {% if page.tags.size > 0 %}<div><dt>Topics</dt><dd>{% include tags.html tags=page.tags %}</dd></div>{% endif %}
       {% assign _solved_on = page.solved | default: _solve.date %}
       {% if _notsolved %}<div><dt>Status</dt><dd>{% if page.status == "attempted" %}Attempted, not solved{% else %}Not solved{% endif %}</dd></div>
@@ -40,18 +40,13 @@ layout: default
       <div><dt>Published</dt><dd><time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%-d %b %Y" }}</time></dd></div>
     </dl>
     <p class="links">
-      {%- if page.link %}<a href="{{ page.link }}">Problem statement</a>{% endif -%}
-      {%- if page.solution != blank %}<a href="{{ site.solutions_repo }}/blob/main/{{ page.solution | uri_escape }}">{% if _notsolved %}Attempt on GitHub{% else %}Solution on GitHub{% endif %}</a>{% endif -%}
+      {%- if page.link %}<a class="btn" href="{{ page.link }}">Problem statement</a>{% endif -%}
+      {%- if page.solution != blank %}<a class="btn quiet" href="{{ site.solutions_repo }}/blob/main/{{ page.solution | uri_escape }}">{% if _notsolved %}Attempt on GitHub{% else %}Solution on GitHub{% endif %}</a>{% endif -%}
     </p>
   </aside>
   <article class="post-body">
     {{ html }}
-    {%- if page.previous or page.next %}
-    <nav class="pn" aria-label="More problems">
-      {%- if page.previous %}<a href="{{ page.previous.url | relative_url }}"><span>Previous</span><b>{{ page.previous.title }}</b></a>{% endif -%}
-      {%- if page.next %}<a class="next" href="{{ page.next.url | relative_url }}"><span>Next</span><b>{{ page.next.title }}</b></a>{% endif -%}
-    </nav>
-    {%- endif %}
+    {%- include problem-nav.html pid=pid %}
   </article>
   {%- include quiz-section.html slug=page.slug pid=pid rating=rating %}
 </div>

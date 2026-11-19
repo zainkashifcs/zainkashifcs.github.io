@@ -1,0 +1,17 @@
+{%- comment -%}
+One bar row of a stats chart. The bar is aria-hidden: the visually hidden sentence is its text equivalent.
+Stacked mode (default): s solved, h solved with help, u not solved; segment kinds differ by fill pattern, not colour.
+Plain mode (plain=true): s is a single count of `unit`s. Usage: include stats-row.html label=x s=n h=n u=n unit="problem"
+{%- endcomment -%}
+{%- assign _t = include.s | plus: include.h | plus: include.u -%}
+<li class="stats-row">
+  <span class="vh">{{ include.label }}: {{ _t }} {{ include.unit }}{% if _t != 1 %}s{% endif %}
+  {%- unless include.plain %} ({{ include.s }} solved{% if include.h > 0 %}, {{ include.h }} solved with help{% endif %}{% if include.u > 0 %}, {{ include.u }} not solved{% endif %}){% endunless %}.</span>
+  <span class="stats-k" aria-hidden="true">{{ include.label }}</span>
+  <span class="stats-track" aria-hidden="true">
+    {%- if include.s > 0 %}<i class="seg solved" style="--v:{{ include.s }}"></i>{% endif -%}
+    {%- if include.h > 0 %}<i class="seg help" style="--v:{{ include.h }}"></i>{% endif -%}
+    {%- if include.u > 0 %}<i class="seg open" style="--v:{{ include.u }}"></i>{% endif -%}
+  </span>
+  <span class="stats-n" aria-hidden="true">{{ _t }}</span>
+</li>

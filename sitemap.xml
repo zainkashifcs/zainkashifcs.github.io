@@ -5,7 +5,7 @@ sitemap: false
 ---
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-{%- for p in site.pages %}{% if p.sitemap == false %}{% continue %}{% endif %}
+{%- for p in site.pages %}{% if p.sitemap == false or p.output_ext != '.html' %}{% continue %}{% endif %}
   <url><loc>{{ p.url | absolute_url }}</loc></url>
 {%- endfor %}
 {%- for p in site.posts %}

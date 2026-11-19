@@ -1,0 +1,31 @@
+{%- comment -%}
+Problems per Codeforces rating, split solved / with help / not solved (same status mapping as problem-row.html:
+"help" is with help, "attempted"/"unsolved" is not solved, everything else counts as solved). Built from _data/problems.json.
+{%- endcomment -%}
+{%- assign _rated = site.data.problems | where_exp: "p", "p.rating != nil" | sort: "rating" -%}
+{%- assign _unrated = site.data.problems.size | minus: _rated.size -%}
+{%- assign _lo = _rated.first.rating | plus: 0 -%}
+{%- assign _hi = _rated.last.rating | plus: 0 -%}
+{%- assign _steps = _hi | minus: _lo | divided_by: 100 -%}
+{%- assign _max = 0 -%}
+{%- for i in (0.._steps) -%}
+  {%- assign _r = i | times: 100 | plus: _lo -%}
+  {%- assign _n = _rated | where_exp: "p", "p.rating == _r" | size -%}
+  {%- if _n > _max -%}{%- assign _max = _n -%}{%- endif -%}
+{%- endfor -%}
+{%- if _steps < 2 %}
+<p class="stats-note">Only {{ _rated.size }} problem{% if _rated.size != 1 %}s have{% else %} has{% endif %} a rating so far, too few to chart.</p>
+{%- else %}
+{% include stats-legend.html %}
+<ol class="stats-bars" style="--max:{{ _max }}">
+  {%- for i in (0.._steps) -%}
+    {%- assign _r = i | times: 100 | plus: _lo -%}
+    {%- assign _here = _rated | where_exp: "p", "p.rating == _r" -%}
+    {%- assign _h = _here | where: "status", "help" | size -%}
+    {%- assign _u1 = _here | where: "status", "attempted" | size -%}{%- assign _u2 = _here | where: "status", "unsolved" | size -%}{%- assign _u = _u1 | plus: _u2 -%}
+    {%- assign _s = _here.size | minus: _h | minus: _u -%}
+    {%- include stats-row.html label=_r s=_s h=_h u=_u unit="problem" -%}
+  {%- endfor %}
+</ol>
+{%- if _unrated > 0 %}<p class="stats-note">{{ _unrated }} problem{% if _unrated != 1 %}s have{% else %} has{% endif %} no rating and {% if _unrated != 1 %}are{% else %}is{% endif %} left out.</p>{% endif %}
+{%- endif %}
