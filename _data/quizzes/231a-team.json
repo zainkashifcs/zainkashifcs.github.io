@@ -121,5 +121,35 @@
       "checked": "2026-11-07"
     },
     "approved_on": "2026-11-19"
+  },
+  {
+    "id": "231a-team-q4",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "reasoning",
+    "tags": [
+      "brute-force"
+    ],
+    "code": false,
+    "question": "Why does the solution read the three numbers inside the loop?",
+    "choices": [
+      "Every problem has its own three numbers",
+      "It makes the program faster",
+      "cin cannot read before the loop",
+      "So that count resets each time"
+    ],
+    "answer": 0,
+    "explanation": "Each iteration handles a different problem, so its three values must be read on that iteration.",
+    "source": {
+      "type": "note",
+      "section": "Idea",
+      "quote": "Reading goes INSIDE the loop because every problem has its own data."
+    },
+    "validation": {
+      "method": "note",
+      "status": "needs-review",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
   }
 ]

@@ -122,5 +122,35 @@
       "checked": "2026-11-07"
     },
     "approved_on": "2026-11-19"
+  },
+  {
+    "id": "617a-elephant-q5",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "reasoning",
+    "tags": [
+      "math"
+    ],
+    "code": false,
+    "question": "When x % 5 is not 0, why does the solution add 1 to x / 5?",
+    "choices": [
+      "The leftover steps still need one more move",
+      "The elephant moves 6 steps at the end",
+      "Integer division always rounds down by 2",
+      "It avoids printing 0"
+    ],
+    "answer": 0,
+    "explanation": "x / 5 counts only the full 5-step moves, and a leftover of 1 to 4 steps still takes one extra move.",
+    "source": {
+      "type": "note",
+      "section": "Idea",
+      "quote": "it still takes ONE more move to cover"
+    },
+    "validation": {
+      "method": "note",
+      "status": "needs-review",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
   }
 ]

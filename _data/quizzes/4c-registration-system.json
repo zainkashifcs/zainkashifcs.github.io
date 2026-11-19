@@ -125,5 +125,36 @@
       "checked": "2026-11-07"
     },
     "approved_on": "2026-11-19"
+  },
+  {
+    "id": "4c-registration-system-q4",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "data-structure",
+    "tags": [
+      "data-structures",
+      "implementation"
+    ],
+    "code": false,
+    "question": "Why is the map declared before the loop and never reset?",
+    "choices": [
+      "It must remember every earlier request",
+      "It makes map lookups faster",
+      "It avoids reading n twice",
+      "It sorts the names"
+    ],
+    "answer": 0,
+    "explanation": "The answer for a name depends on how many times it was requested earlier, so the counts must persist across iterations.",
+    "source": {
+      "type": "note",
+      "section": "Idea",
+      "quote": "Created BEFORE the loop and never reset: it must REMEMBER every earlier request"
+    },
+    "validation": {
+      "method": "note",
+      "status": "needs-review",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
   }
 ]

@@ -122,5 +122,34 @@
       "checked": "2026-11-07"
     },
     "approved_on": "2026-11-19"
+  },
+  {
+    "id": "467a-george-and-accommodation-q5",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "reasoning",
+    "tags": [
+      "implementation"
+    ],
+    "code": false,
+    "question": "Which condition decides that a room is counted?",
+    "choices": [
+      "q - p >= 2",
+      "q - p >= 1",
+      "q > p * 2",
+      "p + q >= 2"
+    ],
+    "answer": 0,
+    "explanation": "The code computes q - p and counts the room only when that difference is at least 2.",
+    "source": {
+      "type": "code",
+      "detail": "line 27-29: total = q - p; if(total >= 2)"
+    },
+    "validation": {
+      "method": "code",
+      "status": "needs-review",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
   }
 ]

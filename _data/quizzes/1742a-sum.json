@@ -91,5 +91,63 @@
       "checked": "2026-11-07"
     },
     "approved_on": "2026-11-19"
+  },
+  {
+    "id": "1742a-sum-q4",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "reasoning",
+    "tags": [
+      "implementation"
+    ],
+    "code": false,
+    "question": "Why does the condition check all three of a + b == c, a + c == b and b + c == a?",
+    "choices": [
+      "Any one of the three numbers could be the sum of the other two",
+      "The numbers might be given in sorted order",
+      "Integer overflow requires three checks",
+      "Each check handles a different test case"
+    ],
+    "answer": 0,
+    "explanation": "The largest value can be in any position, so each position must be tested as the possible sum.",
+    "source": {
+      "type": "code",
+      "detail": "line 27: if((a + b == c) || (a + c == b) || (b + c == a))"
+    },
+    "validation": {
+      "method": "code",
+      "status": "needs-review",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "1742a-sum-q5",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "complexity",
+    "tags": [
+      "implementation"
+    ],
+    "code": false,
+    "question": "What is the total running time for t test cases?",
+    "choices": [
+      "O(1)",
+      "O(t)",
+      "O(t^2)",
+      "O(t log t)"
+    ],
+    "answer": 1,
+    "explanation": "Each test case does a constant number of reads and comparisons, and the loop runs t times.",
+    "source": {
+      "type": "code",
+      "detail": "lines 21-34: loop over t with O(1) body"
+    },
+    "validation": {
+      "method": "code",
+      "status": "needs-review",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
   }
 ]

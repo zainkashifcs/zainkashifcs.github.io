@@ -125,5 +125,36 @@
       "checked": "2026-11-07"
     },
     "approved_on": "2026-11-19"
+  },
+  {
+    "id": "1399a-remove-smallest-q5",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "reasoning",
+    "tags": [
+      "sorting",
+      "greedy"
+    ],
+    "code": false,
+    "question": "Why does the solution sort the numbers before comparing neighbours?",
+    "choices": [
+      "Close numbers end up next to each other, so only adjacent gaps need checking",
+      "Sorting makes the numbers smaller",
+      "Sorting removes duplicates",
+      "cin needs sorted input"
+    ],
+    "answer": 0,
+    "explanation": "After sorting, the numbers can all be merged into one exactly when no two neighbours differ by more than 1. A gap above 1 between neighbours splits the numbers into two groups that can never be joined, so checking adjacent gaps is enough.",
+    "source": {
+      "type": "note",
+      "section": "Idea",
+      "quote": "close numbers sit next to each other"
+    },
+    "validation": {
+      "method": "note",
+      "status": "needs-review",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
   }
 ]

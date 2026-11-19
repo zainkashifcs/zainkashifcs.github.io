@@ -126,5 +126,35 @@
       "checked": "2026-11-07"
     },
     "approved_on": "2026-11-19"
+  },
+  {
+    "id": "59a-word-q5",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "reasoning",
+    "tags": [
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "Why is the number of capitals counted in a separate loop before any letter is changed?",
+    "choices": [
+      "The decision needs the full count first, and changing letters while counting would distort it",
+      "The loop must run twice to avoid a compile error",
+      "Capitals cannot be counted and compared in one pass in C++",
+      "Lowercase letters need a separate pass to be counted"
+    ],
+    "answer": 0,
+    "explanation": "The choice between lower and upper depends on the total number of capitals, which is only known after the whole string is scanned.",
+    "source": {
+      "type": "code",
+      "detail": "line 18-27: counting loop, then if (total <= s.size() / 2)"
+    },
+    "validation": {
+      "method": "code",
+      "status": "needs-review",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
   }
 ]

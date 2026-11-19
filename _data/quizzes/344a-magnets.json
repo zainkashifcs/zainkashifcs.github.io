@@ -122,5 +122,34 @@
       "checked": "2026-11-07"
     },
     "approved_on": "2026-11-19"
+  },
+  {
+    "id": "344a-magnets-q5",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "reasoning",
+    "tags": [
+      "implementation"
+    ],
+    "code": false,
+    "question": "Why does the loop start at i = 1 instead of i = 0?",
+    "choices": [
+      "The first magnet is already read into prev before the loop, so only the other n - 1 are read inside it",
+      "Index 0 is skipped because the first magnet never forms a group",
+      "Reading from index 0 would overflow the string",
+      "The count must start at 0 and index 0 would make it 1"
+    ],
+    "answer": 0,
+    "explanation": "The first string is read before the loop and group starts at 1, so the loop only handles the remaining n - 1 strings.",
+    "source": {
+      "type": "code",
+      "detail": "line 22-25: std::cin >> prev; int group{1}; for (int i = 1; i < n; i++)"
+    },
+    "validation": {
+      "method": "code",
+      "status": "needs-review",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
   }
 ]

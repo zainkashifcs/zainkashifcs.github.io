@@ -122,5 +122,36 @@
       "checked": "2026-11-07"
     },
     "approved_on": "2026-11-19"
+  },
+  {
+    "id": "405a-gravity-flip-q2",
+    "status": "approved",
+    "origin": "human",
+    "kind": "reasoning",
+    "tags": [
+      "sorting",
+      "implementation"
+    ],
+    "code": false,
+    "question": "What actually changes when gravity flips?",
+    "choices": [
+      "The heights",
+      "Only the order of the heights",
+      "The number of columns",
+      "Nothing"
+    ],
+    "answer": 1,
+    "explanation": "Cubes slide right until they stack up, and the result is the same set of column heights in non-decreasing order. Only the order changes, which is why the solution just sorts.",
+    "source": {
+      "type": "note",
+      "section": "Idea",
+      "quote": "the heights stay the same, only their ORDER changes"
+    },
+    "validation": {
+      "method": "note",
+      "status": "needs-review",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
   }
 ]

@@ -123,5 +123,36 @@
       "checked": "2026-11-07"
     },
     "approved_on": "2026-11-19"
+  },
+  {
+    "id": "160a-twins-q5",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "reasoning",
+    "tags": [
+      "greedy",
+      "sorting"
+    ],
+    "code": false,
+    "question": "Why does the solution sort the coins from biggest to smallest?",
+    "choices": [
+      "The biggest coins get past half of the total in the fewest coins",
+      "It lets the loop skip the break",
+      "Smaller coins cannot be added",
+      "cin returns coins in order"
+    ],
+    "answer": 0,
+    "explanation": "Taking the largest values first grows mine fastest, so the stopping condition is reached with the fewest coins.",
+    "source": {
+      "type": "note",
+      "section": "Idea",
+      "quote": "GREEDY: take the biggest coins first, since they get you over half fastest."
+    },
+    "validation": {
+      "method": "note",
+      "status": "needs-review",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
   }
 ]
