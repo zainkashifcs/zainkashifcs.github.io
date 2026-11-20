@@ -1,6 +1,8 @@
 {%- comment -%} The problem index on the homepage: a filter rail (assets/js/index.js; hidden without JS) beside the ledger of every problem row. {%- endcomment -%}
 <section class="section" id="index" aria-labelledby="index-h" data-index>
-  <div class="section-head"><h2 id="index-h">Problem index</h2><p>Every problem in the log, with write-ups where they exist.</p></div>
+  {%- assign _vault_cracked = site.data.problems | where: "status", "solved" | size -%}
+  {%- assign _vb1 = site.data.problems | where: "status", "attempted" | size -%}{%- assign _vb2 = site.data.problems | where: "status", "unsolved" | size -%}{%- assign _vault_boss = _vb1 | plus: _vb2 %}
+  <div class="section-head vault-head"><h2 id="index-h">The Vault</h2><p class="vault-count glass-chip"><span><b>{{ site.data.problems.size }}</b> archived</span><span><b>{{ _vault_cracked }}</b> cracked</span>{% if _vault_boss > 0 %}<span class="vault-boss"><i aria-hidden="true"></i><b>{{ _vault_boss }}</b> boss fight{% if _vault_boss != 1 %}s{% endif %}</span>{% endif %}</p><p>Every problem in the log, with write-ups where they exist.</p></div>
   <div class="panel idx-ws">
     <div class="toolbar idx-rail" hidden data-lenis-prevent>
       <label class="search-field">Search<input type="search" placeholder="ID, title, topic, status or lesson"></label>
@@ -25,7 +27,7 @@
       </div>
       <label>Sort<select name="sort"><option value="newest">Newest</option><option value="rating">Highest rating</option><option value="easiest">Lowest rating</option><option value="id">Problem ID</option></select></label>
       <div class="idx-acts">
-        <button class="btn quiet idx-random" type="button" data-random>Random problem</button>
+        <button class="btn quiet idx-random" type="button" data-random><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 4.5h2.2c1.4 0 2.2.6 3 1.8l1.6 3.4c.8 1.2 1.6 1.8 3 1.8h1.2M11.5 9.5l2 2-2 2M2.5 11.5h2.2c.8 0 1.4-.2 1.9-.6M9.4 5.1c.5-.4 1.1-.6 1.9-.6h1.2M11.5 2.5l2 2-2 2"/></svg>Random Vault pick</button>
         <button class="btn quiet idx-copy" type="button" data-copy-view>Copy link<span class="vh"> to this view</span></button><span class="vh" role="status" data-copy-say></span>
       </div>
     </div>

@@ -14,6 +14,10 @@ description: Problems by rating and topic, weekly activity and approved quiz que
   <p class="stats-more"><a class="more" href="{{ '/activity/' | relative_url }}">See every entry in the activity log</a></p>
 </section>
 <div class="st-grid">
+<section class="section st-card st-full" aria-labelledby="cst-h">
+  <div class="section-head"><h2 id="cst-h">The Knowledge Constellation</h2><p>Every problem linked to its topics. Drag to pull the network, hover to light a cluster, click a problem to open it.</p></div>
+  <div class="panel" data-reveal>{% include constellation.html %}<p class="stats-note">Each node links to its write-up or problem page; the list under the graph gives the same topics and links as text.</p></div>
+</section>
 <section class="section st-card st-full" aria-labelledby="mx-h">
   <div class="section-head"><h2 id="mx-h">Topic mastery</h2><p>How many problems in each topic I solved myself, weakest topics first.</p></div>
   <div class="panel st-mx" data-reveal>{% include mastery-matrix.html %}</div>

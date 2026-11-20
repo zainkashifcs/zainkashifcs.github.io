@@ -115,9 +115,20 @@
   };
   const apply = () => {
     let shown = 0;
-    for (const li of rows) { const ok = passes(li, false); li.hidden = !ok; shown += ok; }
+    const arriving = new Set();
+    for (const li of rows) { const ok = passes(li, false); if (ok && li.hidden) arriving.add(li); li.hidden = !ok; shown += ok; }
     const k = key[sort.value];
     rows.slice().sort((a, b) => { const x = k(a), y = k(b); return x < y ? -1 : x > y ? 1 : 0; }).forEach(li => list.append(li));
+    // rows that come back cascade in, 20ms apart in their new order (capped, so long lists settle quickly)
+    if (arriving.size && !still.matches) {
+      let i = 0;
+      for (const li of list.children) {
+        if (!arriving.has(li)) continue;
+        li.style.setProperty('--i', Math.min(i++, 12));
+        li.classList.remove('is-arriving'); void li.offsetWidth; li.classList.add('is-arriving');
+        li.addEventListener('animationend', () => li.classList.remove('is-arriving'), { once: true });
+      }
+    }
     for (const c of chips) setCount(c, rows.filter(li => passes(li, true) && topicsOf(li).includes(c.dataset.tag)).length); // accessible name: "Greedy 9 problems"
     for (const b of tabs) b.setAttribute('aria-pressed', String(b.dataset.seg === status.value));
     for (const b of bands) { const [a, z] = bandOf(b); b.setAttribute('aria-pressed', String(lo.value === a && hi.value === z)); }
@@ -163,9 +174,35 @@
   tabs.forEach(b => b.addEventListener('click', () => {
     status.value = b.dataset.seg; status.dispatchEvent(new Event('input'));
   }));
+  // Random Vault pick: a short shuffle across the visible rows (anticipation), then the pick is highlighted, scrolled
+  // into view, focused and announced; Enter (or a click) opens it. Reduced motion skips the shuffle.
+  let shuffling = 0;
   if (rand) rand.addEventListener('click', () => {
     const shown = rows.filter(li => !li.hidden);
-    if (shown.length) location.assign(shown[Math.floor(Math.random() * shown.length)].querySelector('a.row').href);
+    if (!shown.length || shuffling) return;
+    rows.forEach(li => li.classList.remove('is-picked', 'is-shuffle'));
+    const pick = shown[Math.floor(Math.random() * shown.length)];
+    const land = () => {
+      shuffling = 0;
+      rows.forEach(li => li.classList.remove('is-shuffle'));
+      pick.classList.add('is-picked');
+      const a = pick.querySelector('a.row');
+      a.scrollIntoView({ block: 'center', behavior: still.matches ? 'auto' : 'smooth' });
+      a.focus({ preventScroll: true });
+      const say = bar.querySelector('[data-copy-say]');
+      if (say) say.textContent = `Picked ${pick.dataset.id} ${a.querySelector('.name')?.textContent || ''}. Press Enter to open it.`;
+      a.addEventListener('blur', () => pick.classList.remove('is-picked'), { once: true });
+    };
+    if (still.matches || shown.length < 2) return land();
+    rand.classList.add('is-spinning');
+    let hops = 0;
+    const hop = () => {
+      rows.forEach(li => li.classList.remove('is-shuffle'));
+      if (hops++ >= 6) { rand.classList.remove('is-spinning'); return land(); }
+      shown[Math.floor(Math.random() * shown.length)].classList.add('is-shuffle');
+      shuffling = setTimeout(hop, 70 + hops * 12);   // slowing down, like a wheel settling
+    };
+    hop();
   });
   // tell the heatmap the day filter is gone, so it can clear its pressed day
   const dropDate = () => { if (!date) return; date = ''; document.dispatchEvent(new CustomEvent('index:date', { detail: { date: '' } })); };

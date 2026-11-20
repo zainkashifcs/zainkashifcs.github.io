@@ -34,21 +34,11 @@
   {%- if page.noindex %}
   <meta name="robots" content="noindex">
   {%- endif %}
-  <link rel="preload" href="{{ '/assets/fonts/Geist-Variable-latin.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="{{ '/assets/fonts/GeistMono-Variable-latin.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ '/assets/fonts/MonaSans-Variable.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ '/assets/fonts/MonaSansMono-Variable.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
   <meta name="theme-color" content="#09090B">
   <script>(function(){var r=document.documentElement;r.classList.add('js');try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')r.dataset.theme=t}catch(e){}
   if(!matchMedia('(prefers-reduced-motion: reduce)').matches)r.classList.add('motion')})()</script>
-  {%- comment -%} homepage: pick the hero scene once per tab, never the one shown last time (assets/js/hero.js) {%- endcomment %}
-  {%- if page.url == '/' -%}
-<script>(function(){var L=['network','mesh','field','grid','sort'],r=document.documentElement,h,p,q=/[?&]hero=(\w+)/.exec(location.search);
-if(q&&L.indexOf(q[1])>-1){r.dataset.hero=q[1];return}
-try{h=sessionStorage.getItem('hero')}catch(e){}
-if(L.indexOf(h)<0){try{p=localStorage.getItem('hero-last')}catch(e){}
-var c=L.filter(function(x){return x!==p});h=c[Math.floor(Math.random()*c.length)];
-try{sessionStorage.setItem('hero',h);localStorage.setItem('hero-last',h)}catch(e){}}
-r.dataset.hero=h})()</script>
-{%- endif -%}
   {%- comment -%} ?v= is the build time: after a deploy, new pages never pick up a stale cached copy (sw.js caches by full URL) {%- endcomment %}
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v={{ site.time | date: '%s' }}">
 </head>
@@ -56,7 +46,7 @@ r.dataset.hero=h})()</script>
   <a class="skip" href="#main">Skip to content</a>
   <header class="site">
     <div class="frame">
-      <a class="brand" href="{{ '/' | relative_url }}">{% include logo-mark.html %}{{ site.title }}</a>
+      <a class="brand brand-pill glass-chip glass-chip--interactive" href="{{ '/' | relative_url }}">{% include logo-mark.html %}<span class="brand-label"><span>{{ site.title }}</span></span></a>
       <nav aria-label="Main">
         <a href="{{ '/' | relative_url }}#index"{% if page.url == '/' or page.layout == 'post' or page.layout == 'problem' %} aria-current="page"{% endif %}>Problems</a>
         <a href="{{ '/activity/' | relative_url }}"{% if page.url == '/activity/' %} aria-current="page"{% endif %}>Activity</a>
@@ -85,6 +75,7 @@ r.dataset.hero=h})()</script>
   <script src="{{ '/assets/js/palette.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
   <script src="{{ '/assets/js/lib/lenis.min.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
   <script src="{{ '/assets/js/motion.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+  <script src="{{ '/assets/js/motion-engine.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
   <script>if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register({{ '/sw.js' | relative_url | jsonify }}).catch(() => {}));</script>
 </body>
 </html>

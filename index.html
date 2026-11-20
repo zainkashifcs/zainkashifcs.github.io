@@ -6,10 +6,11 @@
   <canvas class="hero-bg" aria-hidden="true"></canvas>
   <div class="hero-text">
   <h1 id="intro-h">Problems I&rsquo;ve solved, and what each one taught&nbsp;me.</h1>
-  <p class="lede">I&rsquo;m Zain, a first-year Computer Science student at the University of Nottingham. This is the record of my climb from beginner towards a 1800 Codeforces rating: every problem I&rsquo;ve attempted, what each one taught me, and the ones I haven&rsquo;t solved yet.</p>
-  <p class="cta" data-enter><a class="btn" href="#index">Browse the problems</a><a class="more" href="{{ '/roadmap/' | relative_url }}">Roadmap to 1800</a></p>
+  {%- assign _cfr = site.data.codeforces.rating %}
+  <p class="lede">First-year Computer Science student at the University of Nottingham. Documenting my climb {% if site.data.codeforces.status == "ok" and _cfr %}from {{ _cfr }} {% endif %}to an {{ site.data.roadmap.goal | default: 1800 }} Codeforces rating.</p>
+  <p class="cta" data-enter><a class="btn" href="#index">Browse problems</a>{% if latest %}<a class="btn quiet" href="{{ latest.url | relative_url }}">Latest write-up</a>{% endif %}</p>
   </div>
-  {% include rating-card.html %}
+  {% include focus-card.html %}
 </section>
 
 <section class="highlights z1" aria-labelledby="hl-h" data-depth>
@@ -46,8 +47,7 @@
   <div class="section-head"><h2 id="feed-h">Recent activity</h2><a class="more" href="{{ '/activity/' | relative_url }}">See all {{ site.data.activity.size }} entries</a></div>
   <div class="panel">{% include feed.html limit=6 short=true %}</div>
 </section>
-<script src="{{ '/assets/js/hero-scenes.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
-<script src="{{ '/assets/js/hero.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+<script src="{{ '/assets/js/hero-animals.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
 <script src="{{ '/assets/js/activity.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
 <script src="{{ '/assets/js/index.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
 <script src="{{ '/assets/js/quiz.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>

@@ -1,0 +1,5 @@
+{
+  "notes": {
+    "1791D": "Maximise f(a) + f(b) across non-empty splits of s, where f counts distinct letters."
+  }
+}

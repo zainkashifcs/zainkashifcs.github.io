@@ -1,0 +1,22 @@
+{
+  "1A": {
+    "demo": "theatre-square",
+    "title": "Tile the plaza",
+    "lede": "Change n, m and a, then step through the rounded-up division. Hatched squares hang over the edge."
+  },
+  "263A": {
+    "demo": "beautiful-matrix",
+    "title": "Walk the 1 to the centre",
+    "lede": "Pick any cell for the 1, then step through the neighbouring row and column swaps."
+  },
+  "405A": {
+    "demo": "gravity-flip",
+    "title": "Flip the gravity",
+    "lede": "Play to tip the box to the right: every layer of cubes slides over, which sorts the columns. Shuffle for new ones."
+  },
+  "1791D": {
+    "demo": "distinct-split",
+    "title": "Scrub the split",
+    "lede": "Not solved yet in the log; this shows the prefix and suffix idea. Lit letters are the distinct ones on each side of the split."
+  }
+}

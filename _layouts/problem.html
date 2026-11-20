@@ -37,6 +37,7 @@ build_problems.py. Nothing is generated in his voice. When a write-up is publish
   </header>
   {%- include reader-rail.html pid=p.id slug=p.slug rating=rating status=_st label=_stl html=html toc=_toc facts=_facts links=_links %}
   <div class="rd-main">
+    {%- include visualizer.html pid=p.id %}
     <article class="post-body">
       {{ html }}
       <h2 id="history">History</h2>

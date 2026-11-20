@@ -46,6 +46,7 @@ layout: default
   </header>
   {%- include reader-rail.html pid=pid slug=page.slug rating=rating status=_st label=_stl html=html toc=html facts=_facts links=_links %}
   <div class="rd-main">
+    {%- include visualizer.html pid=pid %}
     <article class="post-body">
       {{ html }}
       {%- include related.html pid=pid rating=rating %}

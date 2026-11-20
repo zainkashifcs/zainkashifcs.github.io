@@ -2,8 +2,7 @@
 // Reveals: [data-reveal] and section titles fade up each time they enter the viewport, scrolling down or up, and reset
 // only after they have left it completely (plus 48px), so nothing flickers at the edge. The climb chart line and
 // the activity calendar wipe in on every entry. The homepage hero rises in once per tab (CSS, html.intro), its
-// canvas fades as it scrolls away, and the Road to 1800 card tilts toward a fine pointer, drifts a few pixels with the
-// scroll and catches a light along its border. All styling is in style.css (motion section). Nothing here runs under
+// animals canvas fades and drifts as it scrolls away. All styling is in style.css (motion section). Nothing here runs under
 // prefers-reduced-motion (the head script then never adds .motion); without JS, in print or with reduced motion every
 // element stays visible.
 (() => {
@@ -21,7 +20,6 @@
   watchHeader();
   reveal();
   heroScroll();
-  tilt();
   if (document.querySelector('.hero [data-enter]') && firstLookThisTab()) root.classList.add('intro');
   root.classList.add('motion-ready');
 
@@ -62,62 +60,32 @@
     if (!('IntersectionObserver' in window)) { els.forEach(el => el.classList.add('is-in')); return; }
     const set = (el, on) => { if (el.classList.contains('is-in') !== on) el.classList.toggle('is-in', on); }; // no-op writes still restyle
     const enter = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && set(e.target, true)), { threshold: 0.12 });
-    const exit = new IntersectionObserver(es => es.forEach(e => !e.isIntersecting && set(e.target, false)), { rootMargin: '48px 0px', threshold: 0 });
+    // remember which edge an element left by, so it glides back in from that side (from above when scrolling back up)
+    const exit = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) return;
+      e.target.dataset.from = e.boundingClientRect.top < 0 ? 'above' : 'below';
+      set(e.target, false);
+    }), { rootMargin: '48px 0px', threshold: 0 });
     els.forEach(el => { enter.observe(el); exit.observe(el); });
   }
 
-  // One rAF-throttled passive scroll listener for the hero. --hero-out (0 to 1) on .hero fades and drifts the canvas as
-  // the hero scrolls away. On the card: --par (-1 to 1, card centre against viewport centre) drives a ±8px parallax and
-  // --sweep (0 to 1, the card's trip through the viewport) moves the light along its border. Both directions, live.
+  // One rAF-throttled passive scroll listener for the hero: --hero-out (0 to 1) on .hero fades and drifts the canvas as
+  // the hero scrolls away, in both directions. Styles are written only when the value changes.
   function heroScroll() {
-    const hero = document.querySelector('.hero'), card = document.querySelector('[data-tilt]');
-    const bg = hero && hero.querySelector('.hero-bg');
-    if (!bg && !card) return;
+    const hero = document.querySelector('.hero');
+    if (!hero || !hero.querySelector('.hero-bg')) return;
     const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
-    let raf = 0;
-    const last = {};
-    const put = (el, prop, v) => { if (last[prop] !== v) { last[prop] = v; el.style.setProperty(prop, v); } };
-    if (bg) hero.dataset.scrub = '';
+    let raf = 0, last = '';
+    hero.dataset.scrub = '';
     const update = () => {
       raf = 0;
-      if (bg) {
-        const r = hero.getBoundingClientRect();
-        put(hero, '--hero-out', clamp(-r.top / (r.height || 1), 0, 1).toFixed(3));
-      }
-      if (card) {
-        const r = card.getBoundingClientRect();
-        put(card, '--par', clamp((r.top + r.height / 2 - innerHeight / 2) / innerHeight, -1, 1).toFixed(3));
-        put(card, '--sweep', clamp((innerHeight - r.top) / (innerHeight + r.height), 0, 1).toFixed(3));
-      }
+      const r = hero.getBoundingClientRect();
+      const v = clamp(-r.top / (r.height || 1), 0, 1).toFixed(3);
+      if (v !== last) { last = v; hero.style.setProperty('--hero-out', v); }
     };
     const kick = () => { if (!raf) raf = requestAnimationFrame(update); };
     addEventListener('scroll', kick, { passive: true });
     addEventListener('resize', kick, { passive: true });
     update();
-  }
-
-  // The Road to 1800 card leans up to 6 degrees toward a fine pointer and its specular follows; it settles back on leave.
-  // Eased with a 0.12 lerp in rAF, idle when still. Touch and coarse pointers keep it flat. The scroll parallax uses the
-  // separate `translate` property, so the two never fight over the inline transform.
-  function tilt() {
-    const card = document.querySelector('[data-tilt]');
-    if (!card || !matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-    let x = 0, y = 0, tx = 0, ty = 0, raf = 0;
-    const step = () => {
-      x += (tx - x) * 0.12; y += (ty - y) * 0.12;
-      card.style.transform = `perspective(900px) rotateX(${y.toFixed(2)}deg) rotateY(${x.toFixed(2)}deg)`;
-      raf = Math.abs(tx - x) + Math.abs(ty - y) > 0.01 ? requestAnimationFrame(step) : 0;
-    };
-    const kick = () => { if (!raf) raf = requestAnimationFrame(step); };
-    const still = matchMedia('(prefers-reduced-motion: reduce)');
-    still.addEventListener('change', () => { if (still.matches) { cancelAnimationFrame(raf); raf = 0; x = y = tx = ty = 0; card.style.transform = ''; card.classList.remove('lit'); } });
-    card.addEventListener('pointermove', e => {
-      if (still.matches) return;
-      const r = card.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
-      tx = (px - 0.5) * 12; ty = (0.5 - py) * 12;
-      card.style.setProperty('--mx', `${(px * 100).toFixed(1)}%`); card.style.setProperty('--my', `${(py * 100).toFixed(1)}%`);
-      card.classList.add('lit'); kick();
-    });
-    card.addEventListener('pointerleave', () => { tx = 0; ty = 0; card.classList.remove('lit'); kick(); });
   }
 })();

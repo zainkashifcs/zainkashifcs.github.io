@@ -1,0 +1,31 @@
+{%- comment -%}
+Interactive dry-run for a problem, shown when _data/visualizers.json has an entry for its ID (include pid=...).
+The demo itself lives in assets/js/algo-visualizer.js; without JavaScript only the title and a note show.
+{%- endcomment -%}
+{%- assign _viz = site.data.visualizers[include.pid] -%}
+{%- if _viz %}
+<section class="viz" data-visualizer="{{ _viz.demo }}" aria-labelledby="viz-h">
+  <div class="viz-head">
+    <h2 id="viz-h">{{ _viz.title }}</h2>
+    <p>{{ _viz.lede }}</p>
+  </div>
+  <div class="viz-inputs" data-viz-inputs hidden></div>
+  <div class="viz-stage">
+    <div class="viz-canvas" data-viz-canvas></div>
+    <ol class="viz-code" data-viz-code aria-label="Key logic, the current line is marked"></ol>
+  </div>
+  <div class="viz-vars" data-viz-vars aria-label="Variables at this step"></div>
+  <p class="viz-say" data-viz-say aria-live="polite"></p>
+  <div class="viz-controls" data-viz-controls hidden>
+    <button type="button" class="glass-chip glass-chip--interactive viz-btn" data-viz="reset" aria-label="Reset to the first step"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8a4.5 4.5 0 1 0 1.3-3.2M3.5 2.8v2.4h2.4"/></svg></button>
+    <button type="button" class="glass-chip glass-chip--interactive viz-btn" data-viz="back" aria-label="Step back"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5"/></svg></button>
+    <button type="button" class="glass-chip glass-chip--interactive viz-btn viz-play" data-viz="play"><svg viewBox="0 0 16 16" aria-hidden="true" class="i-play"><path d="M5 3.5v9l7-4.5z"/></svg><svg viewBox="0 0 16 16" aria-hidden="true" class="i-pause"><path d="M5 3.5v9M11 3.5v9"/></svg><span data-viz-play-label>Play</span></button>
+    <button type="button" class="glass-chip glass-chip--interactive viz-btn" data-viz="fwd" aria-label="Step forward"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5"/></svg></button>
+    <label class="viz-scrub"><span class="vh">Step</span><input type="range" min="0" max="0" value="0" step="1" data-viz-scrub></label>
+    <span class="viz-count" data-viz-count></span>
+    <div class="viz-speed glass-chip" role="group" aria-label="Playback speed"><button type="button" data-viz-speed="1" aria-pressed="true">1x</button><button type="button" data-viz-speed="2" aria-pressed="false">2x</button></div>
+  </div>
+  <noscript><p class="viz-say">This dry-run needs JavaScript; the write-up below explains the same steps.</p></noscript>
+</section>
+<script src="{{ '/assets/js/algo-visualizer.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+{%- endif %}
