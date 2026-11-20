@@ -608,6 +608,7 @@ pre:focus-visible { outline-offset: 2px; }
 .pill.done { border: 1px solid var(--hair-2); background: var(--fill-2); color: var(--text); }
 .pill.done::before { content: "\2713\00a0"; }
 .roadmap { --rail: 3.5rem; --mk: 2.25rem; list-style: none; max-width: 56rem; margin: 0 auto; padding: 0; }
+.cst-feature { margin-bottom: 2.5rem; }   /* .section has no bottom padding: keep the constellation card off stage 1 */
 .rm-stage { --sp: clamp(1.25rem, 3vw, 2rem); position: relative; margin: 0 0 var(--s4) var(--rail); padding: var(--sp); border-radius: var(--r-tile); background: var(--tile); scroll-margin-top: calc(var(--nav-h) + var(--s5)); }
 .rm-stage:not(:last-child)::before { content: ""; position: absolute; inset-inline-start: calc(var(--mk) / 2 - var(--rail) - 1px); top: calc(var(--sp) + var(--mk) / 2); width: 2px; height: calc(100% + var(--s4)); background: var(--hair); }
 .stage-n { position: absolute; z-index: 1; inset-inline-start: calc(-1 * var(--rail)); top: calc(var(--sp) - .15rem); display: grid; place-items: center; width: var(--mk); height: var(--mk); border: 1.5px dashed var(--field); border-radius: 50%; background: var(--bg); color: var(--text-2); font: 500 .8125rem var(--mono); }
