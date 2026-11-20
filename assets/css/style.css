@@ -1503,7 +1503,7 @@ html:not(.js) .idx-hint { display: none; }
 .viz-code { margin: 0; padding: .4rem 0; list-style: none; border: 1px solid var(--hair); border-radius: var(--r-card); counter-reset: vl; overflow-x: auto; }
 .viz-code li { position: relative; padding: .2rem .8rem .2rem 2.4rem; counter-increment: vl; white-space: pre; }
 .viz-code li::before { content: counter(vl); position: absolute; left: .8rem; font: 500 11px/1.9 var(--mono); color: var(--text-3); font-variant-numeric: tabular-nums; }
-.viz-code code { font: 400 .8125rem/1.7 var(--mono); color: var(--text-2); background: none; padding: 0; border: 0; box-shadow: none; }
+.viz-code code { font: 400 .8125rem/1.7 var(--mono); font-variant-ligatures: none; color: var(--text-2); background: none; padding: 0; border: 0; box-shadow: none; }
 .viz-code li.is-now { background: var(--fill-2); box-shadow: inset 2px 0 0 var(--text); }
 .viz-code li.is-now code { color: var(--text); }
 .viz-say { min-height: 3em; margin: var(--s4) 0 var(--s3); font-size: .9375rem; color: var(--text); font-variant-numeric: tabular-nums; }
