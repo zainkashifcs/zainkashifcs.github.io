@@ -11,11 +11,23 @@ build_problems.py. Nothing is generated in his voice. When a write-up is publish
 {%- include rating.html pid=p.id rating=p.rating -%}
 {%- assign html = content | replace: '<pre class="highlight">', '<pre class="highlight" tabindex="0">' -%}
 {%- assign _fname = p.solution_file | split: "/" | last -%}
-{%- capture _cap -%}<div class="code-caption"><span>{{ _fname }}{% unless p.solved %} (attempt, not counted as solved){% endunless %}</span><button class="copy" type="button" data-copy hidden>Copy code</button></div><div class="language-cpp highlighter-rouge">{%- endcapture -%}
+{%- capture _cap -%}<div class="code-caption"><span class="code-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="code-file">{{ _fname }}{% unless p.solved %} (attempt, not counted as solved){% endunless %}</span><span class="code-lang">C++</span><span class="code-lines" data-lines></span><button class="copy tactile" type="button" data-copy hidden>Copy code</button></div><div class="language-cpp highlighter-rouge">{%- endcapture -%}
 {%- assign html = html | replace: '<div class="language-cpp highlighter-rouge">', _cap -%}
-<div class="post problem">
-  <header class="title">
-    <p class="pid"><span class="rb{% unless p.solved %} open{% endunless %}">{{ p.id }}</span></p>
+{%- if p.solved -%}{%- assign _st = p.status -%}{%- else -%}{%- assign _st = "open" -%}{%- endif -%}
+{%- capture _stl -%}{{ p.status_label }}{% unless p.solved %}, not solved{% endunless %}{%- endcapture -%}
+{%- capture _facts -%}
+      <div><dt>Source</dt><dd><a href="{{ p.link }}">Codeforces {{ p.id }}</a></dd></div>
+      {% if p.cf_tags.size > 0 %}<div class="rd-wide"><dt>Codeforces tags</dt><dd>{{ p.cf_tags | join: ", " }}</dd></div>{% endif %}
+      {%- if site.data.codeforces.status == "ok" and site.data.codeforces.accepted contains p.id %}<div><dt>Codeforces</dt><dd>Accepted on Codeforces</dd></div>{% endif %}
+      <div><dt>Last activity</dt><dd><time datetime="{{ p.last_date }}">{{ p.last_date | date: "%-d %b %Y" }}</time></dd></div>
+{%- endcapture -%}
+{%- capture _links -%}
+      <a class="btn" href="{{ p.link }}">Problem statement</a>
+      {%- if p.solution_url %}<a class="btn quiet" href="{{ p.solution_url }}">{% if p.solved %}Solution on GitHub{% else %}Attempt on GitHub{% endif %}</a>{% endif -%}
+{%- endcapture -%}
+{%- assign _toc = html | append: '<h2 id="history">History</h2>' -%}
+<div class="post problem rd">
+  <header class="title rd-title">
     <h1>{{ p.name | escape }}</h1>
     {%- if p.solved %}
     <p class="summary">{{ p.status_label }}{% if p.solved_date %} on {{ p.solved_date | date: "%-d %B %Y" }}{% endif %}. No write-up yet.</p>
@@ -23,29 +35,18 @@ build_problems.py. Nothing is generated in his voice. When a write-up is publish
     <p class="nosolve big">Sorry, not solved.</p>
     {%- endif %}
   </header>
-  <aside class="spec" aria-label="Problem details">
-    <dl>
-      <div><dt>Source</dt><dd><a href="{{ p.link }}">Codeforces {{ p.id }}</a></dd></div>
-      <div><dt>Rating</dt><dd>{% if rating %}<span class="rk t-{{ rank_tier }}">{{ rating }}</span>{% else %}<span class="na">Unrated</span>{% endif %}</dd></div>
-      {% if p.cf_tags.size > 0 %}<div><dt>Codeforces tags</dt><dd>{{ p.cf_tags | join: ", " }}</dd></div>{% endif %}
-      <div><dt>Status</dt><dd>{{ p.status_label }}{% unless p.solved %}, not solved{% endunless %}</dd></div>
-      {%- if site.data.codeforces.status == "ok" and site.data.codeforces.accepted contains p.id %}<div><dt>Codeforces</dt><dd>Accepted on Codeforces</dd></div>{% endif %}
-      <div><dt>Last activity</dt><dd><time datetime="{{ p.last_date }}">{{ p.last_date | date: "%-d %b %Y" }}</time></dd></div>
-    </dl>
-    <p class="links">
-      <a class="btn" href="{{ p.link }}">Problem statement</a>
-      {%- if p.solution_url %}<a class="btn quiet" href="{{ p.solution_url }}">{% if p.solved %}Solution on GitHub{% else %}Attempt on GitHub{% endif %}</a>{% endif -%}
-    </p>
-  </aside>
-  <article class="post-body">
-    {{ html }}
-    <h2>History</h2>
-    <div class="panel hist">{% include feed.html items=_hist %}</div>
-    <p class="provenance">Status and dates come from the practice log, each entry traced to a commit in the solutions repository. The rating and tags are Codeforces' own. {% if html contains "My notes" %}The notes and code above are copied from my solution file as I wrote them. {% endif %}{% if p.solved %}A full write-up has not been written yet.{% else %}This problem is not counted as solved, so there is no write-up or walkthrough.{% endif %}</p>
-    {%- include related.html pid=p.id rating=rating %}
-    {%- include problem-nav.html pid=p.id %}
-  </article>
-  {%- include quiz-section.html slug=p.slug pid=p.id rating=rating %}
+  {%- include reader-rail.html pid=p.id slug=p.slug rating=rating status=_st label=_stl html=html toc=_toc facts=_facts links=_links %}
+  <div class="rd-main">
+    <article class="post-body">
+      {{ html }}
+      <h2 id="history">History</h2>
+      <div class="panel hist">{% include feed.html items=_hist %}</div>
+      <p class="provenance">Status and dates come from the practice log, each entry traced to a commit in the solutions repository. The rating and tags are Codeforces' own. {% if html contains "My notes" %}The notes and code above are copied from my solution file as I wrote them. {% endif %}{% if p.solved %}A full write-up has not been written yet.{% else %}This problem is not counted as solved, so there is no write-up or walkthrough.{% endif %}</p>
+      {%- include related.html pid=p.id rating=rating %}
+      {%- include problem-nav.html pid=p.id %}
+    </article>
+    {%- include quiz-section.html slug=p.slug pid=p.id rating=rating %}
+  </div>
 </div>
 <script src="{{ '/assets/js/quiz.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
 <script src="{{ '/assets/js/post.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>

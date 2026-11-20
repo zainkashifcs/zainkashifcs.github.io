@@ -1,6 +1,6 @@
 {%- comment -%}
-Problems per Codeforces rating, split solved / with help / not solved (same status mapping as problem-row.html:
-"help" is with help, "attempted"/"unsolved" is not solved, everything else counts as solved). Built from _data/problems.json.
+Problems per Codeforces rating, split solved myself / with help or redo / not solved (as in the topic mastery table:
+"help" and "redo" are not independent solves, "attempted"/"unsolved" is not solved, "solved" is solved myself). Built from _data/problems.json.
 {%- endcomment -%}
 {%- assign _rated = site.data.problems | where_exp: "p", "p.rating != nil" | sort: "rating" -%}
 {%- assign _unrated = site.data.problems.size | minus: _rated.size -%}
@@ -21,7 +21,7 @@ Problems per Codeforces rating, split solved / with help / not solved (same stat
   {%- for i in (0.._steps) -%}
     {%- assign _r = i | times: 100 | plus: _lo -%}
     {%- assign _here = _rated | where_exp: "p", "p.rating == _r" -%}
-    {%- assign _h = _here | where: "status", "help" | size -%}
+    {%- assign _h1 = _here | where: "status", "help" | size -%}{%- assign _h2 = _here | where: "status", "redo" | size -%}{%- assign _h = _h1 | plus: _h2 -%}
     {%- assign _u1 = _here | where: "status", "attempted" | size -%}{%- assign _u2 = _here | where: "status", "unsolved" | size -%}{%- assign _u = _u1 | plus: _u2 -%}
     {%- assign _s = _here.size | minus: _h | minus: _u -%}
     {%- include stats-row.html label=_r s=_s h=_h u=_u unit="problem" -%}

@@ -1219,6 +1219,145 @@ html:not(.js) .idx-hint { display: none; }
   .idx-acts .btn { flex: 0 1 auto; }
 }
 
+/* ---------- overnight R: reader pages and the /stats/ dashboard (fragments/R.css) ---------- */
+/* ==== R: reader pages (rd-) ==== */
+/* Two panes from 64rem: sticky rail | reading column. Below, one column: title, rail, text. */
+.rd { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "rail" "main"; column-gap: clamp(2rem, 4vw, 3.5rem); }
+.rd > .title.rd-title { grid-area: head; align-items: flex-start; max-width: 68ch; margin: 0 0 var(--s6); text-align: start; }
+.rd-title h1 { font-size: clamp(2rem, 4.6vw, 3rem); letter-spacing: -.035em; }
+.rd .title .summary { margin-inline: 0; }
+.rd-rail { grid-area: rail; display: flex; flex-direction: column; gap: var(--s3); min-width: 0; margin-bottom: var(--s6); }
+.rd-main { grid-area: main; min-width: 0; }
+.rd .post-body { max-width: 68ch; margin: 0; }
+.rd .post-body > p, .rd .post-body > ul, .rd .post-body > ol { font-size: 1.0625rem; line-height: 1.72; }
+.rd .post-body > h2 { margin-top: var(--s7); padding-top: var(--s5); border-top: 1px solid var(--hair); }
+.rd .post-body > h2:first-child { padding-top: 0; border-top: 0; }
+.rd .provenance { max-width: 68ch; margin-inline: 0; }
+@media (min-width: 64rem) {
+  .rd { grid-template-columns: 17rem minmax(0, 1fr); grid-template-areas: "rail head" "rail main"; align-items: start; }
+  .rd-rail { position: sticky; top: calc(var(--nav-h) + var(--s4)); max-height: calc(100dvh - var(--nav-h) - var(--s6)); overflow-y: auto; overscroll-behavior: contain; margin-bottom: 0; padding-bottom: var(--s2); scrollbar-width: thin; }
+}
+
+.rd-card { padding: var(--s4); border: 1px solid var(--hair); border-radius: var(--r-card); background: var(--tile); box-shadow: var(--spec); }
+.rd-rail .spec { max-width: none; margin: 0; padding: var(--s4); border-radius: var(--r-card); }
+.rd-rail .spec dl { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s3) var(--s4); }
+.rd-rail .spec dl > .rd-wide, .rd-rail .spec dl > .rd-cx-row, .rd-rail .spec dl > div:first-child { grid-column: 1 / -1; }
+.rd-rail .spec dd { font-size: .875rem; overflow-wrap: anywhere; }
+.rd-rail .spec .links { display: flex; flex-wrap: wrap; gap: var(--s2); margin: var(--s4) 0 0; padding-top: var(--s4); }
+.rd-rail .spec .links .btn { flex: 1 1 auto; min-height: 2.25rem; padding-inline: .9rem; font-size: .8125rem; }
+.rd-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); margin: 0 0 var(--s4); padding-bottom: var(--s4); border-bottom: 1px solid var(--hair); }
+.rd-key { padding: 3px 9px; font-size: 13px; }
+.rd-pill { display: inline-flex; align-items: center; gap: .4rem; min-height: 1.5rem; padding: 0 .6rem; border: 1px solid var(--hair-2); border-radius: var(--r-pill); color: var(--text); font-size: .75rem; font-weight: 500; white-space: nowrap; }
+.rd-pill i { flex: none; width: 7px; height: 7px; box-sizing: border-box; border-radius: 50%; background: currentColor; }
+.rd-pill.st-help i { background: linear-gradient(90deg, currentColor 50%, transparent 50%); border: 1px solid currentColor; }
+.rd-pill.st-redo i { background: transparent; border: 1.5px solid currentColor; }
+.rd-pill.st-open { color: var(--text-2); border-style: dashed; border-color: var(--field); }
+.rd-pill.st-open i { background: transparent; border: 1.5px dashed currentColor; }
+.rd-rate { margin-inline-start: auto; font: 500 .8125rem var(--mono); font-variant-numeric: tabular-nums; color: var(--text); }
+.rd-rate.na { font-family: var(--sans); color: var(--text-3); }
+.rd-src { font-weight: 400; }
+.rd-cx { display: inline-block; padding: 1px 7px; border: 1px solid var(--hair-2); border-radius: var(--r-key); background: var(--fill); font: 500 .8125rem/1.5 var(--mono); color: var(--text); }
+.rd-k { margin: 0 0 var(--s2); font-size: .75rem; font-weight: 500; letter-spacing: 0; line-height: 1.3; color: var(--text-3); }
+
+.rd-toc ol { margin: 0; padding: 0; list-style: none; }
+.rd-toc a { display: flex; align-items: center; min-height: 2.25rem; padding: 0 var(--s3); border-inline-start: 2px solid var(--hair); color: var(--text-2); font-size: .875rem; text-decoration: none; transition: color var(--t1) var(--ease), border-color var(--t1) var(--ease); }
+.rd-toc a[aria-current] { border-color: var(--text); color: var(--text); font-weight: 500; }
+@media (hover: hover) { .rd-toc a:hover { color: var(--text); border-color: var(--hair-2); } }
+
+.rd-seg { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; padding: 3px; border-radius: var(--r-ctl); background: var(--fill); }
+.rd-seg button { min-height: 2.25rem; padding: 0 .4rem; border: 1px solid transparent; border-radius: calc(var(--r-ctl) - 2px); background: transparent; color: var(--text-2); font: 500 .75rem var(--sans); cursor: pointer; transition: background-color var(--t1) var(--ease), color var(--t1) var(--ease); }
+.rd-seg button[aria-pressed="true"] { border-color: var(--hair-2); background: var(--tile-2); color: var(--text); box-shadow: var(--spec); }
+@media (hover: hover) { .rd-seg button:hover { color: var(--text); } }
+.rd-face { display: block; margin: var(--s3) 0; font: 600 2.5rem/1 var(--mono); font-variant-numeric: tabular-nums; letter-spacing: -.03em; color: var(--text); text-align: center; }
+.rd-timer.is-up .rd-face { text-decoration: underline 2px; text-underline-offset: .18em; }
+.rd-tbtns { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2); }
+.rd-tbtns .btn { min-height: 2.25rem; padding-inline: .5rem; font-size: .8125rem; }
+
+.scratch summary { display: flex; align-items: center; justify-content: space-between; min-height: 2.25rem; margin: calc(-1 * var(--s2)) 0; cursor: pointer; font-size: .875rem; font-weight: 500; list-style: none; }
+.scratch summary::-webkit-details-marker { display: none; }
+.scratch summary::after { content: ""; width: 7px; height: 7px; margin-inline-end: 4px; border: solid var(--text-2); border-width: 0 1.5px 1.5px 0; rotate: 45deg; translate: 0 -2px; transition: rotate var(--t-open, 180ms) var(--ease); }
+.scratch[open] summary::after { rotate: 225deg; translate: 0 2px; }
+.scratch[open] summary { margin-bottom: var(--s3); }
+.scratch textarea { display: block; box-sizing: border-box; width: 100%; min-height: 9rem; margin-top: var(--s2); padding: .6rem .7rem; border: 1px solid var(--hair-2); border-radius: var(--r-ctl); background: var(--fill); color: var(--text); font: 400 .8125rem/1.55 var(--mono); resize: vertical; }
+.scratch textarea:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+.rd-note { display: block; margin: 0; font-size: .75rem; line-height: 1.4; color: var(--text-3); }
+.rd-note:empty { display: none; }
+.scratch [data-scratch-note] { margin-top: var(--s2); }
+
+/* Code window: title bar with window dots, file name, language badge, line count and the copy button */
+.rd .code-caption { display: flex; align-items: center; gap: var(--s3); min-height: 2.75rem; padding: .35rem .45rem .35rem var(--s4); background: var(--tile-2); color: var(--text-2); }
+.code-dots { display: inline-flex; gap: 6px; flex: none; }
+.code-dots i { width: 10px; height: 10px; box-sizing: border-box; border: 1px solid var(--hair-2); border-radius: 50%; background: var(--fill-2); }
+.code-file { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text); }
+.code-lang { flex: none; padding: 0 6px; border: 1px solid var(--hair-2); border-radius: var(--r-key); font: 500 11px/1.6 var(--mono); color: var(--text-2); }
+.code-lines { flex: none; font: 500 11px var(--mono); color: var(--text-3); white-space: nowrap; }
+.code-lines:empty { display: none; }
+.rd .copy { display: inline-flex; align-items: center; gap: .35rem; flex: none; min-height: 2rem; }
+.copy-tick { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+@media (max-width: 30rem) { .code-dots { display: none; } .rd .code-caption { gap: var(--s2); } }
+@media screen and (prefers-reduced-motion: no-preference) {
+  .rd .copy.fx-celebrate { animation: rd-pop 420ms var(--ease); }
+  .copy-tick path { stroke-dasharray: 14; stroke-dashoffset: 14; animation: rd-tick 260ms var(--ease) 60ms forwards; }
+}
+@keyframes rd-pop { 40% { transform: scale(1.06); } }
+@keyframes rd-tick { to { stroke-dashoffset: 0; } }
+
+@media print {
+  .rd { display: block; }
+  .rd-rail { position: static; max-height: none; overflow: visible; margin-bottom: 1.25rem; }
+  .rd-timer, .scratch, .rd-toc, .code-dots, .code-lines { display: none !important; }
+  .rd-rail .spec { padding: .75rem 0; border: 0; border-block: 1px solid #999; }
+  .rd .post-body > h2 { border-top: 0; padding-top: 0; }
+}
+.rd-rate small { margin-inline-end: .3rem; font: 500 .6875rem var(--sans); color: var(--text-3); }
+/* Under 64rem the rail sits above the text: keep it short. TOC becomes a row of chips, the timer one row. */
+@media (max-width: 63.99rem) {
+  .rd-toc ol { display: flex; flex-wrap: wrap; gap: var(--s2); }
+  .rd-toc a { min-height: 2.25rem; padding: 0 .75rem; border: 1px solid var(--hair-2); border-radius: var(--r-pill); }
+  .rd-toc a[aria-current] { border-color: var(--hair-2); font-weight: 400; color: var(--text-2); }
+  .rd-timer:not([hidden]) { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "k k" "seg seg" "face btns"; align-items: center; column-gap: var(--s3); }
+  .rd-timer .rd-k { grid-area: k; } .rd-seg { grid-area: seg; } .rd-tbtns { grid-area: btns; }
+  .rd-face { grid-area: face; margin: var(--s3) 0 0; font-size: 2rem; text-align: start; }
+  .rd-tbtns { margin-top: var(--s3); grid-template-columns: auto auto; }
+  .rd-tbtns .btn { padding-inline: 1rem; }
+}
+
+/* ==== R: /stats/ dashboard (st-) ==== */
+/* Summary strip: one band, five figures split by hairlines. */
+.st-strip .stats-totals { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; overflow: hidden; border: 1px solid var(--hair); border-radius: var(--r-tile); background: var(--tile); box-shadow: var(--spec); }
+.st-strip .stats-totals .tile, .st-strip .stats-totals .stat-lead, .st-strip .stats-totals .tile:nth-child(n+4) { grid-column: auto; border: 0; border-radius: 0; background: none; box-shadow: none; }
+.st-strip .stats-totals .tile + .tile { border-inline-start: 1px solid var(--hair); }
+.st-strip .stat dd { font-size: clamp(1.75rem, 3vw, 2.5rem); }
+@media (max-width: 64rem) {
+  .st-strip .stats-totals { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .st-strip .stats-totals .tile + .tile { border-inline-start: 0; }
+  .st-strip .stats-totals .tile { border-top: 1px solid var(--hair); }
+  .st-strip .stats-totals .tile:nth-child(-n+2) { border-top: 0; }
+  .st-strip .stats-totals .tile:nth-child(even) { border-inline-start: 1px solid var(--hair); }
+  .st-strip .stats-totals .tile:last-child:nth-child(odd) { grid-column: 1 / -1; }
+}
+@media (max-width: 22rem) { .st-strip .stats-totals { grid-template-columns: minmax(0, 1fr); } .st-strip .stats-totals .tile:nth-child(n) { grid-column: auto; border-inline-start: 0; border-top: 1px solid var(--hair); } .st-strip .stats-totals .tile:first-child { border-top: 0; } }
+
+/* Card grid: full-width matrix and chart, then pairs. Each section is one card; its head sits inside. */
+.st-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s4); margin-top: clamp(2rem, 5vw, 3rem); }
+.st-grid > .st-card { display: flex; flex-direction: column; min-width: 0; padding: clamp(1.25rem, 2.6vw, 1.75rem); border: 1px solid var(--hair); border-radius: var(--r-tile); background: var(--tile); box-shadow: var(--spec); }
+.st-grid > .st-full { grid-column: 1 / -1; }
+.st-card .section-head { margin-bottom: var(--s5); }
+.st-card .section-head h2 { font-size: 1.25rem; letter-spacing: -.02em; }
+.st-card .section-head p { font-size: .875rem; }
+.st-card > .panel { flex: 1; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; }
+@media (max-width: 48rem) { .st-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* Bars grow when their panel enters view (motion engine adds .is-in). Without JS, or with reduced motion,
+   html.reveal-on is never set / the query fails, so bars are drawn at full length. */
+@media screen and (prefers-reduced-motion: no-preference) {
+  .st-card .mx-bar i, .st-card .stats-track .seg { transform-origin: 0 50%; transition: transform 640ms var(--ease) 120ms; }
+  .st-card .stats-col { transform-origin: 50% 100%; transition: transform 640ms var(--ease) 120ms; }
+  .reveal-on .st-card .panel[data-reveal]:not(.is-in) :is(.mx-bar i, .stats-track .seg) { transform: scaleX(0); transition-duration: 180ms; transition-delay: 0s; }
+  .reveal-on .st-card .panel[data-reveal]:not(.is-in) .stats-col { transform: scaleY(0); transition-duration: 180ms; transition-delay: 0s; }
+}
+@media print { .st-grid { display: block; } .st-grid > .st-card { border: 0; box-shadow: none; padding: 0; margin-top: 1.5rem; } .st-strip .stats-totals { border: 0; box-shadow: none; } }
+
 /* ---------- print: write-ups, problem pages and /stats/ as clean black-on-white single columns ---------- */
 @media print {
   @page { margin: 16mm; }

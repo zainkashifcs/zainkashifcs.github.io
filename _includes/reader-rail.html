@@ -1,0 +1,62 @@
+{%- comment -%}
+Left rail of a write-up or problem page: ID keycap, status pill, rating badge, the .spec facts, a complexity badge only
+when my notes state one, a table of contents from the page's own <h2 id> headings, a contest timer and a local
+scratchpad (both hidden until assets/js/post.js runs; the timer stores nothing, the scratchpad uses localStorage
+"scratch:<slug>").
+Usage: include reader-rail.html pid= slug= rating= status= label= html= toc= facts= links=
+  status: solved | help | redo | open      label: the visible status text
+  html: the page body (complexity is read from the part before the code)   toc: html to read <h2 id> headings from
+  facts: the <div><dt>..</dt><dd>..</dd></div> rows      links: the buttons under the facts
+{%- endcomment -%}
+{%- assign complexity = nil -%}
+{%- assign _cx = include.html | split: '<h2 id="code"' | first | strip_html | split: 'Complexity: O(' -%}
+{%- comment -%} shortcut: nested parens are cut at the first ')', upgrade if a note ever uses them {%- endcomment -%}
+{%- if _cx.size > 1 -%}{%- assign complexity = _cx[1] | split: ')' | first | prepend: 'O(' | append: ')' -%}{%- endif -%}
+{%- assign _toc = include.toc | split: '<h2 id="' -%}
+<aside class="rd-rail" aria-label="Problem details" data-lenis-prevent>
+  <div class="rd-card spec">
+    <p class="rd-head">
+      <span class="rb rd-key{% if include.status == 'open' %} open{% endif %}">{{ include.pid }}</span>
+      <span class="rd-pill st-{{ include.status }}"><i aria-hidden="true"></i>{{ include.label }}</span>
+      {%- if include.rating %}<span class="rd-rate"><small>Rating</small> {{ include.rating }}</span>{% else %}<span class="rd-rate na">Unrated</span>{% endif %}
+    </p>
+    <dl>
+      {{ include.facts }}
+      {%- if complexity %}
+      <div class="rd-cx-row"><dt>Complexity <span class="rd-src">(from my notes)</span></dt><dd><code class="rd-cx" data-complexity>{{ complexity | escape }}</code></dd></div>
+      {%- endif %}
+    </dl>
+    <p class="links">{{ include.links }}</p>
+  </div>
+  {%- if _toc.size > 2 %}
+  <nav class="rd-card rd-toc" aria-labelledby="rd-toc-h">
+    <h2 id="rd-toc-h" class="rd-k">On this page</h2>
+    <ol>
+      {%- for c in _toc offset: 1 -%}
+        {%- assign _id = c | split: '"' | first -%}
+        {%- assign _label = c | split: '</h2>' | first | remove_first: _id | remove_first: '">' | strip_html | strip %}
+      <li><a href="#{{ _id }}" data-toc>{{ _label }}</a></li>
+      {%- endfor %}
+    </ol>
+  </nav>
+  {%- endif %}
+  <section class="rd-card rd-timer" data-timer hidden aria-labelledby="rd-timer-h">
+    <h2 id="rd-timer-h" class="rd-k">Contest timer</h2>
+    <div class="rd-seg" role="group" aria-label="Timer mode">
+      <button type="button" class="tactile" data-timer-mode="down" aria-pressed="true">Countdown</button>
+      <button type="button" class="tactile" data-timer-mode="up" aria-pressed="false">Stopwatch</button>
+    </div>
+    <output class="rd-face" data-timer-face aria-live="off">35:00</output>
+    <div class="rd-tbtns">
+      <button type="button" class="btn tactile" data-timer-toggle>Start</button>
+      <button type="button" class="btn quiet tactile" data-timer-reset>Reset</button>
+    </div>
+    <p class="vh" role="status" data-timer-say></p>
+  </section>
+  <details class="rd-card scratch drawer" data-scratch="{{ include.slug }}" hidden>
+    <summary>Scratchpad</summary>
+    <label class="rd-note" for="rd-scratch">Notes for {{ include.pid }}, kept in this browser only.</label>
+    <textarea id="rd-scratch" maxlength="4000" rows="8" spellcheck="false" autocomplete="off"></textarea>
+    <p class="rd-note" data-scratch-note aria-live="polite"></p>
+  </details>
+</aside>
