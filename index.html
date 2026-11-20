@@ -7,6 +7,7 @@
   {%- assign quiz_total = quiz_total | plus: _qs.size -%}
 {%- endfor -%}
 {%- assign latest = site.posts.first -%}
+{%- include mastery-data.html -%}
 <section class="hero" aria-labelledby="intro-h">
   <canvas class="hero-bg" aria-hidden="true"></canvas>
   <div class="hero-text">
@@ -27,6 +28,7 @@
     <div class="tile tile-wide" data-reveal>
       <h3>The climb, problem by problem</h3>
       {% include ladder.html %}
+      {% include velocity.html line=true %}
     </div>
     {%- if latest %}
     {%- include summary.html summary=latest.summary html=latest.content %}
@@ -45,6 +47,8 @@
       <a class="btn quiet" href="{{ '/quiz/' | relative_url }}">Practise by topic</a>
     </div>
     {%- endif %}
+    {% include next-up.html %}
+    {% include weak-topics.html %}
   </div>
 </section>
 
@@ -58,11 +62,14 @@
       <label class="rating-filter">Rating<span class="range"><select name="min" aria-label="Lowest rating"><option value="">Any</option></select><span aria-hidden="true">to</span><select name="max" aria-label="Highest rating"><option value="">Any</option></select></span></label>
       <label>Sort<select name="sort"><option value="newest">Newest</option><option value="rating">Highest rating</option><option value="easiest">Lowest rating</option><option value="id">Problem ID</option></select></label>
       <button class="btn quiet idx-random" type="button" data-random>Random problem</button>
+      <button class="btn quiet idx-copy" type="button" data-copy-view>Copy link<span class="vh"> to this view</span></button><span class="vh" role="status" data-copy-say></span>
       <div class="chips topic-chips" role="group" aria-label="Topics: show problems with any of the chosen topics">
         {%- for g in site.data.topics %}{% for t in g.topics %}{% assign _n = site.data.problems | where_exp: "x", "x.topics contains t.id" | size %}{% if _n > 0 %}<button type="button" class="chip" data-tag="{{ t.id }}" aria-pressed="false">{{ t.label }}<span class="n">{{ _n }}</span><span class="vh"> problems</span></button>{% endif %}{% endfor %}{% endfor -%}
       </div>
     </div>
+    <div class="idx-active" role="group" aria-label="Active filters" hidden></div>
     <p class="count" aria-live="polite"></p>
+    <p class="idx-hint" id="idx-hint">Tip: when a problem has focus, <kbd>&uarr;</kbd> <kbd>&darr;</kbd> move between rows, and <kbd>Home</kbd> <kbd>End</kbd> jump to the first or last.</p>
     <div class="thead" aria-hidden="true"><span>Problem</span><span>Notes</span><span>Topics</span><span>Rating</span><span>Date</span></div>
     <ul class="index">{% for p in site.data.problems %}{% include problem-row.html p=p %}{% endfor %}</ul>
     <p class="empty" hidden>No problems match these filters. <button type="button">Clear search and filters</button></p>
@@ -110,3 +117,4 @@
 <script src="{{ '/assets/js/activity.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
 <script src="{{ '/assets/js/index.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
 <script src="{{ '/assets/js/quiz.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+<script src="{{ '/assets/js/mastery.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>

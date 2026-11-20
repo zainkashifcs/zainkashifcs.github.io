@@ -1,0 +1,14 @@
+{%- comment -%} Homepage tile: the three weakest topics from mastery-data.html (include it first). mastery.js adds quiz recall. {%- endcomment -%}
+<div class="tile tile-weak" data-reveal>
+  <h3>Weakest topics</h3>
+  {%- if mx_weak.size > 0 %}
+  <ol class="weak-list">
+    {%- for r in mx_weak limit: 3 -%}{%- assign _f = r | split: "~" %}
+    <li><a href="{{ '/' | relative_url }}?topics={{ _f[1] }}#index"><span class="weak-name">{{ _f[2] }}</span><span class="weak-frac">{{ _f[3] }}/{{ _f[6] }} solved myself</span></a><span class="weak-q mx-quiz"{% if _f[8] %} data-qids="{{ _f[8] }}"{% endif %} data-short></span></li>
+    {%- endfor %}
+  </ol>
+  {%- else %}
+  <p class="tile-quote">Every topic with a logged problem is solved independently.</p>
+  {%- endif %}
+  <a class="more" href="{{ '/stats/' | relative_url }}#mx-h">See every topic</a>
+</div>

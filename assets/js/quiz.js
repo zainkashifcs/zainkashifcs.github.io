@@ -218,6 +218,8 @@
         const c = chips.find(c => c.dataset.tag === t && bank.some(q => tagsOf(q).includes(t)));
         if (c) { chosen.add(t); c.setAttribute('aria-pressed', 'true'); }
       });
+      const m = new URLSearchParams(location.search).get('mode'); // ?mode=due from the homepage "Next up" queue
+      if ((m === 'due' || m === 'wrong') && !revise.hidden && !panel.querySelector(`[name=mode][value=${m}]`).disabled) setMode(m);
       panel.hidden = false; refresh();
     }
     document.querySelectorAll('[data-deal]').forEach(b => b.addEventListener('click', deal));

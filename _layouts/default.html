@@ -34,7 +34,8 @@
   {%- if page.noindex %}
   <meta name="robots" content="noindex">
   {%- endif %}
-  <link rel="preload" href="{{ '/assets/fonts/Inter-Variable-latin.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ '/assets/fonts/Geist-Variable-latin.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ '/assets/fonts/GeistMono-Variable-latin.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
   <meta name="theme-color" content="#09090B">
   <script>(function(){var r=document.documentElement;r.classList.add('js');try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')r.dataset.theme=t}catch(e){}
   if(!matchMedia('(prefers-reduced-motion: reduce)').matches)r.classList.add('motion')})()</script>
@@ -55,7 +56,7 @@ r.dataset.hero=h})()</script>
   <a class="skip" href="#main">Skip to content</a>
   <header class="site">
     <div class="frame">
-      <a class="brand" href="{{ '/' | relative_url }}"><svg class="mark" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 15h4v-4H1zm5 0h4V8H6zm5 0h4V1h-4z"/></svg>{{ site.title }}</a>
+      <a class="brand" href="{{ '/' | relative_url }}">{% include logo-mark.html %}{{ site.title }}</a>
       <nav aria-label="Main">
         <a href="{{ '/' | relative_url }}#index"{% if page.url == '/' or page.layout == 'post' or page.layout == 'problem' %} aria-current="page"{% endif %}>Problems</a>
         <a href="{{ '/activity/' | relative_url }}"{% if page.url == '/activity/' %} aria-current="page"{% endif %}>Activity</a>

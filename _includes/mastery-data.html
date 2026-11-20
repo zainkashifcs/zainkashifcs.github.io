@@ -1,0 +1,104 @@
+{%- comment -%}
+Build-time numbers for the topic mastery matrix, the "Next up" queue and difficulty velocity. Sets globals (like
+rating.html) and prints nothing. Include once per page, before mastery-matrix.html, weak-topics.html, next-up.html
+or velocity.html. Everything comes from _data/problems.json, _data/topics.json and the approved quiz questions.
+
+Status meanings (problems.json): solved means solved myself, help means solved with help, redo means only a redo is
+logged (so it does not count as independent), attempted and unsolved mean not solved.
+
+mx_rows: every topic with at least one problem, weakest first. Each row is
+  key~id~label~solved myself~with help or redo~not solved~total~hardest solved myself (0 = none)~quiz ids
+The key sorts by the share solved myself (per mille), then the hardest solved myself, then more problems first,
+then the label. A topic is weak when at least one of its problems was not solved independently (share < 1000).
+mx_weak: the weak rows, same order. mx_unstarted: labels of topics with no problems. mx_qids: every approved quiz id.
+{%- endcomment -%}
+{%- assign mx_qids = "" | split: "" -%}
+{%- for f in site.data.quizzes -%}{%- for q in f[1] -%}{%- if q.status == "approved" -%}{%- assign mx_qids = mx_qids | push: q.id -%}{%- endif -%}{%- endfor -%}{%- endfor -%}
+{%- assign _rows = "" -%}{%- assign mx_unstarted = "" | split: "" -%}
+{%- for g in site.data.topics -%}{%- for t in g.topics -%}
+  {%- assign _ps = site.data.problems | where_exp: "p", "p.topics contains t.id" -%}
+  {%- if _ps.size == 0 -%}{%- assign mx_unstarted = mx_unstarted | push: t.label -%}{%- continue -%}{%- endif -%}
+  {%- assign _ind = _ps | where: "status", "solved" -%}
+  {%- assign _h1 = _ps | where: "status", "help" | size -%}{%- assign _h2 = _ps | where: "status", "redo" | size -%}
+  {%- assign _o1 = _ps | where: "status", "attempted" | size -%}{%- assign _o2 = _ps | where: "status", "unsolved" | size -%}
+  {%- assign _best = 0 -%}
+  {%- for p in _ind -%}{%- assign _r = p.rating | plus: 0 -%}{%- if _r > _best -%}{%- assign _best = _r -%}{%- endif -%}{%- endfor -%}
+  {%- assign _rate = _ind.size | times: 1000 | divided_by: _ps.size -%}
+  {%- assign _tq = "" | split: "" -%}
+  {%- for f in site.data.quizzes -%}{%- for q in f[1] -%}{%- if q.status == "approved" and q.tags contains t.id -%}{%- assign _tq = _tq | push: q.id -%}{%- endif -%}{%- endfor -%}{%- endfor -%}
+  {%- assign _k1 = _rate | prepend: "000" | slice: -4, 4 -%}{%- assign _k2 = _best | prepend: "000" | slice: -4, 4 -%}
+  {%- assign _k3 = 1000 | minus: _ps.size | prepend: "000" | slice: -4, 4 -%}
+  {%- capture _rows -%}{{ _rows }}{{ _k1 }}{{ _k2 }}{{ _k3 }}{{ t.label }}~{{ t.id }}~{{ t.label }}~{{ _ind.size }}~{{ _h1 | plus: _h2 }}~{{ _o1 | plus: _o2 }}~{{ _ps.size }}~{{ _best }}~{{ _tq | join: " " }}^{%- endcapture -%}
+{%- endfor -%}{%- endfor -%}
+{%- assign mx_rows = _rows | split: "^" | sort -%}
+{%- assign mx_weak = "" | split: "" -%}
+{%- for r in mx_rows -%}{%- if r != "" -%}{%- assign _f = r | split: "~" -%}{%- if _f[3] != _f[6] -%}{%- assign mx_weak = mx_weak | push: r -%}{%- endif -%}{%- endif -%}{%- endfor -%}
+
+{%- comment -%}
+nu_rows: problems still to work on, as key~index into site.data.problems. Groups: 1 not solved, 2 solved with help,
+3 only a redo logged. Within a group: lowest problem difficulty first, then the earliest start, then the ID.
+{%- endcomment -%}
+{%- assign _q = "" -%}
+{%- for p in site.data.problems -%}
+  {%- case p.status -%}{%- when "attempted", "unsolved" -%}{%- assign _g = 1 -%}{%- when "help" -%}{%- assign _g = 2 -%}{%- when "redo" -%}{%- assign _g = 3 -%}{%- else -%}{%- assign _g = 0 -%}{%- endcase -%}
+  {%- if _g > 0 -%}{%- capture _q -%}{{ _q }}{{ _g }}~{{ p.rating | default: 9999 | prepend: "000" | slice: -4, 4 }}~{{ p.first_date }}~{{ p.id }}~{{ forloop.index0 }}^{%- endcapture -%}{%- endif -%}
+{%- endfor -%}
+{%- assign nu_rows = _q | split: "^" | sort -%}
+{%- assign nu_open = 0 -%}{%- for r in nu_rows -%}{%- assign _c = r | slice: 0, 1 -%}{%- if _c == "1" -%}{%- assign nu_open = nu_open | plus: 1 -%}{%- endif -%}{%- endfor -%}
+
+{%- comment -%}
+Difficulty velocity: problems solved independently (status solved), each on its solved_date. Weeks start on Monday;
+dates are read at noon UTC and day 0 of the Unix epoch was a Thursday, so (day + 3) / 7 numbers the weeks (the same
+rule as stats-weeks.html). vel_weeks: one entry per week from the first to the last solve, empty weeks included:
+  Monday label~count~hardest~median (hardest and median empty when no solves)
+The window is the 28 days ending on the build date, inclusive.
+{%- endcomment -%}
+{%- assign _S = site.data.problems | where: "status", "solved" | where_exp: "p", "p.solved_date != nil" | sort: "solved_date" -%}
+{%- capture _wr -%}{%- for p in _S -%}{{ p.solved_date | append: " 12:00:00 +0000" | date: "%s" | divided_by: 86400 | plus: 3 | divided_by: 7 }}~{{ p.rating | prepend: "000" | slice: -4, 4 }} {% endfor -%}{%- endcapture -%}
+{%- assign _wr = _wr | strip | split: " " -%}
+{%- assign vel_weeks = "" | split: "" -%}{%- assign vel_with = 0 -%}{%- assign vel_lo = 99999 -%}{%- assign vel_hi = 0 -%}
+{%- if _S.size > 0 -%}
+  {%- assign _first = _S.first.solved_date | append: " 12:00:00 +0000" | date: "%s" | divided_by: 86400 | plus: 3 | divided_by: 7 -%}
+  {%- assign _last = _S.last.solved_date | append: " 12:00:00 +0000" | date: "%s" | divided_by: 86400 | plus: 3 | divided_by: 7 -%}
+  {%- assign _span = _last | minus: _first -%}
+  {%- for i in (0.._span) -%}
+    {%- assign _w = _first | plus: i | append: "" -%}
+    {%- assign _R = "" | split: "" -%}
+    {%- for x in _wr -%}{%- assign _xf = x | split: "~" -%}{%- if _xf[0] == _w -%}{%- assign _R = _R | push: _xf[1] -%}{%- endif -%}{%- endfor -%}
+    {%- assign _R = _R | sort -%}
+    {%- assign _mon = _w | plus: 0 | times: 7 | minus: 3 | times: 86400 | plus: 43200 | date: "%-d %b" -%}
+    {%- if _R.size > 0 -%}
+      {%- assign vel_with = vel_with | plus: 1 -%}
+      {%- assign _hard = _R.last | plus: 0 -%}
+      {%- assign _mid = _R.size | divided_by: 2 -%}{%- assign _odd = _R.size | modulo: 2 -%}
+      {%- if _odd == 1 -%}{%- assign _med = _R[_mid] | plus: 0 -%}
+      {%- else -%}{%- assign _m0 = _mid | minus: 1 -%}{%- assign _med = _R[_m0] | plus: 0 | plus: _R[_mid] | divided_by: 2 -%}{%- endif -%}
+      {%- if _med < vel_lo -%}{%- assign vel_lo = _med -%}{%- endif -%}{%- if _hard > vel_hi -%}{%- assign vel_hi = _hard -%}{%- endif -%}
+      {%- capture _e -%}{{ _mon }}~{{ _R.size }}~{{ _hard }}~{{ _med }}{%- endcapture -%}
+    {%- else -%}{%- capture _e -%}{{ _mon }}~0~~{%- endcapture -%}{%- endif -%}
+    {%- assign vel_weeks = vel_weeks | push: _e -%}
+  {%- endfor -%}
+{%- endif -%}
+{%- assign vel_now = site.time | date: "%Y-%m-%d" -%}
+{%- assign vel_w0 = vel_now | append: " 12:00:00 +0000" | date: "%s" | minus: 2332800 | date: "%Y-%m-%d" -%}
+{%- assign vel_before = 0 -%}{%- assign vel_peak = 0 -%}{%- assign vel_in = 0 -%}
+{%- for p in _S -%}{%- assign _r = p.rating | plus: 0 -%}
+  {%- if p.solved_date < vel_w0 and _r > vel_before -%}{%- assign vel_before = _r -%}{%- endif -%}
+  {%- if p.solved_date <= vel_now -%}{%- if _r > vel_peak -%}{%- assign vel_peak = _r -%}{%- endif -%}
+    {%- if p.solved_date >= vel_w0 -%}{%- assign vel_in = vel_in | plus: 1 -%}{%- endif -%}{%- endif -%}
+{%- endfor -%}
+{%- assign vel_to = site.time | date: "%-d %b %Y" -%}
+{%- if vel_in == 0 -%}
+  {%- capture vel_text -%}No new problems solved independently in the 28 days to {{ vel_to }}.{%- endcapture -%}
+  {%- assign vel_short = "No new problems solved independently." -%}
+{%- elsif vel_before == 0 -%}
+  {%- capture vel_text -%}First independent solves in the 28 days to {{ vel_to }}: hardest rated {{ vel_peak }}.{%- endcapture -%}
+  {%- capture vel_short -%}First independent solves: hardest rated {{ vel_peak }}.{%- endcapture -%}
+{%- else -%}
+  {%- assign _d = vel_peak | minus: vel_before -%}
+  {%- if _d > 0 -%}{%- capture _dt -%}+{{ _d }}{%- endcapture -%}{%- else -%}{%- assign _dt = "no change" -%}{%- endif -%}
+  {%- capture vel_text -%}Hardest problem solved independently: {{ vel_before }} &rarr; {{ vel_peak }} ({{ _dt }}) in the 28 days to {{ vel_to }}.{%- endcapture -%}
+  {%- capture vel_short -%}Hardest problem solved independently: {{ vel_before }} &rarr; {{ vel_peak }} ({{ _dt }}).{%- endcapture -%}
+{%- endif -%}
+{%- assign _hr = site.data.activity_stats.highest_rating -%}
+{%- if _hr -%}{%- capture vel_so_far -%}Hardest so far: {{ _hr[0] }} ({{ _hr[1] }}).{%- endcapture -%}{%- else -%}{%- assign vel_so_far = "" -%}{%- endif -%}

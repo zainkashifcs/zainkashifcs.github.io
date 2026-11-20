@@ -4,6 +4,8 @@
 // The view is mirrored in the URL (q, status, min, max, sort, topics) so it can be linked and survives reload.
 // The status tabs (.segmented) drive the visually hidden status select, which stays the single source of truth.
 // Without JS the full list shows and the toolbar stays hidden.
+// Keyboard: while a row has focus, the arrow keys, Home and End move between the visible rows (no global shortcuts).
+// The active filters show as removable chips above the count, and "Copy link to this view" copies the mirrored URL.
 (() => {
   const box = document.querySelector('[data-index]'); if (!box) return;
   const bar = box.querySelector('.toolbar'), list = box.querySelector('.index'), count = box.querySelector('.count'), empty = box.querySelector('.empty');
@@ -41,6 +43,30 @@
   };
   const key = { newest: li => -Number(li.dataset.date.replaceAll('-', '')), rating: li => -(Number(li.dataset.rating) || 0),
     easiest: li => Number(li.dataset.rating) || 99999, id: li => li.dataset.id };
+  // Active filter chips: search, status, rating range, then each chosen topic. Sort is not a filter, so it has none.
+  const active = box.querySelector('.idx-active');
+  const labelOf = c => c.firstChild.textContent.trim();
+  const filters = () => {
+    const f = [], words = q.value.trim(), a = lo.value, b = hi.value;
+    if (words) f.push(['q', `“${words}”`]);
+    if (status.value) f.push(['status', tabs.find(t => t.dataset.seg === status.value)?.textContent.trim() || status.value]);
+    if (a || b) f.push(['range', a && b ? `Rated ${a}–${b}` : a ? `Rated from ${a}` : `Rated up to ${b}`]);
+    for (const c of chips) if (chosen.has(c.dataset.tag)) f.push(['topic:' + c.dataset.tag, labelOf(c)]);
+    return f;
+  };
+  const showActive = () => {
+    if (!active) return;
+    const f = filters();
+    active.replaceChildren(...f.map(([x, label]) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'chip idx-x'; b.dataset.x = x; b.setAttribute('aria-label', `Remove filter: ${label}`);
+      const t = document.createElement('span'); t.textContent = label;
+      b.append(t); b.insertAdjacentHTML('beforeend', '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="m5 5 6 6m0-6-6 6"/></svg>');
+      return b;
+    }));
+    if (f.length > 1) active.insertAdjacentHTML('beforeend', '<button type="button" class="linkish idx-clear">Clear all</button>');
+    active.hidden = !f.length;
+  };
   const apply = () => {
     let shown = 0;
     for (const li of rows) { const ok = passes(li, false); li.hidden = !ok; shown += ok; }
@@ -55,6 +81,10 @@
     count.textContent = `Showing ${shown} of ${rows.length} problem${rows.length === 1 ? '' : 's'}`;
     empty.hidden = shown > 0;
     if (rand) rand.disabled = shown === 0;
+    showActive();
+    // the arrow-key hint is read once, on the first row a screen reader reaches (a list can't take focus)
+    rows.forEach(li => li.querySelector('a.row').removeAttribute('aria-describedby'));
+    [...list.children].find(li => !li.hidden)?.querySelector('a.row').setAttribute('aria-describedby', 'idx-hint');
   };
   const smooth = () => {
     if (!document.startViewTransition || still.matches) return apply();
@@ -88,9 +118,48 @@
     const shown = rows.filter(li => !li.hidden);
     if (shown.length) location.assign(shown[Math.floor(Math.random() * shown.length)].querySelector('a.row').href);
   });
-  empty.querySelector('button').addEventListener('click', () => {
+  const reset = () => {
     q.value = ''; status.value = ''; lo.value = ''; hi.value = ''; chosen.clear();
     chips.forEach(c => c.setAttribute('aria-pressed', 'false')); apply(); sync(); q.focus();
+  };
+  empty.querySelector('button').addEventListener('click', reset);
+  if (active) active.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.classList.contains('idx-clear')) return reset();
+    const at = [...active.querySelectorAll('.idx-x')].indexOf(b), x = b.dataset.x;
+    if (x === 'q') q.value = '';
+    else if (x === 'status') status.value = '';
+    else if (x === 'range') { lo.value = ''; hi.value = ''; }
+    else { const t = x.slice(6); chosen.delete(t); chips.find(c => c.dataset.tag === t)?.setAttribute('aria-pressed', 'false'); }
+    apply(); sync();
+    const left = active.querySelectorAll('.idx-x'); // focus the chip now in the same place, else the one before, else search
+    (left[at] || left[at - 1] || q).focus();
+  });
+
+  // Arrow keys move between the rows the filters show, in the current sort order, only while a row has focus.
+  list.addEventListener('keydown', e => {
+    if (e.ctrlKey || e.metaKey || e.altKey || !e.target.matches('a.row')) return;
+    const vis = [...list.children].filter(li => !li.hidden).map(li => li.querySelector('a.row'));
+    const i = vis.indexOf(e.target);
+    const to = { ArrowDown: vis[Math.min(i + 1, vis.length - 1)], ArrowUp: vis[Math.max(i - 1, 0)], Home: vis[0], End: vis.at(-1) }[e.key];
+    if (!to) return;
+    e.preventDefault();
+    to.focus({ preventScroll: true });
+    to.scrollIntoView({ block: 'nearest', behavior: still.matches ? 'auto' : 'smooth' });
+  });
+
+  // "Copy link to this view": the URL already mirrors the filters, so flush a pending search update first.
+  const copyBtn = bar.querySelector('[data-copy-view]'), say = bar.querySelector('[data-copy-say]');
+  let copyTimer;
+  const idle = copyBtn ? copyBtn.innerHTML : ''; // "Copy link" plus a visually hidden " to this view"
+  if (copyBtn) copyBtn.addEventListener('click', async () => {
+    clearTimeout(timer); sync();
+    let ok = true;
+    try { await navigator.clipboard.writeText(new URL('#index', location.href).href); } catch { ok = false; } // also when the Clipboard API is missing
+    if (ok) copyBtn.textContent = 'Link copied';
+    if (say) say.textContent = ok ? 'Link copied' : 'Couldn’t copy. The address bar has the link.';
+    clearTimeout(copyTimer);
+    copyTimer = setTimeout(() => { copyBtn.innerHTML = idle; if (say) say.textContent = ''; }, 2000);
   });
   apply();
 

@@ -8,7 +8,8 @@ Jekyll 3.10 + one stylesheet (`assets/css/style.css`) + vanilla JS. This file is
 ## 1. Principles
 
 1. **One signal colour.** Amber means progress toward 1800 and nothing else: the rating-progress bar, the climb
-   step-line (and the gradient under it), peak heatmap cells. Never on buttons, links, tags, headings or badges.
+   step-line (and the gradient under it), peak heatmap cells, the hardest-solved series on /stats/ and the peak step
+   of the brand mark. Never on buttons, links, tags, headings or badges.
 2. **Light comes from above.** A faint top spotlight on the canvas and a 1px inset highlight on every card. No drop
    shadows on dark, no glows, no gradients except the spotlight and the amber fill under the climb line.
 3. **Monochrome everything else.** Zinc greys, white, hairlines. Status is shape and wording, never hue.
@@ -73,13 +74,16 @@ element is an obsidian surface in light mode and a no-op in dark. New markup sho
 
 ## 3. Typography
 
-Inter (variable, self-hosted) for UI and prose; JetBrains Mono for IDs, keycaps, axis labels, code.
-`font-feature-settings: "cv11", "ss01"` on Inter; `font-variant-numeric: tabular-nums` on every number in KPIs,
-the ledger, charts, dates and ratings.
+Geist (variable, self-hosted latin subset, weights 400 to 700) for UI and prose, Geist Mono (400 to 500) for IDs,
+keycaps, axis labels and code blocks. Files: `assets/fonts/Geist-Variable-latin.woff2` and
+`GeistMono-Variable-latin.woff2`, both under the OFL (`OFL-geist.txt`). `--sans` and `--mono` point at them, the
+default layout preloads Geist and `sw.js` precaches both. No OpenType feature switches. `font-variant-numeric:
+tabular-nums` goes on every number in KPIs, the ledger, charts, dates and ratings. Mono weights stay at 400 or 500 (the
+file ships no heavier weight). The Inter and JetBrains Mono files remain in `assets/fonts/` unreferenced.
 
 | Role | Size | Weight | Line-height | Tracking |
 |---|---|---|---|---|
-| Display (hero h1) | `clamp(2.5rem, 6vw, 4.25rem)` | 650 | 1.05 | -0.04em |
+| Display (hero h1) | `clamp(2.5rem, 6vw, 4.25rem)` | 650 (Geist variable) | 1.05 | -0.04em |
 | H2 section | `clamp(1.5rem, 3vw, 2rem)` | 600 | 1.15 | -0.03em |
 | H3 card title | 1rem | 600 | 1.3 | -0.015em |
 | KPI numeral | `clamp(1.75rem, 3.2vw, 2.25rem)` | 600 | 1 | -0.03em |
@@ -114,6 +118,14 @@ Prose keeps `--read: 44rem`. Code blocks use 0.875rem mono and scroll horizontal
 Hairlines are always 1px; never stack a border and a shadow ring.
 
 ## 6. Components
+
+**Brand mark.** `_includes/logo-mark.html`: a 24×24 inline SVG, `aria-hidden`, before the site name in the header.
+A rounded tile (`rx 6`, `--fill` with a 1.5px `--hair-2` stroke) holding three ascending steps: the two lower steps
+`currentColor`, the peak step `--accent-display` (the climb to 1800, the one place amber appears in the chrome).
+On hover or keyboard focus of the brand link the peak lifts 1.5px in 150ms, only under
+`prefers-reduced-motion: no-preference`. `assets/favicon.svg` repeats it with fixed colours (dark tile `#101013`,
+steps `#FAFAFA`, peak `#F59E0B`, light `#FFF`/`#09090B`/`#B45309` via `prefers-color-scheme`). The PNG icons
+(32, 180, 192, 512, maskable 512 on `#09090B`) are rendered from the same drawing.
 
 **Navbar.** Sticky, height 3.25rem, glass, bottom hairline. Brand left; 14px links in `--text-2`, current link
 `--text` with a 1px × 16px-wide `--text` underline indicator (not amber); ⌘K search pill; theme toggle.
@@ -154,6 +166,25 @@ area ≥24×24px (2.5.8). The figcaption keeps the key and summary for screen re
 right) · date (tabular). Filter tabs (`role="tablist"`-free: a segmented `role="group"` of `aria-pressed` buttons):
 All / Solved myself / Upsolved / With help / Not solved, `--r-ctl`, active = `--fill-2` + `--text`. Row hover =
 `--tile-2`, 120ms. Tags: plain `--text-2` text separated by ` · `, no pill colour.
+
+**Topic mastery (`.mx`, /stats/).** A table of every topic with problems, weakest first: solved myself as `x/y`
+with a 4px monochrome bar, with help or redo, not solved, hardest solved myself, and quiz recall (filled by
+`mastery.js` from `quiz-progress`, read-only). A topic with any problem not solved independently carries a
+"Weak spot" outline pill (text, not colour). Under 40rem rows become two-column cards labelled from `data-label`.
+
+**Next up and Weakest topics (homepage, 7 / 5 columns).** Next up lists not solved, then with help, then redo-only
+problems, easiest first, at most five, each with a written reason and the status keycap. A due quiz review item is
+added on top in the browser. Weakest topics shows the first three weak rows of the matrix, linking to the filtered
+index.
+
+**Difficulty over time (`.vel`, /stats/).** Weekly hardest (amber 2px line and 8px dots) and median (14px grey
+ring, no line) of problems solved myself, on dashed 100-point rules. The plot is `aria-hidden` and a "Weekly
+numbers" table repeats it. The sentence states the 28 days to the build date without projection, and the homepage climb
+tile carries the same fact in one line (`.vel-line`).
+
+**Ledger keyboard and filters.** While a row has focus, ↑ ↓ Home End move between visible rows (no global keys).
+Active filters show as removable chips (`.idx-x`, accessible name "Remove filter: …") with "Clear all" from two
+chips up, and "Copy link" copies the current filtered URL with a status message.
 
 **Palette (`.cmdk`).** Glass dialog 40rem wide, `--r-tile`, input 16px, results 14px, selected row `--fill-2` with
 2px left `--text` bar; footer hints as keycaps. Opens only with a modifier (Ctrl/⌘+K) or the pill.

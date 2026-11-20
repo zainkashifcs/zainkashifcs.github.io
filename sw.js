@@ -21,8 +21,9 @@ const PRECACHE = [
   {{ '/assets/js/palette.js' | relative_url | append: VERSION | jsonify }},
   {{ '/assets/js/lib/lenis.min.js' | relative_url | append: VERSION | jsonify }},
   {{ '/assets/js/motion.js' | relative_url | append: VERSION | jsonify }},
-  {{ '/assets/fonts/Inter-Variable-latin.woff2' | relative_url | jsonify }},
-  {{ '/assets/fonts/JetBrainsMono-Variable.woff2' | relative_url | jsonify }}
+  {{ '/assets/js/mastery.js' | relative_url | append: VERSION | jsonify }},
+  {{ '/assets/fonts/Geist-Variable-latin.woff2' | relative_url | jsonify }},
+  {{ '/assets/fonts/GeistMono-Variable-latin.woff2' | relative_url | jsonify }}
 ];
 
 self.addEventListener('install', (event) => {
