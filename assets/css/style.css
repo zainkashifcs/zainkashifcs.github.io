@@ -1153,6 +1153,72 @@ html:not(.js) .idx-hint { display: none; }
 .cf-one { max-width: 40rem; margin: 0 auto var(--s4); font-size: .875rem; line-height: 1.5; color: var(--text-2); text-align: center; }
 .cf-one .rk { color: var(--text); }
 
+/* ---------- overnight I: problem index workspace (fragments/I.css) ---------- */
+/* ---------- I: problem index workspace (filter rail 3/12 beside the ledger 9/12; one column below 64rem) ---------- */
+.idx-ws { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); gap: var(--s5); align-items: start; }
+.idx-ws > .toolbar[hidden] + .idx-main { grid-column: 1 / -1; } /* no JS: the rail stays hidden and the ledger takes the width */
+.idx-ws > .toolbar { position: sticky; top: calc(var(--nav-h) + var(--s4)); display: flex; flex-direction: column; align-items: stretch; gap: var(--s4);
+  max-height: calc(100dvh - var(--nav-h) - 2 * var(--s4)); margin: 0; padding: 2px var(--s4) 2px 2px; overflow-y: auto;
+  border-inline-end: 1px solid var(--hair); scrollbar-width: thin; }
+.idx-ws > .toolbar[hidden] { display: none; }
+.idx-rail :is(.rating-filter, .topic-chips, .idx-random, .idx-copy, .search-field) { order: 0; grid-column: auto; margin: 0; }
+.idx-main { min-width: 0; }
+.idx-rail input[type=search] { width: 100%; min-width: 0; }
+
+/* vertical status tabs: pressed = surface + a 2px bar at the start edge (shape, not only tone) */
+.idx-rail .segmented { position: relative; flex-direction: column; gap: 2px; width: auto; max-width: none; margin: 0; padding: 0; overflow: visible; border: 0; background: none; }
+.idx-rail .segmented button { display: flex; align-items: center; gap: .5rem; min-height: 2.25rem; padding: 0 .65rem; text-align: start; }
+.idx-rail .segmented button[hidden] { display: none; }
+.idx-rail .segmented button[aria-pressed="true"] { box-shadow: inset 2px 0 0 var(--text), var(--spec); }
+.idx-rail .segmented .n { margin-inline-start: auto; font: 500 11px var(--mono); font-variant-numeric: tabular-nums; color: var(--text-3); }
+.idx-rail .segmented button[aria-pressed="true"] .n { color: var(--text-2); }
+.idx-rail .segmented .dot { flex: none; width: 6px; height: 6px; margin-inline-start: auto; border-radius: 50%; background: var(--accent-display); } /* amber: the one allowed "Needs review" exception */
+.idx-rail .segmented .dot + .n { margin-inline-start: 0; }
+
+.idx-group { display: grid; gap: var(--s2); min-width: 0; }
+.idx-cap { margin: 0; font-size: .75rem; font-weight: 500; color: var(--text-3); }
+.idx-bands .chip { font-family: var(--mono); font-size: .75rem; font-variant-numeric: tabular-nums; }
+.idx-rail .range select { flex: 1; min-width: 0; }
+.idx-acts { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.idx-acts .btn { flex: 1 1 auto; min-height: 2.25rem; padding-inline: .9rem; font-size: .8125rem; }
+.idx-ws .chip { min-height: 2.25rem; }
+
+/* ledger: topics become monochrome keycaps under the name; status = glyph shape + the status text */
+@media (min-width: 44.01rem) {
+  .idx-ws .thead, .idx-ws .row { grid-template-columns: 5rem minmax(0, 1fr) 3.5rem 6rem; }
+  .idx-ws .thead span:nth-child(3) { display: none; }
+  .idx-ws .row > :not(.topics) { grid-row: 1; }
+  .idx-ws .row .topics { grid-column: 2; grid-row: 2; }
+}
+.idx-ws .row .topics { display: flex; flex-wrap: wrap; gap: 4px; margin-top: .4rem; }
+.idx-ws .row .topics:empty { display: none; }
+@media (max-width: 44rem) { .idx-ws .row .topics { grid-column: 1 / -1; grid-row: 3; margin-top: 0; } }
+.kc { display: inline-flex; align-items: center; min-height: 1.25rem; padding: 0 .4rem; border: 1px solid var(--hair-2); border-bottom-width: 2px;
+  border-radius: var(--r-key); background: var(--fill); color: var(--text-2); font: 500 11px/1 var(--mono); letter-spacing: 0; white-space: nowrap; }
+.row .stx { display: inline-block; flex: none; width: 8px; height: 8px; margin: 0 .4rem 1px 0; vertical-align: middle; border: 1.5px solid currentColor; border-radius: 50%; background: currentColor; }
+.row.st-help .stx { background: linear-gradient(90deg, currentColor 50%, transparent 50%); }
+.row.st-unsolved .stx { border-style: dashed; background: transparent; }
+.row.st-redo .stx { border-radius: 1px; background: transparent; rotate: 45deg; scale: .85; }
+.row .state { color: var(--text-2); }
+
+/* subtle hover elevation (pointer devices; no movement under reduced motion) */
+@media (hover: hover) {
+  .idx-ws .row { position: relative; transition: background-color var(--t1) var(--ease), box-shadow var(--t1) var(--ease), translate var(--t1) var(--ease); }
+  .idx-ws .row:hover { z-index: 1; box-shadow: 0 0 0 1px var(--hair-2), 0 8px 20px -14px rgb(0 0 0 / .6); }
+  .idx-ws .row:hover .kc { border-color: var(--field); }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) { .idx-ws .row:hover { translate: 0 -1px; } }
+
+/* below 64rem: one column, the rail above the ledger, tabs wrap in rows */
+@media (max-width: 64rem) {
+  .idx-ws { grid-template-columns: minmax(0, 1fr); gap: var(--s4); }
+  .idx-ws > .toolbar { position: static; max-height: none; overflow: visible; padding: 0 0 var(--s4); border-inline-end: 0; border-bottom: 1px solid var(--hair); }
+  .idx-rail .segmented { flex-flow: row wrap; }
+  .idx-rail .segmented button[aria-pressed="true"] { box-shadow: inset 0 -2px 0 var(--text), var(--spec); }
+  .idx-rail .segmented .n, .idx-rail .segmented .dot { margin-inline-start: .15rem; }
+  .idx-acts .btn { flex: 0 1 auto; }
+}
+
 /* ---------- print: write-ups, problem pages and /stats/ as clean black-on-white single columns ---------- */
 @media print {
   @page { margin: 16mm; }
