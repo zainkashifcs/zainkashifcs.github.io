@@ -1,0 +1,163 @@
+[
+  {
+    "id": "236a-boy-or-girl-q1",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "brute-force",
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "What does the program print for the username wjmzbmr?",
+    "choices": [
+      "CHAT WITH HER!",
+      "IGNORE HIM!",
+      "It prints 6",
+      "Nothing"
+    ],
+    "answer": 0,
+    "explanation": "The distinct letters are w, j, m, z, b, r, which is 6 (even), so it prints CHAT WITH HER!.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "wjmzbmr",
+      "output": "CHAT WITH HER!",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "236a-boy-or-girl-q2",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "brute-force",
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "What does the program print for xiaodao?",
+    "choices": [
+      "CHAT WITH HER!",
+      "IGNORE HIM!",
+      "It prints 5",
+      "Nothing"
+    ],
+    "answer": 1,
+    "explanation": "The distinct letters are x, i, a, o, d, which is 5 (odd), so it prints IGNORE HIM!.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "xiaodao",
+      "output": "IGNORE HIM!",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "236a-boy-or-girl-q3",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "brute-force",
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "What does the program print for the one-letter username a?",
+    "choices": [
+      "CHAT WITH HER!",
+      "IGNORE HIM!",
+      "It prints 1",
+      "Nothing"
+    ],
+    "answer": 1,
+    "explanation": "count starts at 1 and the loop does not run, so 1 is odd and IGNORE HIM! is printed.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "a",
+      "output": "IGNORE HIM!",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "236a-boy-or-girl-q4",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "complexity",
+    "tags": [
+      "brute-force",
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "What is the time complexity for a string of length n?",
+    "choices": [
+      "O(n)",
+      "O(n log n)",
+      "O(n^2)",
+      "O(1)"
+    ],
+    "answer": 1,
+    "explanation": "std::sort costs O(n log n) and dominates the single linear scan afterwards.",
+    "source": {
+      "type": "code",
+      "detail": "line 23: std::sort(n.begin(), n.end()); lines 25-32 linear scan"
+    },
+    "validation": {
+      "method": "code",
+      "status": "needs-review",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "236a-boy-or-girl-q5",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "reasoning",
+    "tags": [
+      "brute-force",
+      "implementation",
+      "strings"
+    ],
+    "code": false,
+    "question": "If the sort were removed, what would happen for the input abab?",
+    "choices": [
+      "It would count 4 instead of 2 distinct letters",
+      "It would still count 2",
+      "It would crash",
+      "It would count 1"
+    ],
+    "answer": 0,
+    "explanation": "Without sorting, equal letters are not adjacent, so every change between neighbours is counted: 1 + 3 = 4.",
+    "source": {
+      "type": "code",
+      "detail": "line 27: if( n[i] != n[i - 1]) compares only neighbours"
+    },
+    "validation": {
+      "method": "code",
+      "status": "needs-review",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  }
+]

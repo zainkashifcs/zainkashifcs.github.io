@@ -1,0 +1,160 @@
+[
+  {
+    "id": "1399a-remove-smallest-q1",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "sorting",
+      "greedy"
+    ],
+    "code": false,
+    "question": "Input is one test case with n = 4 and the numbers 5 3 4 2. What does the solution print?",
+    "choices": [
+      "YES",
+      "NO",
+      "2",
+      "4"
+    ],
+    "answer": 0,
+    "explanation": "Sorted it is 2 3 4 5 and every neighbouring gap is 1, so ok stays true.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1\n4\n5 3 4 2",
+      "output": "YES",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "1399a-remove-smallest-q2",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "sorting",
+      "greedy"
+    ],
+    "code": false,
+    "question": "Input is one test case with n = 3 and the numbers 1 2 4. What does the solution print?",
+    "choices": [
+      "YES",
+      "NO",
+      "1",
+      "3"
+    ],
+    "answer": 1,
+    "explanation": "After sorting, the gap 4 - 2 = 2 is greater than 1, so ok becomes false.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1\n3\n1 2 4",
+      "output": "NO",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "1399a-remove-smallest-q3",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "sorting"
+    ],
+    "code": false,
+    "question": "Input is one test case with n = 1 and the single number 7. What does the solution print?",
+    "choices": [
+      "YES",
+      "NO",
+      "7",
+      "Nothing is printed"
+    ],
+    "answer": 0,
+    "explanation": "There are no neighbouring pairs, so the check loop never runs and ok stays true.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1\n1\n7",
+      "output": "YES",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "1399a-remove-smallest-q4",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "sorting",
+      "greedy"
+    ],
+    "code": false,
+    "question": "Input is one test case with n = 4 and the numbers 10 1 2 3. What does the solution print?",
+    "choices": [
+      "YES",
+      "NO",
+      "10",
+      "1"
+    ],
+    "answer": 1,
+    "explanation": "Sorted it is 1 2 3 10; the gap of 7 before 10 is larger than 1.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1\n4\n10 1 2 3",
+      "output": "NO",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "1399a-remove-smallest-q5",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "reasoning",
+    "tags": [
+      "sorting",
+      "greedy"
+    ],
+    "code": false,
+    "question": "Why does the solution sort the numbers before comparing neighbours?",
+    "choices": [
+      "Close numbers end up next to each other, so only adjacent gaps need checking",
+      "Sorting makes the numbers smaller",
+      "Sorting removes duplicates",
+      "cin needs sorted input"
+    ],
+    "answer": 0,
+    "explanation": "After sorting, the numbers can all be merged into one exactly when no two neighbours differ by more than 1. A gap above 1 between neighbours splits the numbers into two groups that can never be joined, so checking adjacent gaps is enough.",
+    "source": {
+      "type": "note",
+      "section": "Idea",
+      "quote": "close numbers sit next to each other"
+    },
+    "validation": {
+      "method": "note",
+      "status": "needs-review",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  }
+]

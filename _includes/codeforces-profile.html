@@ -1,0 +1,33 @@
+{%- comment -%}
+Zain's public Codeforces profile, from _data/codeforces.json (written by _scripts/fetch_codeforces.py).
+Shows nothing unless the cached data is valid, so an unset or unknown handle never produces an empty box.
+Usage: include codeforces-profile.html
+{%- endcomment -%}
+{%- assign cf = site.data.codeforces -%}
+{%- if cf.status == "ok" %}
+{%- include rating.html rating=cf.rating -%}{%- assign _now = rank_tier -%}
+{%- include rating.html rating=cf.max_rating -%}{%- assign _max = rank_tier -%}
+<section class="{{ include.class | default: 'section' }} cf-profile" aria-labelledby="cf-h">
+  <div class="section-head"><h2 id="cf-h">On Codeforces</h2><a href="https://codeforces.com/profile/{{ cf.handle }}">{{ cf.handle }} on Codeforces</a></div>
+  <dl class="cf-facts">
+    <div><dt>Rating</dt><dd>{% if cf.rating %}<span class="rk t-{{ _now }}">{{ cf.rating }}</span>{% else %}<span class="na">Unrated</span>{% endif %}<small>{{ cf.rank | default: "no rank yet" }}</small></dd></div>
+    <div><dt>Highest</dt><dd>{% if cf.max_rating %}<span class="rk t-{{ _max }}">{{ cf.max_rating }}</span>{% else %}<span class="na">None yet</span>{% endif %}<small>{{ cf.max_rank | default: "" }}</small></dd></div>
+    <div><dt>Rated contests</dt><dd>{{ cf.contests }}</dd></div>
+    <div><dt>Accepted problems</dt><dd>{{ cf.accepted_count }}</dd></div>
+  </dl>
+  {%- if cf.spark and cf.spark != "" %}
+  <figure class="cf-spark">
+    <svg viewBox="0 0 300 60" preserveAspectRatio="none" role="img" aria-label="Rating after each of {{ cf.contests }} rated contests, from {{ cf.history.first.rating }} to {{ cf.history.last.rating }}"><polyline points="{{ cf.spark }}" /></svg>
+    <figcaption>Rating history, {{ cf.history.first.date | date: "%b %Y" }} to {{ cf.history.last.date | date: "%b %Y" }}</figcaption>
+  </figure>
+  {%- endif %}
+  {%- if cf.by_rating.size > 0 %}
+  {%- assign _top = 1 -%}{%- for r in cf.by_rating -%}{%- if r[1] > _top -%}{%- assign _top = r[1] -%}{%- endif -%}{%- endfor -%}
+  <p class="cf-caption" id="cf-bars-h">Accepted problems by rating</p>
+  <div class="cf-bars{% if cf.by_rating.size > 12 %} dense{% endif %}" role="list" aria-labelledby="cf-bars-h">
+    {%- for r in cf.by_rating %}<div role="listitem" class="bar"><span class="b" style="--h: {{ r[1] | times: 100 | divided_by: _top }}%" aria-hidden="true"></span><span class="v">{{ r[1] }}</span><span class="k">{{ r[0] }}</span></div>{% endfor -%}
+  </div>
+  {%- endif %}
+  <p class="provenance">From the public Codeforces API, last fetched {{ cf.fetched | date: "%-d %b %Y" }}. Accepted problems count every problem with an accepted submission; the archive above is my own log.</p>
+</section>
+{%- endif %}

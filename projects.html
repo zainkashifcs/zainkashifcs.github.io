@@ -1,0 +1,29 @@
+---
+title: Projects
+permalink: /projects/
+description: Software I have built alongside competitive programming.
+---
+{%- comment -%} Entries live in _data/projects.json. Empty fields are not shown, so an entry can grow as it is written. {%- endcomment -%}
+<header class="page-head">
+  <h1>Projects</h1>
+  <p class="lede">Software I&rsquo;ve built alongside competitive programming. More will be added here as I build them.</p>
+</header>
+<div class="projects">
+{%- for pr in site.data.projects %}
+  <article class="project" id="{{ pr.id }}" aria-labelledby="{{ pr.id }}-h">
+    <h2 id="{{ pr.id }}-h">{{ pr.name }}</h2>
+    <p class="overview">{{ pr.overview }}</p>
+    <dl class="project-facts">
+      {%- if pr.problem != "" %}<div><dt>The problem</dt><dd>{{ pr.problem }}</dd></div>{% endif %}
+      {%- if pr.technologies.size > 0 %}<div><dt>Technologies</dt><dd>{{ pr.technologies | join: ", " }}</dd></div>{% endif %}
+      {%- if pr.decisions.size > 0 %}<div><dt>Key decisions</dt><dd><ul>{% for d in pr.decisions %}<li>{{ d }}</li>{% endfor %}</ul></dd></div>{% endif %}
+      {%- if pr.challenges != "" %}<div><dt>Challenges</dt><dd>{{ pr.challenges }}</dd></div>{% endif %}
+      {%- if pr.learned != "" %}<div><dt>What I learned</dt><dd>{{ pr.learned }}</dd></div>{% endif %}
+    </dl>
+    <p class="links">
+      {%- if pr.repo != "" %}<a class="btn quiet" href="{{ pr.repo }}">Repository on GitHub</a>{% endif -%}
+      {%- if pr.demo != "" %}<a class="btn quiet" href="{{ pr.demo }}">Live site</a>{% endif -%}
+    </p>
+  </article>
+{%- endfor %}
+</div>

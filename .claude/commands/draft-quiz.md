@@ -15,14 +15,16 @@ If `$ARGUMENTS` names a problem ID, work only on that problem (it may already ha
 Otherwise take every problem in the queue. If the queue is empty and no ID was given, say so and stop.
 
 ## 2. Read the real material for each problem
-- The solution file in `../comp-program-grind` (path from the queue): its leading `//` comment lines are the notes, the rest is the code.
+- The solution file in `../comp-program-grind` (path from the queue): its leading `//` comment lines are the notes (many files have none), the rest is the code.
+- The problem's record in `_data/problems.json` (official name, rating and tags). Problem statements are not available offline: never state constraints or statement details that the code, notes or a verified run do not show.
 - The published post in `_posts/` if there is one, and the problem's entries in `_data/activity.json`.
 - Existing drafts in `_review/quiz/<slug>.json` and live questions in `_data/quizzes/<slug>.json`: never repeat or change them.
 
 ## 3. Draft 4 to 6 questions per problem
 Mix the kinds that genuinely fit this solution: `tracing`, `edge-case`, `complexity`, `data-structure`, `math`, `reasoning`.
 
-Give every question a `"tags"` list naming the topics it actually tests. Use only ids from `_data/topics.json`, and only tags that the write-up's own front matter lists (its `// Tags:` header). One question may carry several tags; never add a tag the write-up does not have. `approve_quiz.py` and `check_data.py` refuse anything else.
+Give every question a `"tags"` list naming the topics it actually tests. Use only ids in the problem's `topics` list in `_data/problems.json` (its write-up tags plus its official Codeforces tags). One question may carry several tags; never add a tag the problem does not list. `approve_quiz.py` and `check_data.py` refuse anything else.
+Only problems with `"eligible": true` in `_data/problems.json` (solved independently) get questions.
 Test understanding of the algorithm and its reasoning, not recall of the code.
 
 Every question must be grounded. Use exactly one of these sources:
@@ -58,5 +60,5 @@ Finish with a short table: id, kind, status, and what Zain should check for each
 
 ## Never
 - Never run `_scripts/approve_quiz.py`, never edit `_data/quizzes/`, never edit `_posts/`.
-- Never change existing drafts written by someone else, or live questions.
+- Never change existing drafts written by someone else, or live questions. The one exception: an existing draft with no `tags` field may be given one (and nothing else).
 - Never commit, push, or edit the solutions repository.

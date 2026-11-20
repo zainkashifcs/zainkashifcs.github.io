@@ -1,0 +1,24 @@
+{%- comment -%}
+Homepage tile: what to work on next, from nu_rows in mastery-data.html (include it first). Not solved first, then
+solved with help, then problems where only a redo is logged; at most five. mastery.js puts a "quiz questions due"
+item on top when this browser has questions due for review today.
+{%- endcomment -%}
+<div class="tile tile-next" data-reveal>
+  <h3 id="nu-h">Next up</h3>
+  <ol class="nu" aria-labelledby="nu-h" data-qids="{{ mx_qids | join: ' ' }}" data-quiz-href="{{ '/quiz/' | relative_url }}?mode=due">
+    {%- for r in nu_rows limit: 5 -%}{%- if r != "" -%}{%- assign _f = r | split: "~" -%}{%- assign _i = _f[4] | plus: 0 -%}{%- assign p = site.data.problems[_i] %}
+    <li class="nu-item"><a href="{{ p.post | default: p.page | relative_url }}"><span class="rb{% if _f[0] == '1' %} open{% else %} help{% endif %}">{{ p.id }}</span><span class="nu-name">{{ p.name }}</span>{% if p.rating %}<span class="rk">{{ p.rating }}</span>{% endif %}<span class="nu-why">
+      {%- case _f[0] -%}
+      {%- when "1" -%}Attempted {{ p.last_date | date: "%-d %b" }}, not solved yet.
+      {%- when "2" -%}Solved with help on {{ p.last_date | date: "%-d %b" }}. Next: solve it on my own.
+      {%- else -%}Only a redo is logged, so it doesn&rsquo;t count as solved independently.
+      {%- endcase -%}</span></a></li>
+    {%- endif -%}{%- endfor %}
+  </ol>
+  {%- assign _n = nu_rows.size -%}
+  {%- if _n == 0 %}
+  <p class="tile-quote nu-empty">Nothing waiting: every logged problem is solved independently.</p>
+  {%- elsif _n > 5 and nu_open > 0 %}
+  <a class="more" href="{{ '/' | relative_url }}?status=unsolved#index">See all {{ nu_open }} not solved in the index</a>
+  {%- endif %}
+</div>

@@ -1,0 +1,26 @@
+---
+layout: null
+sitemap: false
+---
+{%- comment -%}
+Search index for the command palette (assets/js/palette.js). Built only from existing data: the problem archive, the topic
+list, the site's titled pages and the published journal notes. Rows are one JSON object each, joined with commas.
+{%- endcomment -%}
+{%- assign _sep = "@@@" -%}
+{%- capture _rows -%}
+{%- for p in site.data.problems -%}
+  {%- case p.status -%}{%- when "help" -%}{%- assign _key = "help" -%}{%- when "attempted", "unsolved" -%}{%- assign _key = "unsolved" -%}{%- else -%}{%- assign _key = "solved" -%}{%- endcase -%}
+  {"t":"problem","id":{{ p.id | jsonify }},"title":{{ p.name | jsonify }},"url":{{ p.post | default: p.page | relative_url | jsonify }},"rating":{{ p.rating | default: 0 | jsonify }},"status":{{ _key | jsonify }},"date":{{ p.first_date | jsonify }},"topics":{{ p.topics | jsonify }}}{{ _sep }}
+{%- endfor -%}
+{%- for g in site.data.topics -%}{%- for t in g.topics -%}
+  {%- assign _n = site.data.problems | where_exp: "x", "x.topics contains t.id" | size -%}
+  {%- if _n > 0 -%}{"t":"topic","id":{{ t.id | jsonify }},"title":{{ t.label | jsonify }},"url":{{ '/' | relative_url | append: '?topics=' | append: t.id | append: '#index' | jsonify }},"n":{{ _n }}}{{ _sep }}{%- endif -%}
+{%- endfor -%}{%- endfor -%}
+{%- for pg in site.pages -%}
+  {%- if pg.title and pg.sitemap != false -%}{"t":"page","title":{{ pg.title | jsonify }},"url":{{ pg.url | relative_url | jsonify }}}{{ _sep }}{%- endif -%}
+{%- endfor -%}
+{%- for j in site.journal -%}
+  {"t":"journal","title":{{ j.title | jsonify }},"url":{{ j.url | relative_url | jsonify }}}{{ _sep }}
+{%- endfor -%}
+{%- endcapture -%}
+[{{ _rows | split: _sep | join: "," }}]

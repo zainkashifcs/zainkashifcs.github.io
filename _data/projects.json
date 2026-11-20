@@ -1,0 +1,33 @@
+[
+  {
+    "id": "zains-blog",
+    "name": "Zain's Blog",
+    "overview": "This website: a record of my competitive programming practice, with a problem archive, a verified activity log, quizzes and a roadmap towards a 1800 Codeforces rating.",
+    "problem": "Keeping an honest, searchable record of practice, including problems not yet solved, without editing it by hand after every session.",
+    "technologies": ["Jekyll", "Liquid", "HTML", "CSS", "JavaScript", "Python", "GitHub Actions", "GitHub Pages"],
+    "decisions": [
+      "A static site with no backend or tracking: everything is built ahead of time and hosted on GitHub Pages.",
+      "The activity log is rebuilt from the commit history of the solutions repository every six hours by a GitHub Actions workflow, so each entry is traceable to a commit.",
+      "Problem names, ratings and tags come from Codeforces' public API; statuses come only from the log.",
+      "Quiz questions are checked by compiling and running the real solution before they can be approved."
+    ],
+    "challenges": "",
+    "learned": "",
+    "repo": "https://github.com/zainkashifcs/zainkashifcs.github.io",
+    "demo": "https://zainkashifcs.github.io/"
+  },
+  {
+    "id": "comp-program-grind",
+    "name": "comp-program-grind",
+    "overview": "My C++ solutions to Codeforces problems, one file per problem, many with my notes at the top.",
+    "problem": "",
+    "technologies": ["C++"],
+    "decisions": [
+      "Commit messages record what happened with each problem (solved, attempted, redo), which is what this site's activity log reads."
+    ],
+    "challenges": "",
+    "learned": "",
+    "repo": "https://github.com/zainkashifcs/comp-program-grind",
+    "demo": ""
+  }
+]

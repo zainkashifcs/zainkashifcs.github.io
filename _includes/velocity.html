@@ -1,0 +1,71 @@
+{%- comment -%}
+Difficulty velocity, from the vel_* variables in mastery-data.html (include it first).
+  include velocity.html            the weekly chart, its sentence and a table of the same numbers (/stats/)
+  include velocity.html line=true  one line for the homepage climb tile
+Problem difficulty is Codeforces' rating of the problem, never a personal rating. No trend line, no projection.
+The plot is aria-hidden: the figcaption sentence and the "Weekly numbers" table carry the same facts.
+{%- endcomment -%}
+{%- if include.line -%}
+<p class="vel-line"><span class="vel-k">28 days to {{ site.time | date: "%-d %b" }}</span> {{ vel_short }} {{ vel_so_far }}</p>
+{%- else -%}
+{%- assign _nw = vel_weeks.size -%}
+{%- if vel_with < 2 %}
+<p class="stats-note">Too few weeks to chart.</p>
+<p class="vel-sentence">{{ vel_text }} {{ vel_so_far }}</p>
+{%- else -%}
+{%- assign _lo = vel_lo | divided_by: 100 | times: 100 | minus: 100 -%}
+{%- assign _hi = vel_hi | plus: 99 | divided_by: 100 | times: 100 | plus: 100 -%}
+{%- assign _span = _hi | minus: _lo -%}{%- assign _steps = _span | divided_by: 100 -%}
+{%- assign _path = "" -%}{%- assign _prev = false -%}{%- assign _pts = "" -%}
+{%- for w in vel_weeks -%}{%- assign _f = w | split: "~" -%}
+  {%- assign _x = forloop.index0 | times: 100.0 | plus: 50.0 | divided_by: _nw | round: 2 -%}
+  {%- if _f[2] -%}
+    {%- assign _yh = _hi | minus: _f[2] | times: 100.0 | divided_by: _span | round: 2 -%}
+    {%- assign _ym = _hi | minus: _f[3] | times: 100.0 | divided_by: _span | round: 2 -%}
+    {%- if _prev -%}{%- capture _path -%}{{ _path }} L{{ _x }} {{ _yh }}{%- endcapture -%}{%- else -%}{%- capture _path -%}{{ _path }} M{{ _x }} {{ _yh }}{%- endcapture -%}{%- endif -%}
+    {%- assign _prev = true -%}
+    {%- capture _pts -%}{{ _pts }}<span class="vel-pt md" style="left:{{ _x }}%;top:{{ _ym }}%"></span><span class="vel-pt hi {% if _x < 50 %}l{% else %}r{% endif %}" style="left:{{ _x }}%;top:{{ _yh }}%" data-tip="{{ _f[0] }}: hardest {{ _f[2] }}, median {{ _f[3] }}"></span>{%- endcapture -%}
+  {%- else -%}{%- assign _prev = false -%}{%- endif -%}
+{%- endfor %}
+<figure class="vel">
+  <div class="vel-chart" aria-hidden="true">
+    <div class="vel-plot">
+      {%- for i in (0.._steps) -%}{%- assign _top = i | times: 10000.0 | divided_by: _span | round: 2 %}
+      <div class="rule" style="top:{{ _top }}%"></div>
+      {%- endfor %}
+      <svg class="vel-svg" viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false"><path d="{{ _path | strip }}"/></svg>
+      {{ _pts }}
+    </div>
+    <ul class="vel-axis">
+      {%- for i in (0.._steps) -%}{%- assign _v = i | times: 100 -%}{%- assign _v = _hi | minus: _v -%}{%- assign _m = _v | modulo: 200 -%}
+      {%- if _m == 0 -%}{%- assign _top = i | times: 10000.0 | divided_by: _span | round: 2 %}
+      <li style="top:{{ _top }}%">{{ _v }}</li>
+      {%- endif -%}{%- endfor %}
+    </ul>
+    <ol class="vel-time" style="--n:{{ _nw }}">
+      {%- for w in vel_weeks -%}{%- assign _f = w | split: "~" %}
+      <li{% unless _f[2] %} class="vel-empty"{% endunless %}>{{ _f[0] }}</li>
+      {%- endfor %}
+    </ol>
+  </div>
+  <figcaption>
+    <span class="vel-key"><i class="vel-pt hi"></i>Hardest solved myself</span>
+    <span class="vel-key"><i class="vel-pt md"></i>Median solved myself</span>
+    <span class="vel-sentence">{{ vel_text }} {{ vel_so_far }}</span>
+  </figcaption>
+</figure>
+{%- endif %}
+<details class="vel-data">
+  <summary>Weekly numbers</summary>
+  <table class="mx vel-table">
+    <caption class="vh">Problems solved independently per week, with the hardest and the median problem difficulty</caption>
+    <thead><tr><th scope="col">Week of</th><th scope="col">Solved myself</th><th scope="col">Hardest</th><th scope="col">Median</th></tr></thead>
+    <tbody>
+      {%- for w in vel_weeks -%}{%- assign _f = w | split: "~" %}
+      <tr><th scope="row">{{ _f[0] }}</th><td data-label="Solved myself">{{ _f[1] }}</td><td data-label="Hardest">{% if _f[2] %}{{ _f[2] }}{% else %}None{% endif %}</td><td data-label="Median">{% if _f[3] %}{{ _f[3] }}{% else %}None{% endif %}</td></tr>
+      {%- endfor %}
+    </tbody>
+  </table>
+</details>
+<p class="stats-note">Weeks start on Monday. Only problems solved independently count, each on the day it was first solved. Problem difficulty is Codeforces&rsquo; rating of the problem, not a personal rating.</p>
+{%- endif -%}

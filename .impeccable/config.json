@@ -1,0 +1,25 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-11-18T22:04:26.145Z"
+      },
+      {
+        "rule": "overused-font",
+        "value": "geist",
+        "createdAt": "2026-11-20T00:17:08.187Z",
+        "reason": "User-specified typeface in the Firecrawl/logo/typography brief"
+      },
+      {
+        "rule": "overused-font",
+        "value": "geist mono",
+        "createdAt": "2026-11-20T00:17:08.450Z",
+        "reason": "User-specified typeface in the Firecrawl/logo/typography brief"
+      }
+    ]
+  }
+}

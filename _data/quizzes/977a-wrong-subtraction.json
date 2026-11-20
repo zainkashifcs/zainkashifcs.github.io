@@ -1,0 +1,155 @@
+[
+  {
+    "id": "977a-wrong-subtraction-q1",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "implementation"
+    ],
+    "code": false,
+    "question": "The program reads x then k. What does it print for this input?\n512 4",
+    "choices": [
+      "51",
+      "49",
+      "50",
+      "5"
+    ],
+    "answer": 2,
+    "explanation": "512 -> 511 -> 510 -> 51 -> 50: subtract 1 when the last digit is nonzero, divide by 10 when it is 0.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "512 4",
+      "output": "50",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "977a-wrong-subtraction-q2",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "implementation"
+    ],
+    "code": false,
+    "question": "What is printed for this input?\n1000 3",
+    "choices": [
+      "10",
+      "100",
+      "0",
+      "1"
+    ],
+    "answer": 3,
+    "explanation": "1000 -> 100 -> 10 -> 1, each step dividing by 10 as the last digit is 0.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1000 3",
+      "output": "1",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "977a-wrong-subtraction-q3",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "implementation"
+    ],
+    "code": false,
+    "question": "What is printed for the input 5 6 (k larger than needed to reach 0)?",
+    "choices": [
+      "0",
+      "-1",
+      "1",
+      "5"
+    ],
+    "answer": 0,
+    "explanation": "5 reaches 0 after 5 steps, and the sixth step does 0 / 10 = 0, since 0 % 10 == 0.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "5 6",
+      "output": "0",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "977a-wrong-subtraction-q4",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "implementation"
+    ],
+    "code": false,
+    "question": "What is printed for the input 1 0 (k = 0)?",
+    "choices": [
+      "0",
+      "1",
+      "10",
+      "-1"
+    ],
+    "answer": 1,
+    "explanation": "The loop runs zero times, so x is printed unchanged.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1 0",
+      "output": "1",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "977a-wrong-subtraction-q5",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "reasoning",
+    "tags": [
+      "implementation"
+    ],
+    "code": false,
+    "question": "Which condition makes the program divide by 10 instead of subtracting 1?",
+    "choices": [
+      "x % 10 == 0",
+      "x % 10 == 1",
+      "x % 2 == 0",
+      "x >= 10"
+    ],
+    "answer": 0,
+    "explanation": "Only when the last digit is zero is x divided by 10; otherwise x decreases by 1.",
+    "source": {
+      "type": "code",
+      "detail": "line 13-20: if(x % 10 == 0) x=x/10; else x=x-1"
+    },
+    "validation": {
+      "method": "code",
+      "status": "needs-review",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  }
+]

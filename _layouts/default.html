@@ -3,37 +3,70 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
-  <meta name="description" content="{{ page.description | default: site.description }}">
-  <meta property="og:site_name" content="{{ site.title }}">
-  <meta property="og:title" content="{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}">
-  <meta property="og:description" content="{{ page.description | default: site.description }}">
+  {%- comment -%} description: the page's own, else a write-up's title and lesson, else the site's {%- endcomment -%}
+  {%- assign _desc = page.description -%}
+  {%- if _desc == nil and page.layout == 'post' -%}{%- include summary.html summary=page.summary html=content -%}{%- if summary != "" -%}{%- assign _desc = page.title | append: ": " | append: summary -%}{%- endif -%}{%- endif -%}
+  {%- assign _desc = _desc | default: site.description %}
+  <title>{% if page.title %}{{ page.title | escape }} | {% endif %}{{ site.title | escape }}</title>
+  <meta name="description" content="{{ _desc | escape }}">
+  <meta property="og:site_name" content="{{ site.title | escape }}">
+  <meta property="og:title" content="{% if page.title %}{{ page.title | escape }} | {% endif %}{{ site.title | escape }}">
+  <meta property="og:description" content="{{ _desc | escape }}">
+  <meta property="og:url" content="{{ page.url | absolute_url }}">
+  <meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}">
+  <meta property="og:image" content="{{ '/assets/img/og-card.png' | absolute_url }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Zain's Blog: Problems I've solved, and what each one taught me.">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="{{ page.url | absolute_url }}">
+  {%- comment -%} structured data from facts already on the site (About page, front matter) {%- endcomment -%}
+  {%- if page.url == '/' %}
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":{{ site.title | jsonify }},"url":{{ '/' | absolute_url | jsonify }},"description":{{ site.description | jsonify }},"author":{"@type":"Person","name":"Zain Kashif","affiliation":{"@type":"CollegeOrUniversity","name":"University of Nottingham"}}}</script>
+  {%- elsif page.layout == 'post' %}
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":{{ page.title | jsonify }},"datePublished":{{ page.date | date_to_xmlschema | jsonify }},"url":{{ page.url | absolute_url | jsonify }},"description":{{ _desc | jsonify }},"author":{"@type":"Person","name":"Zain Kashif"}}</script>
+  {%- endif %}
+  <link rel="alternate" type="application/atom+xml" title="{{ site.title | escape }}" href="{{ '/feed.xml' | relative_url }}">
   <link rel="icon" href="{{ '/assets/favicon-32.png' | relative_url }}" sizes="32x32" type="image/png">
   <link rel="icon" href="{{ '/assets/favicon.svg' | relative_url }}" type="image/svg+xml">
   <link rel="apple-touch-icon" href="{{ '/assets/apple-touch-icon.png' | relative_url }}">
-  <link rel="preload" href="{{ '/assets/fonts/Archivo-Variable.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="{{ '/assets/fonts/ArchivoCondensed-Variable.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
-  <meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#10141a" media="(prefers-color-scheme: dark)">
-  <script>(function(){var r=document.documentElement;try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')r.dataset.theme=t}catch(e){}
-  var all=['network','mesh','field'],h;try{h=sessionStorage.getItem('hero');if(all.indexOf(h)<0){var last=localStorage.getItem('hero-last'),pool=all.filter(function(x){return x!==last});h=pool[Math.floor(Math.random()*pool.length)];sessionStorage.setItem('hero',h);localStorage.setItem('hero-last',h)}}catch(e){h=all[Math.floor(Math.random()*3)]}r.dataset.hero=h;
-  })()</script>
-  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  <link rel="manifest" href="{{ '/manifest.webmanifest' | relative_url }}">
+  {%- if page.noindex %}
+  <meta name="robots" content="noindex">
+  {%- endif %}
+  <link rel="preload" href="{{ '/assets/fonts/Geist-Variable-latin.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ '/assets/fonts/GeistMono-Variable-latin.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
+  <meta name="theme-color" content="#09090B">
+  <script>(function(){var r=document.documentElement;r.classList.add('js');try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')r.dataset.theme=t}catch(e){}
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches)r.classList.add('motion')})()</script>
+  {%- comment -%} homepage: pick the hero scene once per tab, never the one shown last time (assets/js/hero.js) {%- endcomment %}
+  {%- if page.url == '/' -%}
+<script>(function(){var L=['network','mesh','field','grid','sort'],r=document.documentElement,h,p,q=/[?&]hero=(\w+)/.exec(location.search);
+if(q&&L.indexOf(q[1])>-1){r.dataset.hero=q[1];return}
+try{h=sessionStorage.getItem('hero')}catch(e){}
+if(L.indexOf(h)<0){try{p=localStorage.getItem('hero-last')}catch(e){}
+var c=L.filter(function(x){return x!==p});h=c[Math.floor(Math.random()*c.length)];
+try{sessionStorage.setItem('hero',h);localStorage.setItem('hero-last',h)}catch(e){}}
+r.dataset.hero=h})()</script>
+{%- endif -%}
+  {%- comment -%} ?v= is the build time: after a deploy, new pages never pick up a stale cached copy (sw.js caches by full URL) {%- endcomment %}
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v={{ site.time | date: '%s' }}">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
   <header class="site">
     <div class="frame">
-      <a class="brand" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+      <a class="brand" href="{{ '/' | relative_url }}">{% include logo-mark.html %}{{ site.title }}</a>
       <nav aria-label="Main">
-        <a href="{{ '/' | relative_url }}#index"{% if page.url == '/' or page.layout == 'post' %} aria-current="page"{% endif %}>Problems</a>
+        <a href="{{ '/' | relative_url }}#index"{% if page.url == '/' or page.layout == 'post' or page.layout == 'problem' %} aria-current="page"{% endif %}>Problems</a>
         <a href="{{ '/activity/' | relative_url }}"{% if page.url == '/activity/' %} aria-current="page"{% endif %}>Activity</a>
-        <a href="{{ '/tags/' | relative_url }}"{% if page.url == '/tags/' %} aria-current="page"{% endif %}>Topics</a>
         <a href="{{ '/quiz/' | relative_url }}"{% if page.url == '/quiz/' %} aria-current="page"{% endif %}>Quiz</a>
+        <a href="{{ '/roadmap/' | relative_url }}"{% if page.url == '/roadmap/' %} aria-current="page"{% endif %}>Roadmap</a>
+        <a href="{{ '/journal/' | relative_url }}"{% if page.url contains '/journal/' %} aria-current="page"{% endif %}>Journal</a>
         <a href="{{ '/about/' | relative_url }}"{% if page.url == '/about/' %} aria-current="page"{% endif %}>About</a>
-        <a href="{{ site.solutions_repo }}">GitHub</a>
       </nav>
-      <button class="theme-toggle" type="button" aria-pressed="false" hidden><span class="vh">Dark theme</span><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 2a8 8 0 0 1 0 16z" fill="currentColor"/></svg></button>
+      <button class="palette-btn" type="button" data-palette data-src="{{ '/search.json' | relative_url }}" aria-haspopup="dialog" aria-label="Search" hidden><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="m12.8 12.8 4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="palette-label">Search</span><kbd class="palette-kbd" aria-hidden="true"></kbd></button>
+      <button class="theme-toggle" type="button" aria-pressed="false" hidden><span class="vh">Dark theme</span><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 2.75a7.25 7.25 0 0 1 0 14.5z" fill="currentColor"/></svg></button>
     </div>
   </header>
   <main id="main">
@@ -44,10 +77,14 @@
   <footer class="site">
     <div class="frame">
       <span>{{ site.title }}. Solutions live in <a href="{{ site.solutions_repo }}">{{ site.solutions_repo | split: '/' | last }}</a>.</span>
-      <span><a href="{{ '/privacy/' | relative_url }}">Privacy policy</a></span>
+      <nav class="footer-links" aria-label="More"><a href="{{ '/tags/' | relative_url }}">Topics</a><a href="{{ '/stats/' | relative_url }}">Stats</a><a href="{{ '/projects/' | relative_url }}">Projects</a><a href="https://github.com/zainkashifcs">GitHub</a><a href="{{ '/privacy/' | relative_url }}">Privacy policy</a></nav>
       <span>Activity last synced from commit {{ site.data.sync_state.solutions_head_short }}.</span>
     </div>
   </footer>
-  <script src="{{ '/assets/js/theme.js' | relative_url }}" defer></script>
+  <script src="{{ '/assets/js/theme.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+  <script src="{{ '/assets/js/palette.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+  <script src="{{ '/assets/js/lib/lenis.min.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+  <script src="{{ '/assets/js/motion.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+  <script>if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register({{ '/sw.js' | relative_url | jsonify }}).catch(() => {}));</script>
 </body>
 </html>

@@ -1,0 +1,157 @@
+[
+  {
+    "id": "405a-gravity-flip-q1",
+    "status": "approved",
+    "origin": "human",
+    "kind": "tracing",
+    "tags": [
+      "sorting"
+    ],
+    "code": false,
+    "question": "The columns are 3 2 1 2. What does the solution print after gravity flips right?",
+    "choices": [
+      "3 2 2 1",
+      "1 2 2 3",
+      "2 1 2 3",
+      "3 2 1 2"
+    ],
+    "answer": 1,
+    "explanation": "Pulling right stacks the shortest columns on the left, so the heights come out sorted.",
+    "source": {
+      "type": "run",
+      "detail": "Codeforces sample input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "4\n3 2 1 2",
+      "output": "1 2 2 3",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "405a-gravity-flip-q3",
+    "status": "approved",
+    "origin": "human",
+    "kind": "complexity",
+    "tags": [
+      "sorting"
+    ],
+    "code": false,
+    "question": "What is the time complexity of the solution?",
+    "choices": [
+      "O(1)",
+      "O(n)",
+      "O(n log n)",
+      "O(n^2)"
+    ],
+    "answer": 2,
+    "explanation": "Reading and printing are single passes; the sort dominates.",
+    "source": {
+      "type": "note",
+      "section": "Lesson",
+      "quote": "Complexity: O(n log n), because of the sort"
+    },
+    "validation": {
+      "method": "note",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "405a-gravity-flip-q4",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "sorting"
+    ],
+    "code": false,
+    "question": "Input is n = 1 and the single height 5. What does the solution print?",
+    "choices": [
+      "5",
+      "0",
+      "1",
+      "Nothing is printed"
+    ],
+    "answer": 0,
+    "explanation": "A single column sorts to itself and no separating space is printed.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1\n5",
+      "output": "5",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "405a-gravity-flip-q5",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "sorting",
+      "implementation"
+    ],
+    "code": false,
+    "question": "Input is n = 5 and the heights 4 4 1 9 1. What does the solution print?",
+    "choices": [
+      "1 1 4 4 9",
+      "9 4 4 1 1",
+      "1 4 9 4 1",
+      "1 1 4 9"
+    ],
+    "answer": 0,
+    "explanation": "Sorting ascending keeps duplicates and gives 1 1 4 4 9.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "5\n4 4 1 9 1",
+      "output": "1 1 4 4 9",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "405a-gravity-flip-q2",
+    "status": "approved",
+    "origin": "human",
+    "kind": "reasoning",
+    "tags": [
+      "sorting",
+      "implementation"
+    ],
+    "code": false,
+    "question": "What actually changes when gravity flips?",
+    "choices": [
+      "The heights",
+      "Only the order of the heights",
+      "The number of columns",
+      "Nothing"
+    ],
+    "answer": 1,
+    "explanation": "Cubes slide right until they stack up, and the result is the same set of column heights in non-decreasing order. Only the order changes, which is why the solution just sorts.",
+    "source": {
+      "type": "note",
+      "section": "Idea",
+      "quote": "the heights stay the same, only their ORDER changes"
+    },
+    "validation": {
+      "method": "note",
+      "status": "needs-review",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  }
+]

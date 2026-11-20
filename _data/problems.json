@@ -1,0 +1,890 @@
+[
+ {
+  "id": "1A",
+  "name": "Theatre Square",
+  "slug": "1a-theatre-square",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 1000,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "math"
+  ],
+  "topics": [
+   "implementation",
+   "math"
+  ],
+  "first_date": "2026-10-14",
+  "last_date": "2026-11-06",
+  "solved_date": "2026-10-14",
+  "solution_file": "CF Questions/1_A_Theatre_Square.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/8d554727aab92d11ca149a9b4325b0ec27dd3d8a/CF%20Questions/1_A_Theatre_Square.cpp",
+  "post": "/posts/1a-theatre-square/",
+  "page": null,
+  "link": "https://codeforces.com/problemset/problem/1/A"
+ },
+ {
+  "id": "706B",
+  "name": "Interesting drink",
+  "slug": "706b-interesting-drink",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 1100,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "binary search",
+   "dp",
+   "implementation"
+  ],
+  "topics": [
+   "binary-search",
+   "dp",
+   "implementation"
+  ],
+  "first_date": "2026-10-20",
+  "last_date": "2026-10-20",
+  "solved_date": "2026-10-20",
+  "solution_file": "CF Questions/706_B_Intresting_Drink.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/58dc2ab26e93b6fde8db14b550afa61a24e80dcb/CF%20Questions/706_B_Intresting_Drink.cpp",
+  "post": null,
+  "page": "/problems/706b-interesting-drink/",
+  "link": "https://codeforces.com/problemset/problem/706/B"
+ },
+ {
+  "id": "1791D",
+  "name": "Distinct Split",
+  "slug": "1791d-distinct-split",
+  "status": "attempted",
+  "status_label": "Attempted",
+  "solved": false,
+  "eligible": false,
+  "rating": 1000,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "brute force",
+   "greedy",
+   "strings"
+  ],
+  "topics": [
+   "brute-force",
+   "greedy",
+   "strings"
+  ],
+  "first_date": "2026-10-17",
+  "last_date": "2026-10-20",
+  "solved_date": null,
+  "solution_file": "CF Questions/1791_D_Distinct_Split.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/c648c109b1e86058a9bca180cb9e85be20c202f0/CF%20Questions/1791_D_Distinct_Split.cpp",
+  "post": null,
+  "page": "/problems/1791d-distinct-split/",
+  "link": "https://codeforces.com/problemset/problem/1791/D"
+ },
+ {
+  "id": "451A",
+  "name": "Game With Sticks",
+  "slug": "451a-game-with-sticks",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 900,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "implementation"
+  ],
+  "topics": [
+   "implementation"
+  ],
+  "first_date": "2026-10-14",
+  "last_date": "2026-10-14",
+  "solved_date": "2026-10-14",
+  "solution_file": "CF Questions/451_A_Game_With_Sticks.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/c1a14abb07ec35f37fdc3ffc707a25764cba90ef/CF%20Questions/451_A_Game_With_Sticks.cpp",
+  "post": null,
+  "page": "/problems/451a-game-with-sticks/",
+  "link": "https://codeforces.com/problemset/problem/451/A"
+ },
+ {
+  "id": "1791E",
+  "name": "Negatives and Positives",
+  "slug": "1791e-negatives-and-positives",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 1100,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "dp",
+   "greedy",
+   "sortings"
+  ],
+  "topics": [
+   "dp",
+   "greedy",
+   "sorting"
+  ],
+  "first_date": "2026-10-14",
+  "last_date": "2026-10-14",
+  "solved_date": "2026-10-14",
+  "solution_file": "CF Questions/1791_E_Neg_And_Pos.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/74d8201bfedf356901c39957c45625c29b46779a/CF%20Questions/1791_E_Neg_And_Pos.cpp",
+  "post": null,
+  "page": "/problems/1791e-negatives-and-positives/",
+  "link": "https://codeforces.com/problemset/problem/1791/E"
+ },
+ {
+  "id": "1790D",
+  "name": "Matryoshkas",
+  "slug": "1790d-matryoshkas",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 1200,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "data structures",
+   "greedy",
+   "sortings"
+  ],
+  "topics": [
+   "data-structures",
+   "greedy",
+   "sorting"
+  ],
+  "first_date": "2026-10-14",
+  "last_date": "2026-10-14",
+  "solved_date": "2026-10-14",
+  "solution_file": "CF Questions/1790D_Matryoshkas.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/97cf3998e96c10cc638d0e59a27c4d014f3505a7/CF%20Questions/1790D_Matryoshkas.cpp",
+  "post": null,
+  "page": "/problems/1790d-matryoshkas/",
+  "link": "https://codeforces.com/problemset/problem/1790/D"
+ },
+ {
+  "id": "4C",
+  "name": "Registration System",
+  "slug": "4c-registration-system",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 1300,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "data structures",
+   "hashing",
+   "implementation"
+  ],
+  "topics": [
+   "data-structures",
+   "hashing",
+   "implementation"
+  ],
+  "first_date": "2026-10-13",
+  "last_date": "2026-10-13",
+  "solved_date": "2026-10-13",
+  "solution_file": "CF Questions/4_C_Registration_System.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/3b330f6e31360650ea088d975ad71afddef7467d/CF%20Questions/4_C_Registration_System.cpp",
+  "post": null,
+  "page": "/problems/4c-registration-system/",
+  "link": "https://codeforces.com/problemset/problem/4/C"
+ },
+ {
+  "id": "112A",
+  "name": "Petya and Strings",
+  "slug": "112a-petya-and-strings",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 800,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "implementation",
+   "strings"
+  ],
+  "topics": [
+   "implementation",
+   "strings"
+  ],
+  "first_date": "2026-10-13",
+  "last_date": "2026-10-13",
+  "solved_date": "2026-10-13",
+  "solution_file": "CF Questions/112_A_Petya_And_Strings.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/48dc9c3a289a7581f9c0010e54caff9f70fd0967/CF%20Questions/112_A_Petya_And_Strings.cpp",
+  "post": null,
+  "page": "/problems/112a-petya-and-strings/",
+  "link": "https://codeforces.com/problemset/problem/112/A"
+ },
+ {
+  "id": "263A",
+  "name": "Beautiful Matrix",
+  "slug": "263a-beautiful-matrix",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 800,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "implementation"
+  ],
+  "topics": [
+   "implementation"
+  ],
+  "first_date": "2026-10-12",
+  "last_date": "2026-10-12",
+  "solved_date": "2026-10-12",
+  "solution_file": "CF Questions/263_A_Bueatiful_Matrix.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/fc05024a3abbba6f1c4eb6997d641a7de2df194f/CF%20Questions/263_A_Bueatiful_Matrix.cpp",
+  "post": null,
+  "page": "/problems/263a-beautiful-matrix/",
+  "link": "https://codeforces.com/problemset/problem/263/A"
+ },
+ {
+  "id": "1399A",
+  "name": "Remove Smallest",
+  "slug": "1399a-remove-smallest",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 800,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "greedy",
+   "sortings"
+  ],
+  "topics": [
+   "greedy",
+   "sorting"
+  ],
+  "first_date": "2026-10-12",
+  "last_date": "2026-10-12",
+  "solved_date": "2026-10-12",
+  "solution_file": "CF Questions/1399_A_Remove_Smallest.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/df37d50f9aea07a9eff823ab9c245fb8c7345505/CF%20Questions/1399_A_Remove_Smallest.cpp",
+  "post": null,
+  "page": "/problems/1399a-remove-smallest/",
+  "link": "https://codeforces.com/problemset/problem/1399/A"
+ },
+ {
+  "id": "2275B",
+  "name": "Did Not Go to Print",
+  "slug": "2275b-did-not-go-to-print",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 800,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "data structures",
+   "implementation"
+  ],
+  "topics": [
+   "data-structures",
+   "implementation"
+  ],
+  "first_date": "2026-10-07",
+  "last_date": "2026-10-11",
+  "solved_date": "2026-10-07",
+  "solution_file": "CF Questions/2275_B_Again.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/f838cfe245716007ffeb00786823ca17f859226a/CF%20Questions/2275_B_Again.cpp",
+  "post": null,
+  "page": "/problems/2275b-did-not-go-to-print/",
+  "link": "https://codeforces.com/problemset/problem/2275/B"
+ },
+ {
+  "id": "405A",
+  "name": "Gravity Flip",
+  "slug": "405a-gravity-flip",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 900,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "greedy",
+   "implementation",
+   "sortings"
+  ],
+  "topics": [
+   "greedy",
+   "implementation",
+   "sorting"
+  ],
+  "first_date": "2026-10-10",
+  "last_date": "2026-10-10",
+  "solved_date": "2026-10-10",
+  "solution_file": "CF Questions/405_Grav_Flip.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/7e42cc9c03dddf4c3361b62a40661d8f3d69e8d8/CF%20Questions/405_Grav_Flip.cpp",
+  "post": null,
+  "page": "/problems/405a-gravity-flip/",
+  "link": "https://codeforces.com/problemset/problem/405/A"
+ },
+ {
+  "id": "339A",
+  "name": "Helpful Maths",
+  "slug": "339a-helpful-maths",
+  "status": "redo",
+  "status_label": "Solved (redo)",
+  "solved": true,
+  "eligible": false,
+  "rating": 800,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "greedy",
+   "implementation",
+   "sortings",
+   "strings"
+  ],
+  "topics": [
+   "greedy",
+   "implementation",
+   "sorting",
+   "strings"
+  ],
+  "first_date": "2026-10-10",
+  "last_date": "2026-10-10",
+  "solved_date": "2026-10-10",
+  "solution_file": "CF Questions/339_A_Helpful_Maths.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/3b6265f80a4b245f5a3ac012d2bd50c4297f1335/CF%20Questions/339_A_Helpful_Maths.cpp",
+  "post": null,
+  "page": "/problems/339a-helpful-maths/",
+  "link": "https://codeforces.com/problemset/problem/339/A"
+ },
+ {
+  "id": "236A",
+  "name": "Boy or Girl",
+  "slug": "236a-boy-or-girl",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 800,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "brute force",
+   "implementation",
+   "strings"
+  ],
+  "topics": [
+   "brute-force",
+   "implementation",
+   "strings"
+  ],
+  "first_date": "2026-10-10",
+  "last_date": "2026-10-10",
+  "solved_date": "2026-10-10",
+  "solution_file": "CF Questions/236_A_Boy_Or_Girl.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/ab8944b3c0875388bc3b519bb36a3817c9fd1e15/CF%20Questions/236_A_Boy_Or_Girl.cpp",
+  "post": null,
+  "page": "/problems/236a-boy-or-girl/",
+  "link": "https://codeforces.com/problemset/problem/236/A"
+ },
+ {
+  "id": "160A",
+  "name": "Twins",
+  "slug": "160a-twins",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 900,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "greedy",
+   "sortings"
+  ],
+  "topics": [
+   "greedy",
+   "sorting"
+  ],
+  "first_date": "2026-10-10",
+  "last_date": "2026-10-10",
+  "solved_date": "2026-10-10",
+  "solution_file": "CF Questions/160_A_Twins.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/ed5535a222a7e2ac53e6fdbad6057823619f77fa/CF%20Questions/160_A_Twins.cpp",
+  "post": null,
+  "page": "/problems/160a-twins/",
+  "link": "https://codeforces.com/problemset/problem/160/A"
+ },
+ {
+  "id": "158A",
+  "name": "Next Round",
+  "slug": "158a-next-round",
+  "status": "help",
+  "status_label": "Solved with help",
+  "solved": true,
+  "eligible": false,
+  "rating": 800,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "implementation"
+  ],
+  "topics": [
+   "implementation"
+  ],
+  "first_date": "2026-10-09",
+  "last_date": "2026-10-09",
+  "solved_date": null,
+  "solution_file": "CF Questions/158_A_Next_Round.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/2c8847b91a7c58d28c2fc4e230dcd42708d38b48/CF%20Questions/158_A_Next_Round.cpp",
+  "post": null,
+  "page": "/problems/158a-next-round/",
+  "link": "https://codeforces.com/problemset/problem/158/A"
+ },
+ {
+  "id": "344A",
+  "name": "Magnets",
+  "slug": "344a-magnets",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 800,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "implementation"
+  ],
+  "topics": [
+   "implementation"
+  ],
+  "first_date": "2026-10-08",
+  "last_date": "2026-10-08",
+  "solved_date": "2026-10-08",
+  "solution_file": "CF Questions/344A_Magnets.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/eb8f5622a0313409b80d6bed3b4e5d8301f100a4/CF%20Questions/344A_Magnets.cpp",
+  "post": null,
+  "page": "/problems/344a-magnets/",
+  "link": "https://codeforces.com/problemset/problem/344/A"
+ },
+ {
+  "id": "1742A",
+  "name": "Sum",
+  "slug": "1742a-sum",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 800,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "implementation"
+  ],
+  "topics": [
+   "implementation"
+  ],
+  "first_date": "2026-10-08",
+  "last_date": "2026-10-08",
+  "solved_date": "2026-10-08",
+  "solution_file": "CF Questions/1742A_sum.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/197fffb46efad4eecf7b497a6a8a1316d5303f5a/CF%20Questions/1742A_sum.cpp",
+  "post": null,
+  "page": "/problems/1742a-sum/",
+  "link": "https://codeforces.com/problemset/problem/1742/A"
+ },
+ {
+  "id": "1703A",
+  "name": "YES or YES?",
+  "slug": "1703a-yes-or-yes",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 800,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "brute force",
+   "implementation",
+   "strings"
+  ],
+  "topics": [
+   "brute-force",
+   "implementation",
+   "strings"
+  ],
+  "first_date": "2026-10-08",
+  "last_date": "2026-10-08",
+  "solved_date": "2026-10-08",
+  "solution_file": "CF Questions/1703_A_YES_Or_YES.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/7df4874a397fb0c185bc79da9d7d38cbc1ffd981/CF%20Questions/1703_A_YES_Or_YES.cpp",
+  "post": null,
+  "page": "/problems/1703a-yes-or-yes/",
+  "link": "https://codeforces.com/problemset/problem/1703/A"
+ },
+ {
+  "id": "2275A",
+  "name": "In Search of Convenience",
+  "slug": "2275a-in-search-of-convenience",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 800,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "geometry",
+   "implementation"
+  ],
+  "topics": [
+   "geometry",
+   "implementation"
+  ],
+  "first_date": "2026-10-07",
+  "last_date": "2026-10-07",
+  "solved_date": "2026-10-07",
+  "solution_file": "CF Questions/2275_A_Wifi_Search.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/b166236042ab2f35b18595e40c0fb4ded77f173f/CF%20Questions/2275_A_Wifi_Search.cpp",
+  "post": null,
+  "page": "/problems/2275a-in-search-of-convenience/",
+  "link": "https://codeforces.com/problemset/problem/2275/A"
+ },
+ {
+  "id": "734A",
+  "name": "Anton and Danik",
+  "slug": "734a-anton-and-danik",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 800,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "implementation",
+   "strings"
+  ],
+  "topics": [
+   "implementation",
+   "strings"
+  ],
+  "first_date": "2026-10-06",
+  "last_date": "2026-10-06",
+  "solved_date": "2026-10-06",
+  "solution_file": "CF Questions/734_A_D_and_A.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/32a4f24e710fb6da85cbdb30ed721b5ab204d564/CF%20Questions/734_A_D_and_A.cpp",
+  "post": null,
+  "page": "/problems/734a-anton-and-danik/",
+  "link": "https://codeforces.com/problemset/problem/734/A"
+ },
+ {
+  "id": "59A",
+  "name": "Word",
+  "slug": "59a-word",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 800,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "implementation",
+   "strings"
+  ],
+  "topics": [
+   "implementation",
+   "strings"
+  ],
+  "first_date": "2026-10-06",
+  "last_date": "2026-10-06",
+  "solved_date": "2026-10-06",
+  "solution_file": "CF Questions/59_A_Word.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/2043c99695093d0a0515fdea9ae0ca018da1445e/CF%20Questions/59_A_Word.cpp",
+  "post": null,
+  "page": "/problems/59a-word/",
+  "link": "https://codeforces.com/problemset/problem/59/A"
+ },
+ {
+  "id": "281A",
+  "name": "Word Capitalization",
+  "slug": "281a-word-capitalization",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 800,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "implementation",
+   "strings"
+  ],
+  "topics": [
+   "implementation",
+   "strings"
+  ],
+  "first_date": "2026-10-06",
+  "last_date": "2026-10-06",
+  "solved_date": "2026-10-06",
+  "solution_file": "CF Questions/281_Word_Capitalisation.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/814244bd863ea36a4efcfc6e336c4c1bf64159f5/CF%20Questions/281_Word_Capitalisation.cpp",
+  "post": null,
+  "page": "/problems/281a-word-capitalization/",
+  "link": "https://codeforces.com/problemset/problem/281/A"
+ },
+ {
+  "id": "69A",
+  "name": "Young Physicist",
+  "slug": "69a-young-physicist",
+  "status": "redo",
+  "status_label": "Solved (redo)",
+  "solved": true,
+  "eligible": false,
+  "rating": 1000,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "implementation",
+   "math"
+  ],
+  "topics": [
+   "implementation",
+   "math"
+  ],
+  "first_date": "2026-10-05",
+  "last_date": "2026-10-05",
+  "solved_date": "2026-10-05",
+  "solution_file": "CF Questions/69_A_Physicist.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/ba9f7d8c62aa9792ac7ba7765c30795b0fb0b7b2/CF%20Questions/69_A_Physicist.cpp",
+  "post": null,
+  "page": "/problems/69a-young-physicist/",
+  "link": "https://codeforces.com/problemset/problem/69/A"
+ },
+ {
+  "id": "677A",
+  "name": "Vanya and Fence",
+  "slug": "677a-vanya-and-fence",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 800,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "implementation"
+  ],
+  "topics": [
+   "implementation"
+  ],
+  "first_date": "2026-10-03",
+  "last_date": "2026-10-03",
+  "solved_date": "2026-10-03",
+  "solution_file": "CF Questions/677_A_Vanya_And_Fence.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/50515919888ffaf1acd4718a9a480d7249c00ed3/CF%20Questions/677_A_Vanya_And_Fence.cpp",
+  "post": null,
+  "page": "/problems/677a-vanya-and-fence/",
+  "link": "https://codeforces.com/problemset/problem/677/A"
+ },
+ {
+  "id": "467A",
+  "name": "George and Accommodation",
+  "slug": "467a-george-and-accommodation",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 800,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "implementation"
+  ],
+  "topics": [
+   "implementation"
+  ],
+  "first_date": "2026-10-03",
+  "last_date": "2026-10-03",
+  "solved_date": "2026-10-03",
+  "solution_file": "CF Questions/467A_George and_Accommodation.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/e00b13f87dd51f5a842e7a33a32513f880035cde/CF%20Questions/467A_George%20and_Accommodation.cpp",
+  "post": null,
+  "page": "/problems/467a-george-and-accommodation/",
+  "link": "https://codeforces.com/problemset/problem/467/A"
+ },
+ {
+  "id": "116A",
+  "name": "Tram",
+  "slug": "116a-tram",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 800,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "implementation"
+  ],
+  "topics": [
+   "implementation"
+  ],
+  "first_date": "2026-10-03",
+  "last_date": "2026-10-03",
+  "solved_date": "2026-10-03",
+  "solution_file": "CF Questions/116A_Tram.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/20c83480f0553a731c0579dba46bbea4f0510a5e/CF%20Questions/116A_Tram.cpp",
+  "post": null,
+  "page": "/problems/116a-tram/",
+  "link": "https://codeforces.com/problemset/problem/116/A"
+ },
+ {
+  "id": "977A",
+  "name": "Wrong Subtraction",
+  "slug": "977a-wrong-subtraction",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 800,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "implementation"
+  ],
+  "topics": [
+   "implementation"
+  ],
+  "first_date": "2026-10-02",
+  "last_date": "2026-10-02",
+  "solved_date": "2026-10-02",
+  "solution_file": "CF Questions/977A_Wrong_Subtraction.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/54f7873de5a1182be1084a852a407520ad7094e5/CF%20Questions/977A_Wrong_Subtraction.cpp",
+  "post": null,
+  "page": "/problems/977a-wrong-subtraction/",
+  "link": "https://codeforces.com/problemset/problem/977/A"
+ },
+ {
+  "id": "231A",
+  "name": "Team",
+  "slug": "231a-team",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 800,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "brute force",
+   "greedy"
+  ],
+  "topics": [
+   "brute-force",
+   "greedy"
+  ],
+  "first_date": "2026-10-02",
+  "last_date": "2026-10-02",
+  "solved_date": "2026-10-02",
+  "solution_file": "CF Questions/231A_Team.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/cb5246fb96b95b14e20654ca44d349c0a7ce2627/CF%20Questions/231A_Team.cpp",
+  "post": null,
+  "page": "/problems/231a-team/",
+  "link": "https://codeforces.com/problemset/problem/231/A"
+ },
+ {
+  "id": "791A",
+  "name": "Bear and Big Brother",
+  "slug": "791a-bear-and-big-brother",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 800,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "implementation"
+  ],
+  "topics": [
+   "implementation"
+  ],
+  "first_date": "2026-10-01",
+  "last_date": "2026-10-01",
+  "solved_date": "2026-10-01",
+  "solution_file": "791A.Bear.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/5a0ac90addebe89efceefb357e14b68779646d42/791A.Bear.cpp",
+  "post": null,
+  "page": "/problems/791a-bear-and-big-brother/",
+  "link": "https://codeforces.com/problemset/problem/791/A"
+ },
+ {
+  "id": "617A",
+  "name": "Elephant",
+  "slug": "617a-elephant",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 800,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "math"
+  ],
+  "topics": [
+   "math"
+  ],
+  "first_date": "2026-10-01",
+  "last_date": "2026-10-01",
+  "solved_date": "2026-10-01",
+  "solution_file": "CF Questions/617A_Elephant.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/2d4da02ebaedc261e2ac0f5f602259f5ed700fd0/CF%20Questions/617A_Elephant.cpp",
+  "post": null,
+  "page": "/problems/617a-elephant/",
+  "link": "https://codeforces.com/problemset/problem/617/A"
+ },
+ {
+  "id": "50A",
+  "name": "Domino piling",
+  "slug": "50a-domino-piling",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 800,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "greedy",
+   "math"
+  ],
+  "topics": [
+   "greedy",
+   "math"
+  ],
+  "first_date": "2026-10-01",
+  "last_date": "2026-10-01",
+  "solved_date": "2026-10-01",
+  "solution_file": "50A_Dominos.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/5a0ac90addebe89efceefb357e14b68779646d42/50A_Dominos.cpp",
+  "post": null,
+  "page": "/problems/50a-domino-piling/",
+  "link": "https://codeforces.com/problemset/problem/50/A"
+ },
+ {
+  "id": "4A",
+  "name": "Watermelon",
+  "slug": "4a-watermelon",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 800,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "brute force",
+   "math"
+  ],
+  "topics": [
+   "brute-force",
+   "math"
+  ],
+  "first_date": "2026-09-29",
+  "last_date": "2026-09-29",
+  "solved_date": "2026-09-29",
+  "solution_file": "watermelon.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/6671e241102be9ebccec45972267d437358c8b0a/watermelon.cpp",
+  "post": null,
+  "page": "/problems/4a-watermelon/",
+  "link": "https://codeforces.com/problemset/problem/4/A"
+ }
+]

@@ -1,0 +1,26 @@
+{%- comment -%}
+Topic mastery table for /stats/, weakest first (rows and the weak rule come from mastery-data.html, which must be
+included first). The quiz recall column is filled in by assets/js/mastery.js from answers saved in this browser;
+without JS or history it keeps the server text. Under 40rem each row becomes a three-column card labelled by data-label.
+{%- endcomment -%}
+<div class="mx-wrap">
+  <table class="mx">
+    <caption class="vh">Problems per topic by how they were solved, weakest first</caption>
+    <thead><tr><th scope="col">Topic</th><th scope="col">Solved myself</th><th scope="col">With help or redo</th><th scope="col">Not solved</th><th scope="col">Hardest solved myself</th><th scope="col">Quiz recall</th></tr></thead>
+    <tbody>
+      {%- assign _flags = 0 -%}
+      {%- for r in mx_rows -%}{%- if r != "" -%}{%- assign _f = r | split: "~" -%}
+      {%- assign _weak = false -%}{%- assign _flag = false -%}{%- if _f[3] != _f[6] -%}{%- assign _weak = true -%}{%- if _flags < 3 -%}{%- assign _flag = true -%}{%- assign _flags = _flags | plus: 1 -%}{%- endif -%}{%- endif %}
+      <tr class="mx-row" data-topic="{{ _f[1] }}"{% if _weak %} data-weak{% endif %}>
+        <th scope="row"><a href="{{ '/tags/' | relative_url }}#{{ _f[1] }}">{{ _f[2] }}</a>{% if _flag %} <span class="mx-flag">Weak spot</span>{% endif %}</th>
+        <td data-label="Solved myself"><span class="mx-frac">{{ _f[3] }}<span class="mx-of">/{{ _f[6] }}</span></span><span class="mx-bar" aria-hidden="true"><i style="--v:{{ _f[3] }};--t:{{ _f[6] }}"></i></span></td>
+        <td data-label="With help or redo">{{ _f[4] }}</td>
+        <td data-label="Not solved">{{ _f[5] }}</td>
+        <td data-label="Hardest solved myself">{% if _f[7] != "0" %}<span class="rk">{{ _f[7] }}</span>{% else %}<span class="mx-none">None yet</span>{% endif %}</td>
+        <td data-label="Quiz recall" class="mx-quiz"{% if _f[8] %} data-qids="{{ _f[8] }}"{% endif %}><span class="mx-q">{% if _f[8] %}Not tried in this browser{% else %}No questions yet{% endif %}</span></td>
+      </tr>
+      {%- endif -%}{%- endfor %}
+    </tbody>
+  </table>
+</div>
+<p class="stats-note">Weak spot: one of the three topics with the lowest share solved independently, the same three as on the homepage. Rows are ordered by the share solved myself, then by the hardest problem solved myself. A redo counts as not independent, so this table can differ from &ldquo;Problems by topic&rdquo; further down. Quiz recall uses answers saved in this browser only.{% if mx_unstarted.size > 0 %} No problems yet in {{ mx_unstarted | join: ", " }}.{% endif %}</p>

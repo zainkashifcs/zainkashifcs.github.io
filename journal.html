@@ -1,0 +1,24 @@
+---
+title: Journal
+permalink: /journal/
+description: Monthly progress notes on my competitive programming practice, with each month's facts taken from the practice log.
+---
+<header class="page-head">
+  <h1>Journal</h1>
+  <p class="lede">Monthly notes on what I studied, what went well and what to work on next. The facts for each month come straight from the practice log; the notes are written by me when the month is done.</p>
+</header>
+<ol class="months">
+{%- for m in site.data.months %}
+  {%- assign _entry = site.journal | where: "month", m.month | first -%}
+  {%- capture _d -%}{{ m.month }}-01{%- endcapture -%}
+  <li class="month" id="m-{{ m.month }}">
+    <h2>{{ _d | date: "%B %Y" }}</h2>
+    {% include month-facts.html m=m %}
+    {%- if _entry %}
+    <p><a class="more" href="{{ _entry.url | relative_url }}">Read my notes for {{ _d | date: "%B" }}</a></p>
+    {%- else %}
+    <p class="muted">No notes written for this month yet.</p>
+    {%- endif %}
+  </li>
+{%- endfor %}
+</ol>

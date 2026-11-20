@@ -1,0 +1,158 @@
+[
+  {
+    "id": "2275a-in-search-of-convenience-q1",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "geometry",
+      "implementation"
+    ],
+    "code": false,
+    "question": "One test case is 0 0 5. What does the solution print?",
+    "choices": [
+      "5 0",
+      "0 5",
+      "0 0",
+      "5 5"
+    ],
+    "answer": 0,
+    "explanation": "It prints x + R and y, which is 5 0.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1\n0 0 5",
+      "output": "5 0",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "2275a-in-search-of-convenience-q2",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "geometry",
+      "implementation"
+    ],
+    "code": false,
+    "question": "Two test cases are -3 4 2 and 10 -10 7. What does the solution print?",
+    "choices": [
+      "-1 4 17 -10",
+      "-3 6 10 -3",
+      "-5 4 3 -10",
+      "-1 6 17 -3"
+    ],
+    "answer": 0,
+    "explanation": "For each case it prints x + R then y: -3+2 = -1 and 4; 10+7 = 17 and -10.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "2\n-3 4 2\n10 -10 7",
+      "output": "-1 4\n17 -10",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "2275a-in-search-of-convenience-q3",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "geometry",
+      "implementation"
+    ],
+    "code": false,
+    "question": "One test case is 0 0 1. What does the solution print?",
+    "choices": [
+      "1 0",
+      "0 1",
+      "0 0",
+      "1 1"
+    ],
+    "answer": 0,
+    "explanation": "x + R = 1 and y stays 0, so it prints 1 0.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1\n0 0 1",
+      "output": "1 0",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "2275a-in-search-of-convenience-q4",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "reasoning",
+    "tags": [
+      "geometry",
+      "implementation"
+    ],
+    "code": true,
+    "question": "The solution prints the point (x + R, y) for centre (x, y). Why is its distance from the centre exactly R?",
+    "choices": [
+      "The horizontal gap is R and the vertical gap is 0, so the distance is sqrt(R^2 + 0) = R",
+      "The point is the midpoint of the centre and the edge",
+      "Both coordinates are shifted by R, so the distance is R * 2",
+      "It prints the centre itself"
+    ],
+    "answer": 0,
+    "explanation": "Moving only along x by R leaves a right triangle with legs R and 0, so the hypotenuse is R.",
+    "source": {
+      "type": "code",
+      "detail": "line 25: std::cout << x + R << ' ' << y"
+    },
+    "validation": {
+      "method": "code",
+      "status": "needs-review",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "2275a-in-search-of-convenience-q5",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "complexity",
+    "tags": [
+      "geometry",
+      "implementation"
+    ],
+    "code": true,
+    "question": "What is the running time of the solution for t test cases?",
+    "choices": [
+      "O(t)",
+      "O(t * R)",
+      "O(t log R)",
+      "O(t^2)"
+    ],
+    "answer": 0,
+    "explanation": "Each test case reads three numbers and prints one point with no inner loop, so the total work is proportional to t.",
+    "source": {
+      "type": "code",
+      "detail": "line 16: single loop over t; lines 17-25 do constant work"
+    },
+    "validation": {
+      "method": "code",
+      "status": "needs-review",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  }
+]

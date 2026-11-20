@@ -1,0 +1,11 @@
+{%- comment -%} Headline totals, straight from _data/activity_stats.json (written by _scripts/sync_activity.py). {%- endcomment -%}
+{%- assign s = site.data.activity_stats -%}
+<div class="stats-totals">
+  <div class="tile stat stat-lead" data-reveal><dl><dt>Problems worked on</dt><dd>{{ s.distinct_problems }}<small>distinct problems in the verified log</small></dd></dl></div>
+  <div class="tile stat" data-reveal><dl><dt>Solved independently</dt><dd>{{ s.independent_total.size }}<small>no help, with a solution file</small></dd></dl></div>
+  <div class="tile stat" data-reveal><dl><dt>Verified activities</dt><dd>{{ s.verified_entries }}<small>across {{ s.active_days }} active days</small></dd></dl></div>
+  <div class="tile stat" data-reveal><dl><dt>Longest streak</dt><dd>{{ s.longest_streak.days }}<span class="unit"> day{% if s.longest_streak.days != 1 %}s{% endif %}</span><small>{{ s.longest_streak.start | date: "%-d %b" }} to {{ s.longest_streak.end | date: "%-d %b %Y" }}</small></dd></dl></div>
+  {%- if s.highest_rating %}
+  <div class="tile stat" data-reveal><dl><dt>Highest rating solved</dt><dd>{{ s.highest_rating[0] }}<small>problem {{ s.highest_rating[1] }}</small></dd></dl></div>
+  {%- endif %}
+</div>

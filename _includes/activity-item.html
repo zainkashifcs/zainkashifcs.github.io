@@ -11,7 +11,8 @@
 {%- endcase -%}
 {%- if e.assisted -%}{%- assign lab = lab | append: ", assisted" -%}{%- endif -%}
 {%- assign href = nil -%}
-{%- if e.post -%}{%- assign href = e.post | relative_url -%}{%- elsif e.source_url -%}{%- assign href = e.source_url -%}{%- endif -%}
+{%- assign _pr = site.data.problems | where: "id", e.problem | first -%}
+{%- if e.post -%}{%- assign href = e.post | relative_url -%}{%- elsif _pr -%}{%- assign href = _pr.post | default: _pr.page | relative_url -%}{%- elsif e.source_url -%}{%- assign href = e.source_url -%}{%- endif -%}
 <li class="ev {{ e.type }}{% if e.assisted %} assisted{% endif %}">{% if e.type == "milestone" %}<span class="rb ms" aria-hidden="true"></span>{% else %}<span class="rb">{{ e.problem }}</span>{% endif %}<span class="what">
   {%- if href %}<a href="{{ href }}">{% endif -%}
   {%- if e.type == "milestone" %}{{ e.note }}{% else %}<span class="vh">{{ e.problem }} </span>{{ e.title }}{% endif -%}

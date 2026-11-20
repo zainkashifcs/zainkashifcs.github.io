@@ -1,12 +1,32 @@
 title: Zain's Blog
 description: Zain's Blog. Notes from my competitive programming practice, mostly Codeforces.
 solutions_repo: https://github.com/zainkashifcs/comp-program-grind
+url: "https://zainkashifcs.github.io"  # used for canonical links and the sitemap
+baseurl: ""  # a user site is served from the root; set explicitly so local builds match GitHub Pages
 permalink: /posts/:title/
+# Codeforces handle for the profile section (https://codeforces.com/profile/amaza1nn). _scripts/fetch_codeforces.py
+# caches the public profile in _data/codeforces.json; the site shows it only when that file says "status": "ok".
+codeforces_handle: "amaza1nn"
 
+# One page per archive problem without a write-up; the stubs in _problems/ are written by _scripts/build_problems.py.
+collections:
+  problems:
+    output: true
+    permalink: /problems/:name/
+  # Monthly progress notes written by Zain; months without notes still show their facts on /journal/.
+  journal:
+    output: true
+    permalink: /journal/:name/
+
+# Excerpts are not used anywhere; turning them off avoids warnings from the {% raw %} blocks in generated pages.
 defaults:
   - scope: { type: posts }
-    values: { layout: post }
+    values: { layout: post, excerpt_separator: "" }
   - scope: { type: pages }
     values: { layout: default }
+  - scope: { type: problems }
+    values: { layout: problem, excerpt_separator: "" }
+  - scope: { type: journal }
+    values: { layout: journal-entry }
 
-exclude: [README.md, make_post.py, skills-lock.json, Gemfile, Gemfile.lock, vendor]
+exclude: [README.md, DESIGN.md, make_post.py, skills-lock.json, Gemfile, Gemfile.lock, vendor]

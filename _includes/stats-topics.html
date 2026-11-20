@@ -1,0 +1,28 @@
+{%- comment -%}
+Problems per topic (a problem counts under every topic it has; see _data/problems.json "topics"), most-covered first,
+ties in alphabetical order. Same status split as stats-rating.html. Sort key: 1000 minus the count, zero-padded.
+{%- endcomment -%}
+{%- assign _max = 0 -%}{%- assign _rows = "" -%}
+{%- for g in site.data.topics -%}{%- for t in g.topics -%}
+  {%- assign _ps = site.data.problems | where_exp: "p", "p.topics contains t.id" -%}
+  {%- if _ps.size > 0 -%}
+    {%- if _ps.size > _max -%}{%- assign _max = _ps.size -%}{%- endif -%}
+    {%- assign _h = _ps | where: "status", "help" | size -%}
+    {%- assign _u1 = _ps | where: "status", "attempted" | size -%}{%- assign _u2 = _ps | where: "status", "unsolved" | size -%}{%- assign _u = _u1 | plus: _u2 -%}
+    {%- assign _key = 1000 | minus: _ps.size | prepend: "000" | slice: -4, 4 -%}
+    {%- capture _rows -%}{{ _rows }}{{ _key }}~{{ t.label }}~{{ _ps.size | minus: _h | minus: _u }}~{{ _h }}~{{ _u }}^{%- endcapture -%}
+  {%- endif -%}
+{%- endfor -%}{%- endfor -%}
+{%- assign _list = _rows | split: "^" | sort -%}
+{%- if _list.size < 3 %}
+<p class="stats-note">Fewer than three topics have problems so far, too few to chart.</p>
+{%- else %}
+{% include stats-legend.html %}
+<ol class="stats-bars" style="--max:{{ _max }}">
+  {%- for r in _list -%}{%- if r != "" -%}
+    {%- assign _f = r | split: "~" -%}
+    {%- assign _a = _f[1] -%}{%- assign _b = _f[2] | plus: 0 -%}{%- assign _c = _f[3] | plus: 0 -%}{%- assign _d = _f[4] | plus: 0 -%}
+    {%- include stats-row.html label=_a s=_b h=_c u=_d unit="problem" -%}
+  {%- endif -%}{%- endfor %}
+</ol>
+{%- endif %}

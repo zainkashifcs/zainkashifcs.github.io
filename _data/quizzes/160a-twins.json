@@ -1,0 +1,158 @@
+[
+  {
+    "id": "160a-twins-q1",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "greedy"
+    ],
+    "code": false,
+    "question": "Input is n = 3 and the coins 1 2 3. What does the solution print?",
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "6"
+    ],
+    "answer": 1,
+    "explanation": "Total is 6; taking 3 gives 3 > 3 false, taking 2 as well gives 5 > 1, so 2 coins.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "3\n1 2 3",
+      "output": "2",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "160a-twins-q2",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "greedy",
+      "sorting"
+    ],
+    "code": false,
+    "question": "Input is n = 5 and the coins 1 1 1 1 1. What does the solution print?",
+    "choices": [
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "answer": 1,
+    "explanation": "Total is 5; three coins give 3 > 2, while two give only 2 > 3 which is false.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "5\n1 1 1 1 1",
+      "output": "3",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "160a-twins-q3",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "greedy"
+    ],
+    "code": false,
+    "question": "Input is n = 2 and the coins 2 2. What does the solution print?",
+    "choices": [
+      "1",
+      "2",
+      "4",
+      "0"
+    ],
+    "answer": 1,
+    "explanation": "One coin gives 2 > 2, which is false (the comparison is strict), so the second coin is needed.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "2\n2 2",
+      "output": "2",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "160a-twins-q4",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "greedy"
+    ],
+    "code": false,
+    "question": "Input is n = 1 and the single coin 5. What does the solution print?",
+    "choices": [
+      "0",
+      "1",
+      "5",
+      "Nothing is printed"
+    ],
+    "answer": 1,
+    "explanation": "Taking the only coin gives 5 > 0 and count is already 1; the output is the count, not the value 5.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1\n5",
+      "output": "1",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "160a-twins-q5",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "reasoning",
+    "tags": [
+      "greedy",
+      "sorting"
+    ],
+    "code": false,
+    "question": "Why does the solution sort the coins from biggest to smallest?",
+    "choices": [
+      "The biggest coins get past half of the total in the fewest coins",
+      "It lets the loop skip the break",
+      "Smaller coins cannot be added",
+      "cin returns coins in order"
+    ],
+    "answer": 0,
+    "explanation": "Taking the largest values first grows mine fastest, so the stopping condition is reached with the fewest coins.",
+    "source": {
+      "type": "note",
+      "section": "Idea",
+      "quote": "GREEDY: take the biggest coins first, since they get you over half fastest."
+    },
+    "validation": {
+      "method": "note",
+      "status": "needs-review",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  }
+]

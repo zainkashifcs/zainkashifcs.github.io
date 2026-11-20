@@ -11,7 +11,7 @@ check-and-explain. Usage: include quiz-question.html q=q i=1 total=4 name="p" [f
     {%- else %}Checked: {{ q.validation.detail }}.
   {%- endcase -%}
 {%- endcapture -%}
-<fieldset class="q" data-answer="{{ q.answer }}" data-tags="{{ q.tags | join: ' ' }}" data-rating="{{ include.rating }}" data-problem="{{ include.slug }}">
+<fieldset class="q" data-qid="{{ q.id }}" data-answer="{{ q.answer }}" data-tags="{{ q.tags | join: ' ' }}" data-rating="{{ include.rating }}" data-problem="{{ include.slug }}">
   <legend><span class="qtext"><span class="qnum"><span class="qn">{% if include.label %}{{ include.label }}{% else %}Question {{ include.i }} of {{ include.total }}{% endif %}</span>{% if include.from_url %} <span class="from">from <a href="{{ include.from_url | relative_url }}">{{ include.from_title }}</a></span>{% endif %}</span>{{ q.question | escape }}</span></legend>
   <div class="choices">
     {%- for c in q.choices %}

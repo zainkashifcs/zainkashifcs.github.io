@@ -1,0 +1,40 @@
+---
+title: Stats
+permalink: /stats/
+description: Problems by rating and topic, weekly activity and approved quiz questions, all counted from the verified practice log.
+---
+{%- include mastery-data.html -%}
+<header class="page-head">
+  <h1>Stats</h1>
+  <p class="lede">Every number here is counted from the practice log, the problem archive and the approved quiz questions. Nothing is estimated.</p>
+</header>
+<section class="stats-first" aria-labelledby="tot-h">
+  <h2 id="tot-h" class="vh">Totals</h2>
+  {% include stats-totals.html %}
+  <p class="stats-more"><a class="more" href="{{ '/activity/' | relative_url }}">See every entry in the activity log</a></p>
+</section>
+<section class="section" aria-labelledby="mx-h">
+  <div class="section-head"><h2 id="mx-h">Topic mastery</h2><p>How many problems in each topic I solved myself, weakest topics first.</p></div>
+  <div class="panel" data-reveal>{% include mastery-matrix.html %}</div>
+</section>
+<section class="section" aria-labelledby="rt-h">
+  <div class="section-head"><h2 id="rt-h">Problems by rating</h2><p>Codeforces rating of every rated problem in the archive.</p></div>
+  <div class="panel" data-reveal>{% include stats-rating.html %}</div>
+</section>
+<section class="section" aria-labelledby="vel-h">
+  <div class="section-head"><h2 id="vel-h">Difficulty over time</h2><p>The hardest and the median problem difficulty I solved myself, week by week.</p></div>
+  <div class="panel" data-reveal>{% include velocity.html %}</div>
+</section>
+<section class="section" aria-labelledby="tp-h">
+  <div class="section-head"><h2 id="tp-h">Problems by topic</h2><p>A problem counts under every topic it has.</p></div>
+  <div class="panel" data-reveal>{% include stats-topics.html %}</div>
+</section>
+<section class="section" aria-labelledby="wk-h">
+  <div class="section-head"><h2 id="wk-h">Activity by week</h2><p>Log entries backed by a solution file.</p></div>
+  <div class="panel" data-reveal>{% include stats-weeks.html %}</div>
+</section>
+<section class="section" aria-labelledby="qz-h">
+  <div class="section-head"><h2 id="qz-h">Quiz questions by topic</h2><p>Approved questions only. Drafts are never counted.</p></div>
+  <div class="panel" data-reveal>{% include stats-quiz.html %}</div>
+</section>
+<script src="{{ '/assets/js/mastery.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>

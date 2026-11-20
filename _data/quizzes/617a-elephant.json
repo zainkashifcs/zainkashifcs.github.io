@@ -1,0 +1,156 @@
+[
+  {
+    "id": "617a-elephant-q1",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "math"
+    ],
+    "code": false,
+    "question": "Input is x = 12. What does the solution print?",
+    "choices": [
+      "2",
+      "3",
+      "4",
+      "12"
+    ],
+    "answer": 1,
+    "explanation": "12 % 5 is 2, so it prints 12 / 5 + 1 = 3.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "12",
+      "output": "3",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "617a-elephant-q2",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "math"
+    ],
+    "code": false,
+    "question": "Input is x = 10. What does the solution print?",
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "10"
+    ],
+    "answer": 1,
+    "explanation": "10 is divisible by 5, so it prints 10 / 5 = 2.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "10",
+      "output": "2",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "617a-elephant-q3",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "edge-case",
+    "tags": [
+      "math"
+    ],
+    "code": false,
+    "question": "Input is x = 1. What does the solution print?",
+    "choices": [
+      "0",
+      "1",
+      "2",
+      "5"
+    ],
+    "answer": 1,
+    "explanation": "1 % 5 is not 0, so it prints 1 / 5 + 1 = 0 + 1 = 1.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "1",
+      "output": "1",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "617a-elephant-q4",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "tracing",
+    "tags": [
+      "math"
+    ],
+    "code": false,
+    "question": "Input is x = 26. What does the solution print?",
+    "choices": [
+      "5",
+      "6",
+      "7",
+      "26"
+    ],
+    "answer": 1,
+    "explanation": "26 / 5 is 5 with remainder 1, so it prints 5 + 1 = 6.",
+    "source": {
+      "type": "run",
+      "detail": "hand-made input"
+    },
+    "validation": {
+      "method": "executed",
+      "input": "26",
+      "output": "6",
+      "status": "passed",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  },
+  {
+    "id": "617a-elephant-q5",
+    "status": "approved",
+    "origin": "claude-sonnet",
+    "kind": "reasoning",
+    "tags": [
+      "math"
+    ],
+    "code": false,
+    "question": "When x % 5 is not 0, why does the solution add 1 to x / 5?",
+    "choices": [
+      "The leftover steps still need one more move",
+      "The elephant moves 6 steps at the end",
+      "Integer division always rounds down by 2",
+      "It avoids printing 0"
+    ],
+    "answer": 0,
+    "explanation": "x / 5 counts only the full 5-step moves, and a leftover of 1 to 4 steps still takes one extra move.",
+    "source": {
+      "type": "note",
+      "section": "Idea",
+      "quote": "it still takes ONE more move to cover"
+    },
+    "validation": {
+      "method": "note",
+      "status": "needs-review",
+      "checked": "2026-11-07"
+    },
+    "approved_on": "2026-11-19"
+  }
+]

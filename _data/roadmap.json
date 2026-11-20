@@ -1,0 +1,71 @@
+{
+  "goal": 1800,
+  "stages": [
+    {
+      "id": "fundamentals", "title": "Programming fundamentals and implementation", "after": [],
+      "topics": ["implementation", "strings", "brute-force"],
+      "teaches": "Reading input exactly, simulating what a statement describes, and handling strings and loops without off-by-one mistakes. Most early problems are won or lost here: the idea is simple and the work is turning it into correct code.",
+      "practise": "Fast, careful implementation of simple statements, and trying every case when the input is small."
+    },
+    {
+      "id": "complexity", "title": "Complexity analysis", "after": ["fundamentals"],
+      "topics": [], "quiz_kind": "complexity",
+      "teaches": "Estimating how many operations a solution performs before writing it, so you can tell from the limits whether O(n^2) is fine or O(n log n) is needed. It also covers integer sizes: when a product needs a 64-bit type.",
+      "practise": "For every problem, state the time complexity and check it against the limits before coding."
+    },
+    {
+      "id": "maths", "title": "Maths foundations", "after": ["fundamentals"],
+      "topics": ["math", "geometry"],
+      "teaches": "Integer arithmetic, parity, rounding with integer division, and turning a description into a formula instead of a simulation.",
+      "practise": "Problems where a short derivation replaces a loop."
+    },
+    {
+      "id": "sorting-greedy", "title": "Sorting and greedy choices", "after": ["fundamentals", "complexity"],
+      "topics": ["sorting", "greedy"],
+      "teaches": "Sorting to expose structure, then making the locally best choice and arguing why it is never worse than any other choice. The argument matters as much as the code.",
+      "practise": "Write down why the greedy choice is safe before submitting."
+    },
+    {
+      "id": "prefix-two-pointers", "title": "Prefix sums and two pointers", "after": ["sorting-greedy"],
+      "topics": ["prefix-sums", "two-pointers"],
+      "teaches": "Answering range-sum questions in O(1) after O(n) preparation, and moving two indices through sorted data so that a nested loop becomes linear.",
+      "practise": "Rewrite an O(n^2) pair or subarray search as a single pass."
+    },
+    {
+      "id": "binary-search", "title": "Binary search", "after": ["sorting-greedy", "complexity"],
+      "topics": ["binary-search"],
+      "teaches": "Searching sorted data in O(log n), and the more powerful form: binary searching on the answer when a yes/no check is monotonic.",
+      "practise": "Identify the monotonic predicate first, then the boundaries."
+    },
+    {
+      "id": "data-structures", "title": "Data structures", "after": ["complexity"],
+      "topics": ["data-structures", "hashing", "sets-and-maps", "arrays"],
+      "teaches": "Choosing the right container: maps and sets for counting and lookup, stacks and queues for order, and priority queues for repeated best-element access.",
+      "practise": "Ask which operations the problem repeats, then pick the structure that makes them cheap."
+    },
+    {
+      "id": "number-theory", "title": "Number theory and combinatorics", "after": ["maths"],
+      "topics": ["number-theory", "combinatorics", "probability"],
+      "teaches": "Divisibility, gcd, primes and modular arithmetic, and counting arrangements without listing them.",
+      "practise": "Small cases by hand, then a formula, then modular arithmetic for large answers."
+    },
+    {
+      "id": "dp", "title": "Dynamic programming", "after": ["complexity", "prefix-two-pointers"],
+      "topics": ["dp"],
+      "teaches": "Defining a state, a transition and a base case so that each subproblem is solved once. It turns exponential searches into polynomial ones.",
+      "practise": "Name the state in words before writing any code."
+    },
+    {
+      "id": "graphs", "title": "Graphs: BFS, DFS and shortest paths", "after": ["data-structures"],
+      "topics": ["graphs", "bfs-dfs"],
+      "teaches": "Modelling a problem as nodes and edges, exploring it with BFS and DFS, and finding shortest paths and connected components.",
+      "practise": "Draw the graph for the sample before coding the traversal."
+    },
+    {
+      "id": "trees-advanced", "title": "Trees and advanced topics", "after": ["graphs", "dp"],
+      "topics": ["trees"],
+      "teaches": "Rooted trees, subtree computations and tree DP, then structures that start to appear on the way to 1800, such as disjoint set union, segment trees and lowest common ancestors.",
+      "practise": "One new technique at a time, each with a few problems before moving on."
+    }
+  ]
+}

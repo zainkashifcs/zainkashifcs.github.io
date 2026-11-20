@@ -1,15 +1,18 @@
 {%- comment -%}
-Sets `rating` (or nil) and `rank_colour`: the post's `rating`, otherwise a rating recorded in the activity data
-(solution header or commit message). Never estimated. Usage: include rating.html pid=pid rating=post.rating
+Sets `rating` (or nil) and `rank_tier`: the post's `rating`, otherwise a rating recorded in the activity data
+(solution header or commit message). Never estimated. `rank_tier` names the Codeforces rank band the rating falls in
+(newbie, pupil, specialist, expert, cm, master, gm), available to templates as a t-* class; the current design does not colour it.
+Usage: include rating.html pid=pid rating=post.rating
 {%- endcomment -%}
 {%- assign rating = include.rating -%}
+{%- assign rank_tier = nil -%}
 {%- unless rating -%}
   {%- assign _r = site.data.activity | where: "problem", include.pid | where_exp: "e", "e.rating != nil" | first -%}
   {%- if _r -%}{%- assign rating = _r.rating -%}{%- endif -%}
 {%- endunless -%}
 {%- if rating -%}{%- assign rating = rating | plus: 0 -%}
-  {%- if rating < 1200 -%}{%- assign rank_colour = "#808080" -%}{%- elsif rating < 1400 -%}{%- assign rank_colour = "#008000" -%}
-  {%- elsif rating < 1600 -%}{%- assign rank_colour = "#03a89e" -%}{%- elsif rating < 1900 -%}{%- assign rank_colour = "#0000ff" -%}
-  {%- elsif rating < 2100 -%}{%- assign rank_colour = "#aa00aa" -%}{%- elsif rating < 2400 -%}{%- assign rank_colour = "#ff8c00" -%}
-  {%- else -%}{%- assign rank_colour = "#ff0000" -%}{%- endif -%}
+  {%- if rating < 1200 -%}{%- assign rank_tier = "newbie" -%}{%- elsif rating < 1400 -%}{%- assign rank_tier = "pupil" -%}
+  {%- elsif rating < 1600 -%}{%- assign rank_tier = "specialist" -%}{%- elsif rating < 1900 -%}{%- assign rank_tier = "expert" -%}
+  {%- elsif rating < 2100 -%}{%- assign rank_tier = "cm" -%}{%- elsif rating < 2400 -%}{%- assign rank_tier = "master" -%}
+  {%- else -%}{%- assign rank_tier = "gm" -%}{%- endif -%}
 {%- endif -%}
