@@ -21,11 +21,13 @@ The list in the details element is the text equivalent and works without JavaScr
     <button type="button" class="chip" data-cst-labels aria-pressed="true">Labels</button>
     <button type="button" class="glass-chip glass-chip--interactive viz-btn viz-text-btn" data-cst="center">Re-center</button>
     <button type="button" class="glass-chip glass-chip--interactive viz-btn viz-text-btn" data-cst="explode">Explode</button>
+    <span class="cst-zoom"><button type="button" class="glass-chip glass-chip--interactive viz-btn" data-cst-zoom="1" aria-label="Zoom in">+</button><button type="button" class="glass-chip glass-chip--interactive viz-btn" data-cst-zoom="-1" aria-label="Zoom out">&minus;</button></span>
   </div>
   <div class="cst-stage">
     <canvas class="cst-canvas" role="img" aria-label="Topic constellation: {{ _cst_list.size }} topics and {{ site.data.problems.size }} problems, each problem linked to its topics. The list below has the same links."></canvas>
     <div class="cst-tip glass-chip" hidden></div>
   </div>
+  <p class="cst-hint">Drag a node to pull the network, drag the background to pan, pinch or Ctrl + scroll to zoom.</p>
   <p class="cst-key"><span><i class="k-hub"></i>Topic, sized by problems solved myself</span><span><i class="k-solved"></i>Solved myself</span><span><i class="k-help"></i>Solved with help</span><span><i class="k-redo"></i>Only a redo logged</span><span><i class="k-open"></i>Not solved yet</span></p>
   <details class="cst-list">
     <summary>Browse the constellation as a list</summary>

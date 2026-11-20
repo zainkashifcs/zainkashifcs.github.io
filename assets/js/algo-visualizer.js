@@ -60,6 +60,10 @@
             steps.push({ line: 4, text: `Answer: ${rows} × ${cols} = ${rows * cols}${over ? '; the hatched strip hangs over the edge' : '; nothing hangs over'}.`, laid: rows, guide: 2, done: true });
             return steps;
           },
+          vars(s) {
+            const { n, m, a } = p, rows = up(n, a), cols = up(m, a);
+            return { n, m, a, tilesN: s.guide >= 1 ? rows : '?', tilesM: s.guide >= 2 ? cols : '?', laid: s.laid * cols, answer: s.done ? rows * cols : '?' };
+          },
           draw(s) {
             const { n, m, a } = p, rows = up(n, a), cols = up(m, a);
             const W = Math.max(m, cols * a), H = Math.max(n, rows * a);
@@ -124,7 +128,15 @@
             steps.push({ line: 3, text: `Answer: |${start.r} − 2| + |${start.c} − 2| = ${moves} move${moves === 1 ? '' : 's'}.`, r, c, moves, hl: null, done: true });
             return steps;
           },
+          vars(s) { return { r: s.r, c: s.c, moves: s.moves, 'goal': '(2, 2)' }; },
           draw(s) {
+            const was = this.prev, moved = was && (was.r !== s.r || was.c !== s.c);
+            this.prev = { r: s.r, c: s.c };
+            if (moved && !still.matches) {
+              const from = cells[was.r * 5 + was.c], to = cells[s.r * 5 + s.c];
+              from.animate([{ boxShadow: '0 0 0 0 var(--field)' }, { boxShadow: '0 0 0 10px transparent' }], { duration: 420, easing: 'cubic-bezier(.22, 1, .36, 1)' });   // secondary ripple
+              to.animate([{ transform: 'scale(.82, 1.12)' }, { transform: 'scale(1.1, .9)', offset: 0.55 }, { transform: 'none' }], { duration: 360, easing: 'cubic-bezier(.22, 1, .36, 1)' });   // squash and stretch
+            }
             cells.forEach((b, k) => {
               const r = Math.floor(k / 5), c = k % 5, one = r === s.r && c === s.c;
               b.textContent = one ? '1' : '0';
@@ -175,7 +187,7 @@
               moved.add(L);
               const at = cols.map((h, j) => (h >= L ? j : -1)).filter(j => j >= 0);
               const k = at.filter((j, rank) => j !== cols.length - at.length + rank).length;   // cubes that actually move
-              steps.push({ line: 1, text: k ? `Layer ${L}: ${k} cube${k === 1 ? '' : 's'} slide${k === 1 ? 's' : ''} to the right wall.` : `Layer ${L}: already against the right wall.`, pos: place(moved) });
+              steps.push({ layer: L, line: 1, text: k ? `Layer ${L}: ${k} cube${k === 1 ? '' : 's'} slide${k === 1 ? 's' : ''} to the right wall.` : `Layer ${L}: already against the right wall.`, pos: place(moved) });
             }
             const sorted = [...cols].sort((x, y) => x - y);
             steps.push({ line: 2, text: `That is the columns sorted: ${sorted.join(' ')}.`, pos: place(moved) });
@@ -190,11 +202,30 @@
             this.top = top;
             return steps;
           },
+          vars(s) {
+            const moved = s.pos.filter(c => c.x !== Number(c.id.split('-')[0])).length;
+            return { n: cols.length, layer: s.layer ?? '–', 'cubes moved': moved, answer: s.done ? [...cols].sort((x, y) => x - y).join(' ') : '?' };
+          },
           draw(s) {
             const byId = new Map(s.pos.map(c => [c.id, c]));
+            let k = 0;
             for (const c of cubes) {
-              const p = byId.get(c.id);
-              c.el.style.transform = `translate(${p.x}px, ${this.top - p.L}px)`;
+              const p = byId.get(c.id), x = p.x, y = this.top - p.L;
+              const end = `translate(${x}px, ${y}px)`;
+              if (c.at && (c.at[0] !== x) && !still.matches) {
+                const [x0, y0] = c.at, mid = (x0 + x) / 2, lift = Math.min(y0, y) - 0.75;
+                c.el.animate([
+                  { transform: `translate(${x0}px, ${y0}px)` },
+                  { transform: `translate(${x0}px, ${y0 + 0.06}px) scale(1.06, .9)`, offset: 0.16 },   // anticipation
+                  { transform: `translate(${mid}px, ${lift}px) scale(.96, 1.06)`, offset: 0.52 },     // arc
+                  { transform: `translate(${x}px, ${y + 0.04}px) scale(1.1, .88)`, offset: 0.84 },     // squash on landing
+                  { transform: end },
+                ], { duration: 520, delay: 40 * k++, easing: 'cubic-bezier(.22, 1, .36, 1)', fill: 'backwards' });
+                const ring = svgEl('ellipse', { cx: x + 0.5, cy: y + 1, rx: 0.45, ry: 0.08, class: 'viz-ripple' }, svg);   // secondary ripple
+                ring.animate([{ opacity: 0.8, transform: 'scale(.6)' }, { opacity: 0, transform: 'scale(1.6)' }], { duration: 480, delay: 40 * (k - 1) + 440, easing: 'ease-out', fill: 'both' }).finished.then(() => ring.remove(), () => ring.remove());
+              }
+              c.el.style.transform = end;
+              c.at = [x, y];
               c.el.classList.toggle('is-moved', p.x !== Number(c.id.split('-')[0]));
             }
           },
@@ -245,7 +276,8 @@
             steps.push({ line: 3, i: at, text: `Answer: ${best}, first reached by splitting at ${at} ("${s.slice(0, at)}" | "${s.slice(at)}").`, done: true });
             // the word: one cell per letter
             word.replaceChildren();
-            [...s].forEach(ch => htmlEl('span', { class: 'viz-ch' }, word, ch));
+            this.chars = [...s].map(ch => htmlEl('span', { class: 'viz-ch' }, word, ch));
+            this.split = htmlEl('span', { class: 'viz-splitbar', hidden: '' }, word);
             // the chart: one bar per split
             const { pre: P, suf: S } = this.data;
             chart.setAttribute('viewBox', `0 0 ${n - 1} ${best + 1}`);
@@ -258,8 +290,15 @@
             }
             return steps;
           },
+          vars(st) {
+            const { pre, suf, best } = this.data, i = st.i;
+            return i > 0 ? { i, 'pre[i]': pre[i], 'suf[i]': suf[i], sum: pre[i] + suf[i], best } : { n: s.length, best: st.line > 1 ? best : '?' };
+          },
           draw(st) {
-            const chars = word.children, i = st.i;
+            const chars = this.chars, i = st.i;
+            const peak = i > 0 && this.data.pre[i] + this.data.suf[i] === this.data.best;
+            word.classList.toggle('is-peak', peak);
+            if (i > 0) { this.split.style.left = `${chars[i].offsetLeft - 5}px`; this.split.hidden = false; } else this.split.hidden = true;
             const lit = new Set(), firstL = new Set(), firstR = new Set();
             if (i > 0) {
               for (let k = 0; k < i; k++) if (!firstL.has(s[k])) { firstL.add(s[k]); lit.add(k); }
@@ -268,9 +307,8 @@
             for (let k = 0; k < chars.length; k++) {
               chars[k].classList.toggle('is-lit', lit.has(k));
               chars[k].classList.toggle('is-right', i > 0 && k >= i);
-              chars[k].classList.toggle('is-split', i > 0 && k === i);
             }
-            this.bars.forEach((b, k) => b.classList.toggle('is-now', k + 1 === i));
+            this.bars.forEach((b, k) => { b.classList.toggle('is-now', k + 1 === i); b.classList.toggle('is-peak', k + 1 === i && peak); });
           },
         };
       },
@@ -285,6 +323,11 @@
     const inputs = q('[data-viz-inputs]'), scrub = q('[data-viz-scrub]'), count = q('[data-viz-count]');
     const playBtn = q('[data-viz="play"]'), playLabel = q('[data-viz-play-label]');
     const lines = demo.code.map(t => htmlEl('code', {}, htmlEl('li', {}, code), t).parentElement);
+    const box = htmlEl('div', { class: 'viz-codebox' });   // the marker glides behind the list (a div can't live inside <ol>)
+    code.replaceWith(box); box.append(code);
+    const marker = htmlEl('div', { class: 'viz-marker', 'aria-hidden': 'true' }, box);
+    const varsBox = q('[data-viz-vars]');
+    let lastVars = {};
     let steps = [], at = 0, timer = 0, speed = 1, impl;
 
     const api = { canvas, inputs, rebuild: () => { stop(); steps = impl.build(); scrub.max = String(steps.length - 1); go(0); } };
@@ -294,6 +337,17 @@
       const s = steps[at];
       impl.draw(s);
       lines.forEach((li, k) => { li.classList.toggle('is-now', k === s.line); if (k === s.line) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current'); });
+      const li = lines[s.line];
+      if (li) { marker.style.transform = `translateY(${li.offsetTop + code.offsetTop + code.clientTop}px)`; marker.style.height = `${li.offsetHeight}px`; marker.hidden = false; }
+      if (varsBox && impl.vars) {
+        const v = impl.vars(s);
+        varsBox.replaceChildren(...Object.entries(v).map(([k, val]) => {
+          const pill = htmlEl('span', { class: `viz-var glass-chip${lastVars[k] !== undefined && lastVars[k] !== val ? ' is-changed' : ''}` });
+          htmlEl('i', {}, pill, k); htmlEl('b', {}, pill, String(val));
+          return pill;
+        }));
+        lastVars = v;
+      }
       say.textContent = `Step ${at + 1}: ${s.text}`;
       scrub.value = String(at);
       scrub.setAttribute('aria-valuetext', `Step ${at + 1} of ${steps.length}`);

@@ -60,7 +60,12 @@
     if (!('IntersectionObserver' in window)) { els.forEach(el => el.classList.add('is-in')); return; }
     const set = (el, on) => { if (el.classList.contains('is-in') !== on) el.classList.toggle('is-in', on); }; // no-op writes still restyle
     const enter = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && set(e.target, true)), { threshold: 0.12 });
-    const exit = new IntersectionObserver(es => es.forEach(e => !e.isIntersecting && set(e.target, false)), { rootMargin: '48px 0px', threshold: 0 });
+    // remember which edge an element left by, so it glides back in from that side (from above when scrolling back up)
+    const exit = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) return;
+      e.target.dataset.from = e.boundingClientRect.top < 0 ? 'above' : 'below';
+      set(e.target, false);
+    }), { rootMargin: '48px 0px', threshold: 0 });
     els.forEach(el => { enter.observe(el); exit.observe(el); });
   }
 

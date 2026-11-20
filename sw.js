@@ -21,6 +21,7 @@ const PRECACHE = [
   {{ '/assets/js/palette.js' | relative_url | append: VERSION | jsonify }},
   {{ '/assets/js/lib/lenis.min.js' | relative_url | append: VERSION | jsonify }},
   {{ '/assets/js/motion.js' | relative_url | append: VERSION | jsonify }},
+  {{ '/assets/js/motion-engine.js' | relative_url | append: VERSION | jsonify }},
   {{ '/assets/js/mastery.js' | relative_url | append: VERSION | jsonify }},
   {{ '/assets/js/home.js' | relative_url | append: VERSION | jsonify }},
   {{ '/assets/js/hero-animals.js' | relative_url | append: VERSION | jsonify }},

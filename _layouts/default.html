@@ -75,6 +75,7 @@
   <script src="{{ '/assets/js/palette.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
   <script src="{{ '/assets/js/lib/lenis.min.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
   <script src="{{ '/assets/js/motion.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+  <script src="{{ '/assets/js/motion-engine.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
   <script>if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register({{ '/sw.js' | relative_url | jsonify }}).catch(() => {}));</script>
 </body>
 </html>

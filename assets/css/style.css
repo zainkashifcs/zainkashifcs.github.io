@@ -1052,7 +1052,8 @@ html:not(.js) .idx-hint { display: none; }
    Every rule that hides or moves content sits inside `@media screen and (prefers-reduced-motion: no-preference)` and,
    for reveals, under html.reveal-on (set by motion.js only). Print, no-JS and reduced motion always show everything.
    Only transform / opacity / clip-path / stroke-dashoffset animate (plus the card's 1px border light). */
-:root { --ease-exit: cubic-bezier(.4, 0, 1, 1); --t-open: 180ms; --t-close: 115ms; --t-press: 80ms; --t-release: 140ms; --t-exit: 180ms; }
+:root { --ease-exit: cubic-bezier(.4, 0, 1, 1); --t-open: 200ms; --t-close: 120ms; --t-press: 80ms; --t-release: 280ms; --t-exit: 180ms;
+  --ease-spring: cubic-bezier(.22, 1, .36, 1); --ease-overshoot: cubic-bezier(.34, 1.56, .64, 1); }
 
 /* popovers (hint drawers, chart tooltips): toggle .is-open, never [hidden]; set --origin-x/--origin-y to the trigger */
 .pop { transform-origin: var(--origin-x, 50%) var(--origin-y, 0%); }
@@ -1063,6 +1064,7 @@ html:not(.js) .idx-hint { display: none; }
   /* reveals: hidden only while armed and out of view; :focus-within keeps a focused descendant visible */
   .reveal-on :is([data-reveal], .section-head > *):not(.is-in):not(:focus-within) { opacity: 0; transform: translateY(14px) scale(.985);
     transition: opacity var(--t-exit) var(--ease-exit), transform var(--t-exit) var(--ease-exit); }
+  .reveal-on :is([data-reveal], .section-head > *)[data-from="above"]:not(.is-in):not(:focus-within) { transform: translateY(-14px) scale(.985); }
   .reveal-on :is([data-reveal], .section-head > *):is(.is-in, :focus-within) { transition: opacity var(--t-reveal) var(--ease), transform var(--t-reveal) var(--ease);
     transition-delay: calc(var(--index, 0) * var(--stagger, 35ms)); }
 
@@ -1086,10 +1088,10 @@ html:not(.js) .idx-hint { display: none; }
   }
 
   /* tactile press on high-frequency controls: 80ms in, 140ms spring back */
-  :is(.tactile, .btn, .chip, [data-seg], .idx-x, .q-actions button, [data-copy], .palette-btn, .theme-toggle) {
-    transition: scale var(--t-release) var(--ease), background-color var(--t1) var(--ease), color var(--t1) var(--ease), border-color var(--t1) var(--ease), opacity var(--t1) var(--ease); }
-  :is(.tactile, .btn, .chip, [data-seg], .idx-x, .q-actions button, [data-copy], .palette-btn, .theme-toggle):active:not(:disabled) {
-    scale: .975; transition-duration: var(--t-press), var(--t1), var(--t1), var(--t1), var(--t1); }
+  :is(.tactile, .btn, .chip, [data-seg], .idx-x, .q-actions button, [data-copy], .palette-btn, .theme-toggle, .glass-chip--interactive) {
+    transition: scale var(--t-release) var(--ease-overshoot), background-color var(--t1) var(--ease), color var(--t1) var(--ease), border-color var(--t1) var(--ease), opacity var(--t1) var(--ease); }
+  :is(.tactile, .btn, .chip, [data-seg], .idx-x, .q-actions button, [data-copy], .palette-btn, .theme-toggle, .glass-chip--interactive):active:not(:disabled):not([aria-disabled="true"]) {
+    scale: .96; transition-duration: var(--t-press), var(--t1), var(--t1), var(--t1), var(--t1); }
 
   .fx-celebrate { animation: fx-pop 420ms var(--ease); }
 
@@ -1097,9 +1099,9 @@ html:not(.js) .idx-hint { display: none; }
   .pop.is-open { transform: none; transition: opacity var(--t-open) var(--ease), transform var(--t-open) var(--ease), visibility 0s; }
   .glide { transition: translate 180ms cubic-bezier(.34, 1.25, .64, 1); }
 
-  details.drawer::details-content { opacity: 0; transform: scale(.98); transform-origin: var(--origin-x, 0) 0;
+  :is(details.drawer, details.reveal, details.cst-list, details.vel-data)::details-content { opacity: 0; transform: scale(.98); transform-origin: var(--origin-x, 0) 0;
     transition: opacity var(--t-close) var(--ease-exit), transform var(--t-close) var(--ease-exit), content-visibility var(--t-close) allow-discrete; }
-  details.drawer[open]::details-content { opacity: 1; transform: none; transition-duration: var(--t-open); transition-timing-function: var(--ease); }
+  :is(details.drawer, details.reveal, details.cst-list, details.vel-data)[open]::details-content { opacity: 1; transform: none; transition-duration: var(--t-open); transition-timing-function: var(--ease); }
 
   /* command palette: grows from its trigger (palette.js sets --origin-x/-y); the 115ms close is WAAPI in palette.js */
   .cmdk { transform-origin: var(--origin-x, 50%) var(--origin-y, 0%); }
@@ -1514,8 +1516,8 @@ html:not(.js) .idx-hint { display: none; }
 .viz-bar.is-best { stroke: var(--text); stroke-width: 1.5; stroke-dasharray: 3 2; vector-effect: non-scaling-stroke; }
 .viz-bar.is-now { fill: var(--text); }
 @media (prefers-reduced-motion: no-preference) {
-  .viz-cube { transition: transform 420ms var(--ease), fill var(--t2) var(--ease); }
-  .viz-new { animation: viz-in 320ms var(--ease) both; }
+  .viz-cube { transition: fill var(--t2) var(--ease); }
+  .viz-new { animation: viz-drop 460ms var(--ease-spring) both; }
   .viz-mcell { transition: background-color var(--t1) var(--ease), color var(--t1) var(--ease); }
   .viz-ch { transition: background-color var(--t2) var(--ease), color var(--t2) var(--ease), margin var(--t2) var(--ease); }
 }
@@ -1529,7 +1531,7 @@ html:not(.js) .idx-hint { display: none; }
 .cst-bar[hidden] { display: none; }
 .cst-bar .chip { min-height: 2.25rem; font-family: var(--mono); font-size: .75rem; font-variant-numeric: tabular-nums; }
 .cst-bar .cst-sep { width: 1px; height: 1.5rem; margin: 0 .25rem; background: var(--hair-2); }
-.cst-stage { position: relative; height: clamp(22rem, 52vw, 34rem); border-radius: var(--r-card); background: var(--tile-2); overflow: hidden; }
+.cst-stage { position: relative; height: clamp(26rem, 52vw, 34rem); border-radius: var(--r-card); background: var(--tile-2); overflow: hidden; }
 .cst-canvas { display: block; width: 100%; height: 100%; cursor: grab; touch-action: pan-y; }
 .cst-canvas.is-dragging { cursor: grabbing; }
 .cst-tip { position: absolute; z-index: 2; max-width: 16rem; padding: .5rem .7rem; border-radius: var(--r-card); font-size: .8125rem; line-height: 1.45; color: var(--text); pointer-events: none; }
@@ -1550,6 +1552,94 @@ html:not(.js) .idx-hint { display: none; }
 .cst-list li { break-inside: avoid; margin-bottom: var(--s3); }
 .cst-list li b { display: block; font-weight: 600; }
 .cst-list a { color: var(--text-2); }
+
+/* ---------- shared motion engine (assets/js/motion-engine.js) ---------- */
+/* a glass pill that glides between the options of a segmented group; the pressed option itself goes transparent */
+.has-glide { position: relative; isolation: isolate; }
+.has-glide > :not(.glide-pill) { position: relative; z-index: 1; }
+.glide-pill { position: absolute; top: 0; left: 0; z-index: 0; pointer-events: none; border: 1px solid var(--field); background: var(--chip-bg-on); box-shadow: var(--chip-rim); }
+.glide-pill[hidden], .nav-pill[hidden] { display: none; }
+.has-glide > [aria-pressed="true"] { background: transparent !important; border-color: transparent !important; box-shadow: none !important; }
+.idx-rail .idx-tabs > .glide-pill { box-shadow: inset 2px 0 0 var(--text), var(--chip-rim); }
+@media (max-width: 64rem) { .idx-rail .idx-tabs > .glide-pill { box-shadow: inset 0 -2px 0 var(--text), var(--chip-rim); } }
+header.site nav { position: relative; }
+header.site nav a { z-index: 1; }
+.nav-pill { position: absolute; top: 50%; left: 0; height: 2rem; margin-top: -1rem; border-radius: var(--r-pill); background: var(--fill); pointer-events: none; }
+/* rubber banding: the scroller's content follows --rb past the edge and springs back */
+[data-rubber] > * { translate: var(--rb, 0) 0; }
+
+/* ---------- The Vault (the problem index) ---------- */
+.vault-head { flex-wrap: wrap; }
+.vault-count { display: inline-flex; flex-wrap: wrap; gap: .25rem .9rem; margin: 0; padding: .35rem .8rem; border-radius: var(--r-pill); font: 500 .75rem var(--mono); color: var(--text-2); font-variant-numeric: tabular-nums; }
+.vault-count b { color: var(--text); font-weight: 600; margin-inline-end: .25em; }
+.vault-boss { display: inline-flex; align-items: center; gap: .35rem; }
+.vault-boss i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-display); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-display) 22%, transparent); }   /* amber: the boss-fight exception */
+/* boss fights: the ID keycap keeps its dashed not-solved shape and glows amber (the boss-fight exception) */
+.row.st-unsolved .rb { border-color: var(--accent-display); color: var(--text); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-display) 18%, transparent); }
+.index a.row { position: relative; padding-inline-end: 1.9rem; scroll-margin-block: 25vh; }
+.index a.row::after { content: ""; position: absolute; right: .8rem; top: 1.25rem; width: 6px; height: 6px; border: solid var(--text-3); border-width: 1.5px 1.5px 0 0; rotate: 45deg; opacity: .55; }
+@media (hover: hover) {
+  .index a.row:hover { box-shadow: inset 0 1px 0 rgb(255 255 255 / .06), 0 0 0 1px var(--hair-2); }
+  .index a.row:hover::after { opacity: 1; border-color: var(--text); }
+}
+.idx-random svg { width: 15px; height: 15px; margin-inline-end: .4rem; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; vertical-align: -2px; }
+li.is-shuffle > a.row { background: var(--fill-2); }
+li.is-picked > a.row { background: var(--fill-2); box-shadow: 0 0 0 1px var(--field), inset 2px 0 0 var(--text); }
+@media (prefers-reduced-motion: no-preference) {
+  .index a.row::after { transition: translate var(--t2) var(--ease-overshoot), opacity var(--t1) var(--ease), border-color var(--t1) var(--ease); }
+  .index a.row { transition: background-color var(--t1) var(--ease), box-shadow var(--t2) var(--ease); }
+  @media (hover: hover) { .index a.row:hover::after { translate: 3px 0; } }
+  li.is-arriving { animation: idx-arrive 280ms var(--ease-spring) both; animation-delay: calc(var(--i, 0) * 20ms); }
+  li.is-picked > a.row { animation: idx-pick 420ms var(--ease-overshoot); }
+  .idx-random.is-spinning svg { animation: idx-spin 520ms var(--ease-spring); }
+}
+@keyframes idx-arrive { from { opacity: 0; transform: translateY(6px); } }
+@keyframes idx-pick { 40% { transform: scale(1.012); } }
+@keyframes idx-spin { 30% { transform: rotate(-25deg); } to { transform: rotate(360deg); } }
+
+/* ---------- The Knowledge Constellation: inspector card and toolbar extras ---------- */
+.cst-tip { transform-origin: var(--origin-x, 0) var(--origin-y, 100%); }
+@media (prefers-reduced-motion: no-preference) {
+  .cst-tip { opacity: 0; transform: scale(.94); transition: opacity var(--t-close) var(--ease-exit), transform var(--t-close) var(--ease-exit); }
+  .cst-tip.is-open { opacity: 1; transform: none; transition: opacity var(--t-open) var(--ease-spring), transform var(--t-open) var(--ease-spring); }
+}
+.cst-zoom { display: inline-flex; gap: 4px; margin-inline-start: auto; }
+@media (max-width: 30rem) { .cst-bar .cst-sep { display: none; } .cst-bar .chips { flex-basis: 100%; } }
+.cst-zoom .viz-btn { font: 600 1rem var(--sans); }
+.cst-hint { margin: var(--s3) 0 0; font-size: .75rem; color: var(--text-3); }
+
+/* ---------- studio visualizers: blueprint stage, sliding line marker, live variables ---------- */
+.viz-canvas { position: relative; background-color: var(--tile-2);
+  background-image: linear-gradient(var(--hair) 1px, transparent 1px), linear-gradient(90deg, var(--hair) 1px, transparent 1px);
+  background-size: 24px 24px; background-position: -1px -1px;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .06), inset 0 -1px 0 rgb(0 0 0 / .25), inset 0 0 0 1px var(--hair); }
+:root[data-theme="light"] .viz-canvas { box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 rgb(9 9 11 / .06), inset 0 0 0 1px var(--hair); }
+.viz-codebox { position: relative; }
+.viz-codebox .viz-code li.is-now { background: transparent; box-shadow: none; }
+.viz-marker { position: absolute; top: 0; left: 1px; right: 1px; height: 0; z-index: 0; pointer-events: none; background: var(--fill-2); box-shadow: inset 2px 0 0 var(--text); border-radius: 2px; }
+.viz-codebox .viz-code { position: relative; }
+.viz-codebox .viz-code li { z-index: 1; }
+.viz-vars { display: flex; flex-wrap: wrap; gap: 6px; margin-top: var(--s3); min-height: 1.9rem; }
+.viz-var { display: inline-flex; align-items: baseline; gap: .4rem; padding: .25rem .6rem; border-radius: var(--r-pill); font: 500 .75rem var(--mono); font-variant-numeric: tabular-nums; }
+.viz-var i { font-style: normal; color: var(--text-3); }
+.viz-var b { color: var(--text); font-weight: 600; }
+.viz-cube { transform-box: fill-box; transform-origin: 50% 100%; }
+.viz-ripple { fill: none; stroke: var(--text-2); stroke-width: .04; transform-box: fill-box; transform-origin: center; }
+.viz-word { position: relative; }
+.viz-splitbar { position: absolute; top: -6px; bottom: -6px; left: 0; width: 2px; border-radius: 1px; background: var(--text); }
+.viz-splitbar[hidden] { display: none; }
+.viz-word.is-peak .viz-ch.is-lit { box-shadow: 0 0 0 1px var(--text), 0 0 14px -2px color-mix(in srgb, var(--text) 45%, transparent); }
+.viz-bar.is-peak { filter: drop-shadow(0 0 4px color-mix(in srgb, var(--text) 60%, transparent)); }
+@media (prefers-reduced-motion: no-preference) {
+  .viz-marker { transition: transform 240ms var(--ease-spring), height 240ms var(--ease-spring); }
+  .viz-var.is-changed { animation: viz-pop 360ms var(--ease-overshoot); }
+  .viz-splitbar { transition: left 360ms var(--ease-overshoot); }
+  .viz-word.is-peak { animation: viz-peak 520ms var(--ease-spring); }
+}
+@keyframes viz-drop { 0% { opacity: 0; transform: translateY(-.6px) scale(1, 1.08); } 70% { opacity: 1; transform: translateY(.04px) scale(1.04, .94); } 100% { transform: none; } }
+@keyframes viz-pop { 40% { transform: scale(1.12); } }
+@keyframes viz-peak { 40% { transform: scale(1.03); } }
+.viz-new { transform-box: fill-box; transform-origin: 50% 100%; }
 
 /* ---------- print: write-ups, problem pages and /stats/ as clean black-on-white single columns ---------- */
 @media print {

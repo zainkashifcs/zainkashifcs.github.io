@@ -245,6 +245,23 @@ ring on not-solved problems is an allowed amber exception (the boss fight), like
 everything else to 15%; the details list underneath is the text equivalent. The loop runs only while on screen and
 visible, idles once the layout settles, and draws one still frame under reduced motion.
 
+Motion engine (`assets/js/motion-engine.js`, every page): `window.MotionSpring` (semi-implicit Euler: stiffness, damping,
+mass; retargets mid-flight). A glass pill glides between the pressed options of segmented groups (Vault tabs, rating
+bands, constellation tiers, pace pills, visualizer speed, timer mode); the header nav has a hover pill that settles back
+on the current page; horizontal scrollers rubber-band at their edges. Reveals re-enter from the side they left by.
+Opens 200ms (`--ease-spring`), closes 120ms; presses go to `.96` and spring back with `--ease-overshoot`. Keyboard row
+stepping stays instant. Everything jumps under reduced motion.
+
+The Vault (the problem index, `#index`): a glass count badge (archived, cracked = solved myself, boss fights = not
+solved), an amber outline and soft glow on the ID keycap of not-solved rows (boss-fight exception; no side stripe), row chevrons that nudge on hover, a 20ms cascade
+when rows come back after filtering, and "Random Vault pick": a short shuffle, then the pick is focused, announced and
+opened with Enter.
+
+The Knowledge Constellation (rebuild): hubs anchored on a padded ellipse (64px from every edge) in a world at least
+640px wide (narrow screens start zoomed out), curved gradient filaments with a hover pulse, frosted hubs with a
+solved-ratio arc, jewel nodes, an amber beacon for not-solved problems, decorative unlabelled orbit rings, Ctrl/Cmd +
+scroll or pinch to zoom, +/- buttons, background drag to pan, labels that avoid nodes and each other.
+
 ## 8. Do / Don't
 
 **Do**
