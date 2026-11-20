@@ -21,7 +21,7 @@
   const still = matchMedia('(prefers-reduced-motion: reduce)');
   const coarse = matchMedia('(pointer: coarse)');
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-  const TAU = Math.PI * 2, PAD = 64;
+  const TAU = Math.PI * 2, PAD = 64, BOTTOM_PAD = 52;   // BOTTOM_PAD: the hard floor keeps node rims this far above the bottom edge
   const hash = s => { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) | 0; return h; };
 
   // ---- graph ----
@@ -84,7 +84,7 @@
         if (d2 < 0.01) { dx = Math.random() - 0.5; dy = Math.random() - 0.5; d2 = 0.25; }
         const d = Math.sqrt(d2), both = a.type === 'hub' && b.type === 'hub';
         let f = (both ? 5200 : 1500) / d2 * k;
-        const gap = a.r + b.r + (both ? 70 : 14);   // collision: hubs keep room for their labels
+        const gap = a.r + b.r + (both ? 70 : 20);   // collision: hubs keep room for their labels, problems for their IDs
         if (d < gap) f += (gap - d) * 0.22;
         const fx = dx / d * f, fy = dy / d * f;
         a.vx += fx; a.vy += fy; b.vx -= fx; b.vy -= fy;
@@ -104,7 +104,7 @@
       if (n.y < PAD) n.vy += (PAD - n.y) * 0.06; else if (n.y > R.vh - PAD) n.vy -= (n.y - (R.vh - PAD)) * 0.06;
       n.vx *= 0.8; n.vy *= 0.8;
       if (!Number.isFinite(n.vx) || !Number.isFinite(n.vy)) { n.vx = n.vy = 0; }
-      n.x = clamp(n.x + n.vx, lo, R.vw - lo); n.y = clamp(n.y + n.vy, lo, R.vh - lo);
+      n.x = clamp(n.x + n.vx, lo, R.vw - lo); n.y = clamp(n.y + n.vy, lo, R.vh - BOTTOM_PAD - n.r);
     }
     alpha = Math.max(0.02, alpha * 0.985);   // settles in about 4s
   }
@@ -210,8 +210,11 @@
     if (!labels && !lit) { lastHubLabelOverlaps = 0; return; }
     ctx.setTransform(R.dpr, 0, 0, R.dpr, 0, 0);
     ctx.textBaseline = 'middle';
-    const boxes = hubList.filter(h => dim(h) >= 0.3).map(h => { const [x, y] = toScreen(h.x, h.y), r = (h.r + 5) * view.s; return { x: x - r, y: y - r, w: 2 * r, h: 2 * r, hub: h }; });
-    const hits = (b, self) => boxes.some(o => o.hub !== self && b.x < o.x + o.w && b.x + b.w > o.x && b.y < o.y + o.h && b.y + b.h > o.y);
+    // every visible node is an obstacle (beacons include their orbit), so labels never sit on a dot
+    const reach = n => n.r + (n.type === 'hub' ? 7 : n.kind === 'open' ? 11 : 2);   // hub: out to the solved-ratio ring
+    const boxes = nodes.filter(n => visible(n) && dim(n) >= 0.3).map(n => { const [x, y] = toScreen(n.x, n.y), r = reach(n) * view.s; return { x: x - r, y: y - r, w: 2 * r, h: 2 * r, node: n }; });
+    const hits = (b, self) => boxes.some(o => o.node !== self && b.x < o.x + o.w && b.x + b.w > o.x && b.y < o.y + o.h && b.y + b.h > o.y);
+    const fits = b => b.x >= 2 && b.x + b.w <= R.w - 2 && b.y >= 2 && b.y + b.h <= R.h - 2;
     const big = R.w > 560;
     ctx.font = `600 ${big ? 13 : 12}px Geist, system-ui, sans-serif`;
     let overlaps = 0;
@@ -219,9 +222,10 @@
       if (dim(h) < 0.3 && !(lit && lit.has(h))) continue;
       const [sx, sy] = toScreen(h.x, h.y), w = ctx.measureText(h.label).width, rr = (h.r + 8) * view.s;
       const right = Math.cos(h.angle) >= 0;
-      let x = right ? sx + rr : sx - rr - w, y = sy - 8;
-      if (x < 4 || x + w > R.w - 4) { x = clamp(sx - w / 2, 4, R.w - w - 4); y = Math.sin(h.angle) < 0 ? sy - rr - 16 : sy + rr; }   // no room beside it: centre the label above or below
-      let b = { x, y, w, h: 16 }, tries = 0;
+      const side = x => ({ x, y: sy - 8, w, h: 16 }), mid = y => ({ x: clamp(sx - w / 2, 4, R.w - w - 4), y, w, h: 16 });
+      // outward side first, then above, the inner side and below: the first spot clear of every node and label wins
+      const spots = [side(right ? sx + rr : sx - rr - w), mid(sy - rr - 16), side(right ? sx - rr - w : sx + rr), mid(sy + rr)].filter(fits);
+      let b = spots.find(s => !hits(s, h)) || spots[0] || mid(Math.sin(h.angle) < 0 ? sy - rr - 16 : sy + rr), tries = 0;
       while (hits(b, h) && tries++ < 8) b = { ...b, y: b.y + (Math.sin(h.angle) >= 0 ? 12 : -12) };
       if (hits(b, h)) overlaps++;
       boxes.push(b);
@@ -242,9 +246,11 @@
       let ux = 1, uy = 0;
       if (hub) { const dx = n.x - hub.x, dy = n.y - hub.y, d = Math.hypot(dx, dy) || 1; ux = dx / d; uy = dy / d; }   // away from the parent hub
       const w = ctx.measureText(n.id).width, off = (n.r + (n.kind === 'open' ? 11 : 0)) * view.s + 5;   // clear the boss beacon's orbit
-      const x = clamp(sx + ux * off - (ux < 0 ? w : 0), 2, R.w - w - 2), y = sy + uy * off - 6;
-      const b = { x, y, w, h: 12 };
-      if (hits(b)) continue;
+      const box = (x, y) => ({ x: clamp(x, 2, R.w - w - 2), y, w, h: 12 });
+      // away from the hub first, then right, left, above and below; a label with no clear spot is left out
+      const b = [box(sx + ux * off - (ux < 0 ? w : 0), sy + uy * off - 6), box(sx + off, sy - 6), box(sx - off - w, sy - 6), box(sx - w / 2, sy - off - 12), box(sx - w / 2, sy + off)]
+        .find(s => fits(s) && !hits(s, n));
+      if (!b) continue;
       boxes.push(b);
       ctx.globalAlpha = dim(n); ctx.fillStyle = colours.text3; ctx.textAlign = 'left'; ctx.fillText(n.id, b.x, b.y + 6);
     }
