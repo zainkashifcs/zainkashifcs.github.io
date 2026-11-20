@@ -79,7 +79,7 @@ keycaps, axis labels and code blocks. Files: `assets/fonts/Geist-Variable-latin.
 `GeistMono-Variable-latin.woff2`, both under the OFL (`OFL-geist.txt`). `--sans` and `--mono` point at them, the
 default layout preloads Geist and `sw.js` precaches both. No OpenType feature switches. `font-variant-numeric:
 tabular-nums` goes on every number in KPIs, the ledger, charts, dates and ratings. Mono weights stay at 400 or 500 (the
-file ships no heavier weight). The Inter and JetBrains Mono files remain in `assets/fonts/` unreferenced.
+file ships no heavier weight).
 
 | Role | Size | Weight | Line-height | Tracking |
 |---|---|---|---|---|

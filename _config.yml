@@ -4,9 +4,9 @@ solutions_repo: https://github.com/zainkashifcs/comp-program-grind
 url: "https://zainkashifcs.github.io"  # used for canonical links and the sitemap
 baseurl: ""  # a user site is served from the root; set explicitly so local builds match GitHub Pages
 permalink: /posts/:title/
-# Codeforces handle for the profile section. Left empty until confirmed: "amaza1nn__" returned "not found" from
-# the Codeforces API on 6 Nov 2026, so nothing is fetched or shown yet (see _scripts/fetch_codeforces.py).
-codeforces_handle: ""
+# Codeforces handle for the profile section (https://codeforces.com/profile/amaza1nn). _scripts/fetch_codeforces.py
+# caches the public profile in _data/codeforces.json; the site shows it only when that file says "status": "ok".
+codeforces_handle: "amaza1nn"
 
 # One page per archive problem without a write-up; the stubs in _problems/ are written by _scripts/build_problems.py.
 collections:

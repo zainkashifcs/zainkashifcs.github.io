@@ -28,7 +28,7 @@ Without `--solutions` it keeps the existing page bodies. A problem's status in a
 ## Codeforces profile
 Set `codeforces_handle` in `_config.yml`. `fetch_codeforces.py` makes at most three public API calls, two seconds
 apart, and writes `_data/codeforces.json`. The profile only appears on the site when that file says `"status": "ok"`.
-`amaza1nn__` was reported "not found" by the API on 6 and 7 Nov 2026, so the handle is empty for now.
+The handle is `amaza1nn` (https://codeforces.com/profile/amaza1nn); it resolved on 20 Nov 2026.
 
 ## Quiz questions (manual, Claude Sonnet via Claude Code)
 
