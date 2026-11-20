@@ -54,7 +54,7 @@ Jekyll 3.10 + one stylesheet (`assets/css/style.css`) + vanilla JS. This file is
 | `--fill-2` | `rgb(255 255 255 / .07)` | `rgb(9 9 11 / .07)` | pressed, selected tab |
 | `--field` | `rgb(255 255 255 / .38)` | `rgb(9 9 11 / .45)` | outline marks (≥3:1 graphics) |
 | `--accent` | `#F59E0B` | `#B45309` | 8.8:1 on card / 5.0:1 on white: may carry text |
-| `--accent-display` | `#F59E0B` | `#B45309` | climb line, progress bar (≥3:1) |
+| `--accent-display` | `#F59E0B` | `#B45309` | progress bar, climb milestones (≥3:1) |
 | `--accent-fill` | `#FFFFFF` | `#09090B` | **the pill CTA**, not amber |
 | `--on-accent-fill` | `#09090B` | `#FAFAFA` | text on pill CTA |
 | `--amber-wash-top` | `rgb(245 158 11 / .22)` | `rgb(180 83 9 / .16)` | top stop of climb-area gradient |
@@ -182,13 +182,29 @@ linking to the commit). The hero's own text no longer repeats the KPI numbers.
 Solved independently 29 · Active days 17 · Longest streak 10 days · Goal 1800 ("hardest solved 1300"). Values come
 from `_data/activity_stats.json` / `_data/problems.json` at build time, never typed in.
 
-**Climb chart (`.ladder`).** No shaded rank bands. Horizontal rules at 1800, 1900 (Expert), 1600 (Specialist),
-1400 (Pupil), 1200 (Newbie top): `border-top: 1px dashed var(--hair-2)`. Axis labels 11px mono `--text-3`. Step-line
-2px `--accent-display`, `vector-effect: non-scaling-stroke`; under it a closed path filled with
-`linearGradient` from `--amber-wash-top` to transparent. Dots: solved = `--text` filled, with help = ring, not solved
-= dashed ring. Every dot is a focusable `<a>` (to the problem page) with a glass tooltip (ID, name, rating, date,
-"Open") shown on `:hover` and `:focus-visible`; tooltip flips near edges; `Esc` hides it (WCAG 1.4.13). Dot hit
-area ≥24×24px (2.5.8). The figcaption keeps the key and summary for screen readers.
+**Climb chart (`.ladder`).** A momentum curve, not a step line. The y axis runs from 750 to
+max(1400, hardest solved myself + 100), so the climb fills the card. Gridlines: `border-top: 1px dashed var(--hair-2)`
+every 150 from 800 and from each rank boundary, stopping 40 short of the next boundary or the top (today 800, 950,
+1100, 1200 · Pupil, 1350); a rank boundary rule uses `--field` and its 11px mono label reads "1200 · Pupil" on one
+line. The goal sits in a `.glass-chip` at the top right of the card header ("Goal: 1800 (Expert)").
+The curve is a 5-problem trailing rolling average of the problems' Codeforces ratings, in the order started, drawn as
+a Catmull-Rom spline turned into cubic Bezier segments (built in Liquid, so it renders without JavaScript). Stroke
+2.5px, round caps, `vector-effect: non-scaling-stroke`; under it the same path closed to the floor at `fill-opacity`
+.2 dark / .16 light. Both take one vertical altitude gradient (`linearGradient gradientUnits="userSpaceOnUse"`, stops
+at 800, 1000, 1150, 1200 and the top, colours `--g1` to `--g5`): "forged", brushed graphite #6E6E78 at the base,
+warm platinum #A8A29E, bronze #D08A2E, then the signal amber #F59E0B and #FCD34D at 1200 and above (light: #8A8A93,
+#8C7B66, #B4691F, #B45309, #92400E, each at least 3:1 on white). Amber stays the colour of progress: the line only
+turns amber as the climb nears the goal.
+Milestone pins: the first problem solved myself in each 200 band from 1000 (rated within its first 100) and the peak
+(hardest solved myself), each a dashed drop line from its rating to the floor, a dot tinted by band and a glass badge
+("First 1000: 69A", "Peak 1300: 4C"); badges stack above every drop line and right-align past 80% of the width.
+Each problem is a focusable `<a>` on the curve whose dot appears only on `:hover` / `:focus-visible`, with the shared
+glass tooltip (ID, name, rating, status, date, the 5-problem average, "Open"); `Esc` hides it (WCAG 1.4.13). Points
+are as wide as their column (the problem index links every problem too: the 2.5.8 equivalent-control exception).
+Motion: the curve, wash and pins (`.ladder-draw`) wipe in left to right with `clip-path`, 900ms
+`cubic-bezier(.22, 1, .36, 1)`, every time the chart enters the viewport (a quarter visible), and reset without
+animating once it is fully out (`rootMargin: -20px 0px`), in both scroll directions. Reduced motion: drawn at once.
+The figcaption names the key and lists the milestones for screen readers.
 
 **Problem ledger.** Left-aligned rows: keycap ID · name + one-line lesson · monochrome topics · rating (tabular,
 right) · date (tabular). Filter tabs (`role="tablist"`-free: a segmented `role="group"` of `aria-pressed` buttons):

@@ -1,7 +1,7 @@
 // Motion layer, no animation library. Lenis smooths wheel scrolling; the header gains its hairline once the page scrolls.
 // Reveals: [data-reveal] and section titles fade up each time they enter the viewport, scrolling down or up, and reset
-// only after they have left it completely (plus 48px), so nothing flickers at the edge. The climb chart line and
-// the activity calendar wipe in on every entry. The homepage hero rises in once per tab (CSS, html.intro), its
+// only after they have left it completely (plus 48px), so nothing flickers at the edge. The activity calendar
+// wipes in on every entry (the climb chart's draw-in lives in home.js). The homepage hero rises in once per tab (CSS, html.intro), its
 // animals canvas fades and drifts as it scrolls away. All styling is in style.css (motion section). Nothing here runs under
 // prefers-reduced-motion (the head script then never adds .motion); without JS, in print or with reduced motion every
 // element stays visible.
@@ -50,7 +50,7 @@
     const grid = document.querySelector('[data-heatmap] .grid');
     if (grid && grid.parentElement) grid.parentElement.classList.add('mo-wipe');
     const SEL = '[data-reveal], .section-head > *';
-    const els = [...document.querySelectorAll(`${SEL}, .ladder-plot, .mo-wipe`)];
+    const els = [...document.querySelectorAll(`${SEL}, .mo-wipe`)];
     if (!els.length) return;
     document.querySelectorAll('[data-reveal-group], .section-head').forEach(g =>
       [...g.children].filter(c => c.matches(SEL)).forEach((el, i) => el.style.setProperty('--index', Math.min(i, 10))));

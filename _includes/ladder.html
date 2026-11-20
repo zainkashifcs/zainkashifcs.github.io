@@ -1,66 +1,145 @@
 {%- comment -%}
-The climb: every rated problem in the archive in the order I started it (left to right), placed by its Codeforces
-rating (bottom 700, top 1900). Dashed rules mark the rank boundaries at 1200, 1400, 1600 and 1900 and the 1800 goal.
-The amber line steps up to the hardest problem solved independently so far, over a fading amber wash. Each dot links to
-its problem and shows a tooltip on hover and keyboard focus (assets/js/home.js turns these into one shared tooltip that glides between dots; Esc hides it). Built at build time from
-_data/problems.json; positions are percentages so the figure scales without distorting its marks.
+The climb: every rated problem in the archive in the order I started it (left to right). The curve is a 5-problem
+rolling average of the problems' Codeforces ratings (trailing window), drawn as a Catmull-Rom spline converted to cubic
+Bezier segments. Its stroke and the translucent wash under it take a vertical "altitude" gradient
+(gradientUnits="userSpaceOnUse") whose colours are CSS variables, so the palette and the theme can change it.
+Milestone pins mark the first problem solved myself in a rating band (1000, 1200, 1400, 1600, 1800) and the hardest
+solved myself (the peak). The y axis runs from 750 to max(1400, peak + 100). The curve, its wash and the pins sit in .ladder-draw, which wipes in left to right each
+time the chart enters the viewport (home.js). Each problem is a focusable point on the
+curve with a tooltip (assets/js/home.js turns these into one shared tooltip that glides between points; Esc hides it).
+Built at build time from _data/problems.json; positions are percentages so the figure scales without distorting.
 {%- endcomment -%}
 {%- assign _ps = site.data.problems | where_exp: "p", "p.rating != nil" | sort: "first_date" -%}
 {%- assign _n = _ps.size -%}
-{%- assign _best = 0 -%}{%- assign _path = "" -%}{%- assign _x0 = 0 -%}{%- assign _marks = "" -%}
+{%- comment -%} pass 1: the peak, the milestones and the rolling average {%- endcomment -%}
+{%- assign _best = 0 -%}{%- assign _best_id = "" -%}{%- assign _best_i = 0 -%}
+{%- assign _rs = "" -%}{%- assign _avgs = "" -%}{%- assign _seen = "" -%}{%- assign _mile = "" -%}
 {%- for p in _ps -%}
   {%- include rating.html pid=p.id rating=p.rating -%}
+  {%- assign _rs = _rs | append: rating | append: "," -%}
+  {%- assign _arr = _rs | split: "," -%}
+  {%- assign _from = forloop.index0 | minus: 4 | at_least: 0 -%}{%- assign _len = forloop.index0 | minus: _from | plus: 1 -%}
+  {%- assign _sum = 0 -%}{%- for r in _arr offset: _from limit: _len -%}{%- assign _sum = _sum | plus: r -%}{%- endfor -%}
+  {%- assign _avg = _sum | times: 1.0 | divided_by: _len | round -%}
+  {%- assign _avgs = _avgs | append: _avg | append: "," -%}
+  {%- if p.solved and p.status != "help" -%}
+    {%- if rating > _best -%}{%- assign _best = rating -%}{%- assign _best_id = p.id -%}{%- assign _best_i = forloop.index0 -%}{%- endif -%}
+    {%- assign _band = rating | divided_by: 200 | times: 200 -%}
+    {%- assign _key = "b" | append: _band | append: "," -%}
+    {%- assign _btop = _band | plus: 100 -%}
+    {%- if _band >= 1000 and rating < _btop -%}{%- unless _seen contains _key -%}
+      {%- assign _seen = _seen | append: _key -%}
+      {%- assign _mile = _mile | append: forloop.index0 | append: "~" | append: _band | append: "~" | append: p.id | append: ";" -%}
+    {%- endunless -%}{%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign _lo = 750 -%}{%- assign _hi = _best | plus: 100 | at_least: 1400 -%}{%- assign _span = _hi | minus: _lo -%}
+{%- assign _avgs = _avgs | split: "," -%}
+{%- comment -%} pass 2: positions, points and tooltips {%- endcomment -%}
+{%- assign _xs = "" -%}{%- assign _ys = "" -%}{%- assign _marks = "" -%}
+{%- for p in _ps -%}
+  {%- include rating.html pid=p.id rating=p.rating -%}
+  {%- assign _avg = _avgs[forloop.index0] | plus: 0 -%}
   {%- assign _x = forloop.index0 | times: 100.0 | plus: 50.0 | divided_by: _n | round: 2 -%}
-  {%- assign _y = 1900 | minus: rating | times: 100.0 | divided_by: 1200 | round: 2 -%}
+  {%- assign _y = _hi | minus: _avg | times: 100.0 | divided_by: _span | round: 2 -%}
+  {%- assign _xs = _xs | append: _x | append: "," -%}{%- assign _ys = _ys | append: _y | append: "," -%}
   {%- if p.solved and p.status != "help" -%}{%- assign _kind = "solved" -%}{%- assign _what = "solved myself" -%}
   {%- elsif p.solved -%}{%- assign _kind = "help" -%}{%- assign _what = "solved with help" -%}
   {%- else -%}{%- assign _kind = "open" -%}{%- assign _what = "not solved yet" -%}{%- endif -%}
-  {%- if _kind == "solved" and rating > _best -%}
-    {%- if _path == "" -%}{%- capture _path -%}M{{ _x }} {{ _y }}{%- endcapture -%}{%- assign _x0 = _x -%}
-    {%- else -%}{%- capture _path -%}{{ _path }} H{{ _x }} V{{ _y }}{%- endcapture -%}{%- endif -%}
-    {%- assign _best = rating -%}
-  {%- endif -%}
   {%- comment -%} the tooltip flips away from the plot's edges {%- endcomment -%}
   {%- assign _tip = "" -%}
   {%- if _x < 18 -%}{%- assign _tip = " tip-l" -%}{%- elsif _x > 82 -%}{%- assign _tip = " tip-r" -%}{%- endif -%}
   {%- if _y < 30 -%}{%- assign _tip = _tip | append: " tip-b" -%}{%- endif -%}
   {%- assign _date = p.first_date | date: "%-d %b %Y" -%}
-  {%- capture _marks -%}{{ _marks }}<a class="pt {{ _kind }}{{ _tip }}" data-reveal href="{{ p.post | default: p.page | relative_url }}" style="left:{{ _x }}%;top:{{ _y }}%" aria-label="{{ p.id | escape }} {{ p.name | escape }}: rated {{ rating }}, {{ _what }}, started {{ _date }}"><span class="dot-tip" aria-hidden="true"><span class="rb{% if _kind == 'help' %} help{% elsif _kind == 'open' %} open{% endif %}">{{ p.id | escape }}</span><b>{{ p.name | escape }}</b><span class="m">{{ rating }} · {{ _what }} · {{ _date }}</span><span class="go">Open {% if p.post %}the write-up{% else %}the problem page{% endif %}</span></span></a>{%- endcapture -%}
+  {%- capture _marks -%}{{ _marks }}<a class="pt {{ _kind }}{{ _tip }}" data-reveal href="{{ p.post | default: p.page | relative_url }}" style="left:{{ _x }}%;top:{{ _y }}%" aria-label="{{ p.id | escape }} {{ p.name | escape }}: rated {{ rating }}, {{ _what }}, started {{ _date }}"><span class="dot-tip" aria-hidden="true"><span class="rb{% if _kind == 'help' %} help{% elsif _kind == 'open' %} open{% endif %}">{{ p.id | escape }}</span><b>{{ p.name | escape }}</b><span class="m">{{ rating }} · {{ _what }} · {{ _date }}</span><span class="m">5-problem average {{ _avg }}</span><span class="go">Open {% if p.post %}the write-up{% else %}the problem page{% endif %}</span></span></a>{%- endcapture -%}
 {%- endfor -%}
-{%- if _path != "" -%}{%- capture _area -%}{{ _path }} H100 V100 H{{ _x0 }} Z{%- endcapture -%}{%- capture _path -%}{{ _path }} H100{%- endcapture -%}{%- else -%}{%- assign _area = "M0 100" -%}{%- assign _path = "M0 100" -%}{%- endif -%}
+{%- comment -%} the spline: Catmull-Rom through every point, as cubic Bezier segments {%- endcomment -%}
+{%- assign _xs = _xs | split: "," -%}{%- assign _ys = _ys | split: "," -%}{%- assign _last = _n | minus: 1 -%}
+{%- assign _path = "" -%}
+{%- if _n > 0 -%}
+  {%- capture _path -%}M{{ _xs[0] }} {{ _ys[0] }}{%- endcapture -%}
+  {%- if _n > 1 -%}{%- assign _stop = _last | minus: 1 -%}
+  {%- for i in (0.._stop) -%}
+    {%- assign _i0 = i | minus: 1 | at_least: 0 -%}{%- assign _i2 = i | plus: 1 -%}{%- assign _i3 = i | plus: 2 | at_most: _last -%}
+    {%- assign _x0 = _xs[_i0] | plus: 0 -%}{%- assign _y0 = _ys[_i0] | plus: 0 -%}
+    {%- assign _x1 = _xs[i] | plus: 0 -%}{%- assign _y1 = _ys[i] | plus: 0 -%}
+    {%- assign _x2 = _xs[_i2] | plus: 0 -%}{%- assign _y2 = _ys[_i2] | plus: 0 -%}
+    {%- assign _x3 = _xs[_i3] | plus: 0 -%}{%- assign _y3 = _ys[_i3] | plus: 0 -%}
+    {%- assign _c1x = _x2 | minus: _x0 | divided_by: 6.0 | plus: _x1 | round: 2 -%}
+    {%- assign _c1y = _y2 | minus: _y0 | divided_by: 6.0 | plus: _y1 | at_least: 0 | at_most: 100 | round: 2 -%}
+    {%- assign _c2x = _x3 | minus: _x1 | divided_by: 6.0 | times: -1 | plus: _x2 | round: 2 -%}
+    {%- assign _c2y = _y3 | minus: _y1 | divided_by: 6.0 | times: -1 | plus: _y2 | at_least: 0 | at_most: 100 | round: 2 -%}
+    {%- capture _path -%}{{ _path }} C{{ _c1x }} {{ _c1y }} {{ _c2x }} {{ _c2y }} {{ _x2 }} {{ _y2 }}{%- endcapture -%}
+  {%- endfor -%}{%- endif -%}
+  {%- capture _area -%}{{ _path }} L{{ _xs[_last] }} 100 L{{ _xs[0] }} 100 Z{%- endcapture -%}
+{%- else -%}{%- assign _area = "M0 100" -%}{%- assign _path = "M0 100" -%}{%- endif -%}
+{%- comment -%} gradient stops at fixed ratings, mapped into the plot's 0-100 space (offset 0 = 750, 1 = top) {%- endcomment -%}
+{%- assign _o800 = 800 | minus: _lo | times: 1.0 | divided_by: _span | round: 4 -%}
+{%- assign _o1000 = 1000 | minus: _lo | times: 1.0 | divided_by: _span | round: 4 -%}
+{%- assign _o1150 = 1150 | minus: _lo | times: 1.0 | divided_by: _span | round: 4 -%}
+{%- assign _o1200 = 1200 | minus: _lo | times: 1.0 | divided_by: _span | round: 4 -%}
+{%- comment -%} gridlines: 800 and each rank boundary (labelled) start a run of lines every 150, which stops 40 short of
+the next boundary and of the top. With a top of 1400: 800, 950, 1100, 1200 Pupil, 1350. {%- endcomment -%}
+{%- assign _anchors = "800~,1200~Pupil,1400~Specialist,1600~Expert,1900~Candidate Master,9999~" | split: "," -%}
+{%- assign _rules = "" -%}
+{%- for a in _anchors -%}{%- assign _af = a | split: "~" -%}{%- assign _av = _af[0] | plus: 0 -%}
+  {%- if _av >= _hi -%}{%- break -%}{%- endif -%}
+  {%- assign _nf = _anchors[forloop.index] | split: "~" -%}{%- assign _end = _nf[0] | plus: 0 | at_most: _hi | minus: 40 -%}
+  {%- for k in (0..20) -%}{%- assign _v = k | times: 150 | plus: _av -%}{%- if _v > _end -%}{%- break -%}{%- endif -%}
+    {%- if k == 0 -%}{%- assign _rules = _rules | append: a | append: "," -%}{%- else -%}{%- assign _rules = _rules | append: _v | append: "~," -%}{%- endif -%}
+  {%- endfor -%}
+{%- endfor -%}
+{%- assign _rules = _rules | split: "," -%}
+{%- assign _goal = site.data.roadmap.goal | default: 1800 -%}
+{%- include rating.html pid="" rating=_goal -%}
+<div class="ladder-head">
+  <h3>The climb, problem by problem</h3>
+  <div class="ladder-tools">
+    <span class="glass-chip ladder-goal">Goal: {{ _goal }} ({{ rank_tier | capitalize }})</span>
+  </div>
+</div>
 <figure class="ladder" data-enter>
   <div class="ladder-chart">
     <div class="ladder-plot" data-reveal-group style="--n:{{ _n }};--stagger:18ms">
-      <div class="rule" style="top:0" aria-hidden="true"></div>
-      <div class="rule goal" style="top:8.33%" aria-hidden="true"></div>
-      <div class="rule" style="top:25%" aria-hidden="true"></div>
-      <div class="rule" style="top:41.67%" aria-hidden="true"></div>
-      <div class="rule" style="top:58.33%" aria-hidden="true"></div>
+      {%- for r in _rules -%}{%- assign _f = r | split: "~" -%}{%- assign _t = _hi | minus: _f[0] | times: 100.0 | divided_by: _span | round: 2 %}
+      <div class="rule{% if _f[1] %} rank{% endif %}" style="top:{{ _t }}%" aria-hidden="true"></div>
+      {%- endfor %}
+      <div class="ladder-draw">
       <svg class="best" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-        <defs><linearGradient id="climb-wash" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="w0"/><stop offset="1" class="w1"/></linearGradient></defs>
-        <path class="area" d="{{ _area }}" fill="url(#climb-wash)"/>
-        <path class="line" d="{{ _path }}"/>
+        <defs>
+          <linearGradient id="climb-alt" gradientUnits="userSpaceOnUse" x1="0" y1="100" x2="0" y2="0">
+            <stop offset="{{ _o800 }}" class="g1"/><stop offset="{{ _o1000 }}" class="g2"/><stop offset="{{ _o1150 }}" class="g3"/><stop offset="{{ _o1200 }}" class="g4"/><stop offset="1" class="g5"/>
+          </linearGradient>
+        </defs>
+        <path class="area" d="{{ _area }}" fill="url(#climb-alt)"/>
+        <path class="line" d="{{ _path }}" stroke="url(#climb-alt)"/>
       </svg>
+      {%- assign _pins = _mile | split: ";" -%}
+      {%- capture _peak_entry -%}{{ _best_i }}~peak~{{ _best_id }}{%- endcapture -%}
+      {%- assign _pins = _pins | push: _peak_entry -%}
+      {%- for m in _pins -%}{%- assign _f = m | split: "~" -%}
+        {%- if _f[1] != "peak" and _f[2] == _best_id -%}{%- continue -%}{%- endif -%}
+        {%- assign _pi = _f[0] | plus: 0 -%}{%- assign _pp = _ps[_pi] -%}
+        {%- include rating.html pid=_pp.id rating=_pp.rating -%}
+        {%- assign _x = _pi | times: 100.0 | plus: 50.0 | divided_by: _n | round: 2 -%}
+        {%- assign _y = _hi | minus: rating | times: 100.0 | divided_by: _span | round: 2 -%}
+        {%- if rating >= 1200 -%}{%- assign _tint = "hi" -%}{%- elsif rating >= 1000 -%}{%- assign _tint = "mid" -%}{%- else -%}{%- assign _tint = "lo" -%}{%- endif -%}
+        {%- assign _al = "" -%}{%- if _x > 80 -%}{%- assign _al = " end" -%}{%- elsif _x < 15 -%}{%- assign _al = " start" -%}{%- endif %}
+      <div class="pin t-{{ _tint }}{{ _al }}" style="left:{{ _x }}%;top:{{ _y }}%" aria-hidden="true"><span class="glass-chip pin-badge">{% if _f[1] == "peak" %}Peak {{ rating }}{% else %}First {{ _f[1] }}{% endif %}: {{ _pp.id }}</span></div>
+      {%- endfor %}
+      </div>
       {{ _marks }}
     </div>
     <ul class="ladder-axis" aria-hidden="true">
-      <li style="top:0">1900</li>
-      <li class="goal-label" style="top:8.33%">1800 goal</li>
-      <li style="top:16.67%">Expert</li>
-      <li style="top:25%">1600</li>
-      <li style="top:33.33%">Specialist</li>
-      <li style="top:41.67%">1400</li>
-      <li style="top:50%">Pupil</li>
-      <li style="top:58.33%">1200</li>
-      <li style="top:79.17%">Newbie</li>
+      {%- for r in _rules -%}{%- assign _f = r | split: "~" -%}{%- assign _t = _hi | minus: _f[0] | times: 100.0 | divided_by: _span | round: 2 %}
+      <li{% if _f[1] %} class="rank"{% endif %} style="top:{{ _t }}%">{{ _f[0] }}{% if _f[1] %} · {{ _f[1] }}{% endif %}</li>
+      {%- endfor %}
     </ul>
     <p class="ladder-time" aria-hidden="true"><span>{{ _ps.first.first_date | date: "%-d %b" }}</span><span>{{ _ps.last.first_date | date: "%-d %b %Y" }}</span></p>
   </div>
   <figcaption>
-    <span class="key"><i class="pt solved"></i>Solved myself</span>
-    <span class="key"><i class="pt help"></i>Solved with help</span>
-    <span class="key"><i class="pt open"></i>Not solved yet</span>
-    <span class="key"><i class="line"></i>Hardest solved myself: {{ _best }}</span>
-    <span class="ladder-note">{{ _n }} problems in the order I started them, placed by Codeforces rating. Dashed lines mark the rank boundaries and the 1800 goal.</span>
+    <span class="key"><i class="line"></i>5-problem rolling average of problem ratings</span>
+    <span class="key"><i class="pin-key"></i>Milestones{% for m in _pins %}{% assign _f = m | split: "~" %}{% if _f[1] != "peak" and _f[2] == _best_id %}{% continue %}{% endif %}{% assign _pi = _f[0] | plus: 0 %}{% assign _pp = _ps[_pi] %}{% if forloop.first %}: {% else %}, {% endif %}{% if _f[1] == "peak" %}hardest solved myself {{ _best }} ({{ _pp.id }}){% else %}first {{ _f[1] }} ({{ _pp.id }}){% endif %}{% endfor %}</span>
+    <span class="ladder-note">{{ _n }} problems in the order I started them. Each point is the average Codeforces rating of that problem and the four before it; hover or focus a point for the problem itself.</span>
   </figcaption>
 </figure>
