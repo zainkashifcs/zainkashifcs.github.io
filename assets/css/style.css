@@ -172,6 +172,8 @@ a.rb { text-decoration: none; }
 .section-head h2 { flex: 1 1 auto; }
 .section-head p { flex: 1 0 100%; margin: 0; color: var(--text-2); font-size: 1rem; }
 .section-head .more { font-size: .875rem; }
+/* text links that stand alone keep a 24px target (WCAG 2.5.8) */
+.kpi .more, .section-head .more { display: inline-flex; align-items: center; min-height: 24px; }
 
 /* ---------- homepage: hero ---------- */
 .hero { position: relative; isolation: isolate; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: center; gap: var(--s7) var(--s6);
@@ -341,6 +343,10 @@ button.d { cursor: pointer; outline: 2px solid transparent; outline-offset: 3px;
 @media (hover: hover) { button.d:hover { outline-color: var(--text-2); outline-offset: 1px; } }
 button.d[aria-pressed="true"] { outline: 1px solid var(--text); outline-offset: 2px; }
 button.d:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+/* active days are controls: a --text-3 ring (>= 3:1 on the tile in both themes) tells them from empty days */
+.heat button.d { box-shadow: inset 0 0 0 1px var(--text-3); }
+/* on the homepage a day filters the index, so each one is a 24px target (WCAG 2.5.8); .heat-scroll scrolls on phones */
+.z2-heat .heat { --cell: 20px; --gap: 4px; }
 .legend { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s3) var(--s5); margin-top: var(--s3); font-size: .75rem; color: var(--text-3); }
 .legend .scale, .legend .before { display: flex; align-items: center; gap: 4px; } .legend .d { --cell: .75rem; }
 .legend .scale span:first-child { margin-inline-end: var(--s1); } .legend .scale span:last-child { margin-inline-start: var(--s1); }
