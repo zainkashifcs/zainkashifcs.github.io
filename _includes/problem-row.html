@@ -4,20 +4,23 @@ and Codeforces' public data). Problems without an accepted solution say exactly 
 Usage: include problem-row.html p=problem
 {%- endcomment -%}
 {%- assign p = include.p -%}
-{%- case p.status -%}{%- when "help" -%}{%- assign _key = "help" -%}{%- when "attempted", "unsolved" -%}{%- assign _key = "unsolved" -%}{%- else -%}{%- assign _key = "solved" -%}{%- endcase -%}
+{%- case p.status -%}{%- when "help" -%}{%- assign _key = "help" -%}{%- when "attempted", "unsolved" -%}{%- assign _key = "unsolved" -%}{%- when "redo" -%}{%- assign _key = "redo" -%}{%- else -%}{%- assign _key = "solved" -%}{%- endcase -%}
 {%- assign summary = "" -%}
 {%- if p.post and p.solved -%}{%- assign _post = site.posts | where: "url", p.post | first -%}{%- include summary.html summary=_post.summary html=_post.content -%}{%- endif -%}
 {%- capture _labels -%}{%- for g in site.data.topics -%}{%- for t in g.topics -%}{%- if p.topics contains t.id -%}{{ t.label }}|{%- endif -%}{%- endfor -%}{%- endfor -%}{%- endcapture -%}
 {%- assign _labels = _labels | split: "|" -%}
 {%- capture _hay -%}{{ p.id }} {{ p.name }} {{ p.status_label }} {% if _key == "unsolved" %}sorry not solved unsolved{% endif %} {{ summary }} {{ _labels | join: " " }} {{ p.cf_tags | join: " " }}{%- endcapture -%}
 {%- include rating.html pid=p.id rating=p.rating -%}
-<li data-id="{{ p.id }}" data-date="{{ p.last_date }}" data-rating="{{ p.rating }}" data-topics="{{ p.topics | join: ' ' }}" data-status="{{ _key }}"{% if site.data.activity_stats.independent_upsolves contains p.id %} data-upsolve="1"{% endif %} data-search="{{ _hay | downcase | escape }}">
+{%- comment -%} Days with verified activity (no milestones, no message-only entries: the activity.js rule) for the heatmap date filter; approved quiz ids for "Needs review". One comparison per where_exp: Jekyll 3.10 has no `and` there. {%- endcomment -%}
+{%- assign _d = site.data.activity | where: "problem", p.id | where_exp: "e", "e.type != 'milestone'" | where_exp: "e", "e.verification != 'message'" | map: "date" | uniq | join: " " -%}
+{%- assign _q = site.data.quizzes[p.slug] | where: "status", "approved" | map: "id" | join: " " -%}
+<li data-id="{{ p.id }}" data-date="{{ p.last_date }}" data-rating="{{ p.rating }}" data-topics="{{ p.topics | join: ' ' }}" data-status="{{ _key }}" data-dates="{{ _d }}" data-qids="{{ _q }}"{% if site.data.activity_stats.independent_upsolves contains p.id %} data-upsolve="1"{% endif %} data-search="{{ _hay | downcase | escape }}">
   <a class="row st-{{ _key }}" href="{{ p.post | default: p.page | relative_url }}">
     <span class="pid"><span class="rb">{{ p.id }}</span></span>
     <span class="what"><span class="name">{{ p.name }}</span>
       {%- if _key == "unsolved" %}<span class="nosolve">Sorry, not solved.</span>{% elsif summary != "" %}<span class="summary">{{ summary }}</span>{% endif -%}
-      <span class="state">{{ p.status_label }}{% if p.post %}. Write-up{% elsif p.solved %}. No write-up yet{% endif %}</span></span>
-    <span class="topics">{{ _labels | join: " · " }}</span>
+      <span class="state"><span class="stx" aria-hidden="true"></span>{{ p.status_label }}{% if p.post %}. Write-up{% elsif p.solved %}. No write-up yet{% endif %}</span></span>
+    <span class="topics">{% for l in _labels %}<span class="kc">{{ l }}</span>{% unless forloop.last %} {% endunless %}{% endfor %}</span>
     <span class="rating">{% if rating %}<span class="rk t-{{ rank_tier }}">{{ rating }}</span>{% else %}<span class="na">Unrated</span>{% endif %}</span>
     <time datetime="{{ p.last_date }}">{{ p.last_date | date: "%-d %b %Y" }}</time>
   </a>

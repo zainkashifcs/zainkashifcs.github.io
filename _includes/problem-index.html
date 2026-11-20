@@ -1,24 +1,41 @@
-{%- comment -%} The problem index on the homepage: filters (assets/js/index.js) and every problem row. {%- endcomment -%}
+{%- comment -%} The problem index on the homepage: a filter rail (assets/js/index.js; hidden without JS) beside the ledger of every problem row. {%- endcomment -%}
 <section class="section" id="index" aria-labelledby="index-h" data-index>
   <div class="section-head"><h2 id="index-h">Problem index</h2><p>Every problem in the log, with write-ups where they exist.</p></div>
-  <div class="panel">
-    <div class="toolbar" hidden>
-      <div class="segmented" role="group" aria-label="Show problems"><button type="button" data-seg="" aria-pressed="true">All</button><button type="button" data-seg="solved" aria-pressed="false">Solved myself</button><button type="button" data-seg="upsolved" aria-pressed="false">Upsolved</button><button type="button" data-seg="help" aria-pressed="false">With help</button><button type="button" data-seg="unsolved" aria-pressed="false">Not solved</button></div>
+  <div class="panel idx-ws">
+    <div class="toolbar idx-rail" hidden data-lenis-prevent>
       <label class="search-field">Search<input type="search" placeholder="ID, title, topic, status or lesson"></label>
-      <label class="vh">Status<select name="status" tabindex="-1" aria-hidden="true"><option value="">All problems</option><option value="solved">Solved</option><option value="upsolved">Upsolved</option><option value="help">Solved with help</option><option value="unsolved">Not solved</option></select></label>
-      <label class="rating-filter">Rating<span class="range"><select name="min" aria-label="Lowest rating"><option value="">Any</option></select><span aria-hidden="true">to</span><select name="max" aria-label="Highest rating"><option value="">Any</option></select></span></label>
+      <div class="segmented idx-tabs" role="group" aria-label="Show problems">
+        <button type="button" data-seg="" aria-pressed="true">All<span class="n"></span><span class="vh"> problems</span></button>
+        <button type="button" data-seg="solved" aria-pressed="false">Solved myself<span class="n"></span><span class="vh"> problems</span></button>
+        <button type="button" data-seg="help" aria-pressed="false">Solved with help<span class="n"></span><span class="vh"> problems</span></button>
+        <button type="button" data-seg="unsolved" aria-pressed="false">Not solved yet<span class="n"></span><span class="vh"> problems</span></button>
+        <button type="button" data-seg="review" aria-pressed="false" hidden>Needs review <span class="dot" aria-hidden="true"></span><span class="n">0</span><span class="vh"> problems</span></button>
+      </div>
+      <label class="vh">Status<select name="status" tabindex="-1" aria-hidden="true"><option value="">All problems</option><option value="solved">Solved</option><option value="upsolved">Upsolved</option><option value="help">Solved with help</option><option value="unsolved">Not solved</option><option value="review">Needs review</option></select></label>
+      <div class="idx-group" role="group" aria-labelledby="idx-rating-h">
+        <p class="idx-cap" id="idx-rating-h">Rating</p>
+        <div class="chips idx-bands"><button type="button" class="chip tactile" data-band="800-1000" aria-pressed="false">800–1000</button><button type="button" class="chip tactile" data-band="1100-1300" aria-pressed="false">1100–1300</button><button type="button" class="chip tactile" data-band="1400-" aria-pressed="false">1400+</button></div>
+        <label class="rating-filter"><span class="vh">Custom rating range</span><span class="range"><select name="min" aria-label="Lowest rating"><option value="">Any</option></select><span aria-hidden="true">to</span><select name="max" aria-label="Highest rating"><option value="">Any</option></select></span></label>
+      </div>
+      <div class="idx-group" role="group" aria-labelledby="idx-topics-h">
+        <p class="idx-cap" id="idx-topics-h">Topics</p>
+        <div class="chips topic-chips" role="group" aria-label="Topics: show problems with any of the chosen topics">
+          {%- for g in site.data.topics %}{% for t in g.topics %}{% assign _n = site.data.problems | where_exp: "x", "x.topics contains t.id" | size %}{% if _n > 0 %}<button type="button" class="chip" data-tag="{{ t.id }}" aria-pressed="false">{{ t.label }}<span class="n">{{ _n }}</span><span class="vh"> problems</span></button>{% endif %}{% endfor %}{% endfor -%}
+        </div>
+      </div>
       <label>Sort<select name="sort"><option value="newest">Newest</option><option value="rating">Highest rating</option><option value="easiest">Lowest rating</option><option value="id">Problem ID</option></select></label>
-      <button class="btn quiet idx-random" type="button" data-random>Random problem</button>
-      <button class="btn quiet idx-copy" type="button" data-copy-view>Copy link<span class="vh"> to this view</span></button><span class="vh" role="status" data-copy-say></span>
-      <div class="chips topic-chips" role="group" aria-label="Topics: show problems with any of the chosen topics">
-        {%- for g in site.data.topics %}{% for t in g.topics %}{% assign _n = site.data.problems | where_exp: "x", "x.topics contains t.id" | size %}{% if _n > 0 %}<button type="button" class="chip" data-tag="{{ t.id }}" aria-pressed="false">{{ t.label }}<span class="n">{{ _n }}</span><span class="vh"> problems</span></button>{% endif %}{% endfor %}{% endfor -%}
+      <div class="idx-acts">
+        <button class="btn quiet idx-random" type="button" data-random>Random problem</button>
+        <button class="btn quiet idx-copy" type="button" data-copy-view>Copy link<span class="vh"> to this view</span></button><span class="vh" role="status" data-copy-say></span>
       </div>
     </div>
-    <div class="idx-active" role="group" aria-label="Active filters" hidden></div>
-    <p class="count" aria-live="polite"></p>
-    <p class="idx-hint" id="idx-hint">Tip: when a problem has focus, <kbd>&uarr;</kbd> <kbd>&darr;</kbd> move between rows, and <kbd>Home</kbd> <kbd>End</kbd> jump to the first or last.</p>
-    <div class="thead" aria-hidden="true"><span>Problem</span><span>Notes</span><span>Topics</span><span>Rating</span><span>Date</span></div>
-    <ul class="index">{% for p in site.data.problems %}{% include problem-row.html p=p %}{% endfor %}</ul>
-    <p class="empty" hidden>No problems match these filters. <button type="button">Clear search and filters</button></p>
+    <div class="idx-main">
+      <div class="idx-active" role="group" aria-label="Active filters" hidden></div>
+      <p class="count" aria-live="polite"></p>
+      <p class="idx-hint" id="idx-hint">Tip: when a problem has focus, <kbd>&darr;</kbd> <kbd>&uarr;</kbd> or <kbd>J</kbd> <kbd>K</kbd> move between rows, and <kbd>Home</kbd> <kbd>End</kbd> jump to the first or last.</p>
+      <div class="thead" aria-hidden="true"><span>Problem</span><span>Notes</span><span>Topics</span><span>Rating</span><span>Date</span></div>
+      <ul class="index">{% for p in site.data.problems %}{% include problem-row.html p=p %}{% endfor %}</ul>
+      <p class="empty" hidden>No problems match these filters. <button type="button">Clear search and filters</button></p>
+    </div>
   </div>
 </section>

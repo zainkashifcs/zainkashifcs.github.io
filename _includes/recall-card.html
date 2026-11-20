@@ -1,0 +1,28 @@
+{%- comment -%}
+Homepage zone 2: "1-Minute Recall". One approved question per problem (its first), at most 40; only the first is shown
+in the markup, so without JavaScript there is one question with "Show answer". assets/js/quiz.js picks which one to
+show (due first, then unseen, then any), checks answers instantly and fills the status line and links.
+Needs mx_qids from mastery-data.html.
+{%- endcomment -%}
+{%- if mx_qids.size > 0 %}
+<div class="tile tile-recall" data-reveal>
+<section class="recall" data-recall data-qids="{{ mx_qids | join: ' ' }}" aria-labelledby="recall-h">
+  <h3 id="recall-h">1-Minute Recall</h3>
+  <p class="recall-why" data-recall-why></p>
+  <form data-quiz data-try data-instant onsubmit="return false">
+    {%- assign _t = 0 -%}
+    {%- for p in site.data.problems -%}
+      {%- if _t >= 40 -%}{%- break -%}{%- endif -%}
+      {%- assign _qs = site.data.quizzes[p.slug] | where: "status", "approved" | slice: 0, 1 -%}
+      {%- if _qs.size > 0 -%}{%- include rating.html pid=p.id rating=p.rating -%}{%- endif -%}
+      {%- for q in _qs -%}{%- assign _t = _t | plus: 1 -%}
+        {%- capture _label -%}From {{ p.id }} {{ p.name }}{%- endcapture %}
+    <div class="try"{% if _t > 1 %} hidden{% endif %}>{% include quiz-question.html q=q i=_t total=1 name="r" label=_label slug=p.slug rating=rating %}</div>
+      {%- endfor -%}
+    {%- endfor %}
+  </form>
+  <p class="recall-after" data-recall-after hidden><a class="more" href="{{ '/quiz/' | relative_url }}">Open the full deck</a> <a class="more" data-recall-due href="{{ '/quiz/' | relative_url }}?mode=due" hidden></a></p>
+  <p class="recall-deck"><a class="more" data-recall-deck href="{{ '/quiz/' | relative_url }}">Practise by topic</a></p>
+</section>
+</div>
+{%- endif %}

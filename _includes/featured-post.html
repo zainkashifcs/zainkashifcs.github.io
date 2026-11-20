@@ -1,0 +1,33 @@
+{%- comment -%}
+Homepage zone 2: the latest write-up as an editorial card. Rating from _data/problems.json (the problem whose post is
+this one), topics from the post's tags, two lines of its summary (summary.html), and a peek at the first highlighted
+code block of the post: up to its first 16 lines (the card shows about 10, faded), decorative (aria-hidden), since the post itself has the full code.
+Usage: include featured-post.html post=site.posts.first
+{%- endcomment -%}
+{%- assign _fp = include.post -%}
+{%- if _fp -%}
+{%- include summary.html summary=_fp.summary html=_fp.content -%}
+{%- assign _fprob = site.data.problems | where: "post", _fp.url | first -%}
+{%- assign _pid = _fp.title | split: " " | first -%}{%- assign _name = _fp.title | remove_first: _pid | strip -%}
+{%- capture _nl %}
+{% endcapture -%}
+{%- assign _code = _fp.content | split: '<pre class="highlight"><code>' -%}
+{%- if _code.size > 1 -%}
+  {%- comment -%} shortcut: a token spanning a line break (a block comment) is cut mid-span; the browser closes it at </code>. {%- endcomment -%}
+  {%- assign _peek = _code[1] | split: '</code></pre>' | first | split: _nl | slice: 0, 16 | join: _nl -%}
+{%- else -%}{%- assign _peek = "" -%}{%- endif %}
+<article class="tile tile-post feat" data-reveal aria-labelledby="feat-h">
+  <h3 id="feat-h">Latest write-up</h3>
+  <p class="tile-title feat-title"><span class="rb">{{ _pid }}</span> {{ _name }}</p>
+  <p class="feat-meta">
+    {%- if _fprob.rating %}<span class="feat-rating"><span class="vh">Codeforces rating </span>{{ _fprob.rating }}</span>{% endif -%}
+    {%- for t in _fp.tags %}<span class="feat-key">{{ t }}</span>{% endfor -%}
+    <time datetime="{{ _fp.date | date: '%Y-%m-%d' }}">{{ _fp.date | date: "%-d %b %Y" }}</time>
+  </p>
+  {%- if summary != "" %}<p class="tile-quote feat-quote">{{ summary }}</p>{% endif %}
+  {%- if _peek != "" %}
+  <div class="feat-peek highlight" aria-hidden="true"><pre class="highlight"><code>{{ _peek }}</code></pre></div>
+  {%- endif %}
+  <a class="more" href="{{ _fp.url | relative_url }}">Read the write-up<span class="vh">: {{ _fp.title }}</span></a>
+</article>
+{%- endif -%}

@@ -14,7 +14,7 @@ layout: default
 {%- assign html = content | replace: '<pre class="highlight">', '<pre class="highlight" tabindex="0">' -%}
 {%- if page.solution != blank -%}
   {%- assign _fname = page.solution | split: "/" | last -%}
-  {%- capture _cap -%}<div class="code-caption"><span>{{ _fname }}{% if _notsolved %} (attempt, not counted as solved){% endif %}</span><button class="copy" type="button" data-copy hidden>Copy code</button></div><div class="language-cpp highlighter-rouge">{%- endcapture -%}
+  {%- capture _cap -%}<div class="code-caption"><span class="code-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="code-file">{{ _fname }}{% if _notsolved %} (attempt, not counted as solved){% endif %}</span><span class="code-lang">C++</span><span class="code-lines" data-lines></span><button class="copy tactile" type="button" data-copy hidden>Copy code</button></div><div class="language-cpp highlighter-rouge">{%- endcapture -%}
   {%- assign html = html | replace: '<div class="language-cpp highlighter-rouge">', _cap -%}
 {%- endif -%}
 {%- assign _l = html | split: '<h2 id="lesson">Lesson</h2>' -%}
@@ -22,34 +22,37 @@ layout: default
   {%- assign _c = _l[1] | split: '<h2 id="code">' -%}
   {%- capture html -%}{{ _l[0] }}<h2 id="lesson">Lesson</h2><div class="takeaway">{{ _c[0] }}</div>{% if _c.size > 1 %}<h2 id="code">{{ _c[1] }}{% endif %}{%- endcapture -%}
 {%- endif -%}
-<div class="post">
-  <header class="title">
-    <p class="pid"><span class="rb">{{ pid }}</span></p>
-    <h1>{{ name }}</h1>
-    {% if _notsolved %}<p class="nosolve big">Sorry, not solved.</p>{% elsif summary != "" %}<p class="summary">{{ summary }}</p>{% endif %}
-  </header>
-  <aside class="spec" aria-label="Problem details">
-    <dl>
+{%- assign _me = site.data.problems | where: "id", pid | first -%}
+{%- if _notsolved -%}{%- assign _st = "open" -%}{%- if page.status == "attempted" -%}{%- assign _stl = "Attempted, not solved" -%}{%- else -%}{%- assign _stl = "Not solved" -%}{%- endif -%}
+{%- elsif _me -%}{%- assign _stl = _me.status_label -%}{%- if _me.solved -%}{%- assign _st = _me.status -%}{%- else -%}{%- assign _st = "open" -%}{%- endif -%}
+{%- else -%}{%- assign _st = "solved" -%}{%- assign _stl = "Solved" -%}{%- endif -%}
+{%- assign _solved_on = page.solved | default: _solve.date -%}
+{%- capture _facts -%}
       {% if page.link %}<div><dt>Source</dt><dd><a href="{{ page.link }}">Codeforces {{ pid }}</a></dd></div>{% endif %}
-      <div><dt>Rating</dt><dd>{% if rating %}<span class="rk t-{{ rank_tier }}">{{ rating }}</span>{% else %}<span class="na">Unrated</span>{% endif %}</dd></div>
-      {% if page.tags.size > 0 %}<div><dt>Topics</dt><dd>{% include tags.html tags=page.tags %}</dd></div>{% endif %}
-      {% assign _solved_on = page.solved | default: _solve.date %}
+      {% if page.tags.size > 0 %}<div class="rd-wide"><dt>Topics</dt><dd>{% include tags.html tags=page.tags %}</dd></div>{% endif %}
       {% if _notsolved %}<div><dt>Status</dt><dd>{% if page.status == "attempted" %}Attempted, not solved{% else %}Not solved{% endif %}</dd></div>
       {% elsif _solved_on %}<div><dt>Solved</dt><dd>{{ _solved_on | date: "%-d %b %Y" }}</dd></div>{% endif %}
       {%- if site.data.codeforces.status == "ok" and site.data.codeforces.accepted contains pid %}<div><dt>Codeforces</dt><dd>Accepted on Codeforces</dd></div>{% endif %}
       <div><dt>Published</dt><dd><time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%-d %b %Y" }}</time></dd></div>
-    </dl>
-    <p class="links">
+{%- endcapture -%}
+{%- capture _links -%}
       {%- if page.link %}<a class="btn" href="{{ page.link }}">Problem statement</a>{% endif -%}
       {%- if page.solution != blank %}<a class="btn quiet" href="{{ site.solutions_repo }}/blob/main/{{ page.solution | uri_escape }}">{% if _notsolved %}Attempt on GitHub{% else %}Solution on GitHub{% endif %}</a>{% endif -%}
-    </p>
-  </aside>
-  <article class="post-body">
-    {{ html }}
-    {%- include related.html pid=pid rating=rating %}
-    {%- include problem-nav.html pid=pid %}
-  </article>
-  {%- include quiz-section.html slug=page.slug pid=pid rating=rating %}
+{%- endcapture -%}
+<div class="post rd">
+  <header class="title rd-title">
+    <h1>{{ name }}</h1>
+    {% if _notsolved %}<p class="nosolve big">Sorry, not solved.</p>{% elsif summary != "" %}<p class="summary">{{ summary }}</p>{% endif %}
+  </header>
+  {%- include reader-rail.html pid=pid slug=page.slug rating=rating status=_st label=_stl html=html toc=html facts=_facts links=_links %}
+  <div class="rd-main">
+    <article class="post-body">
+      {{ html }}
+      {%- include related.html pid=pid rating=rating %}
+      {%- include problem-nav.html pid=pid %}
+    </article>
+    {%- include quiz-section.html slug=page.slug pid=pid rating=rating %}
+  </div>
 </div>
 <script src="{{ '/assets/js/quiz.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
 <script src="{{ '/assets/js/post.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>

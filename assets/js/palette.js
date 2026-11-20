@@ -209,24 +209,47 @@
     if (on) say.textContent = 'Keyboard shortcuts and search filters shown. Press Escape to go back to the results.'; else render();
   };
 
+  // Opens from its trigger: the header button's centre becomes the transform origin (Ctrl/Cmd+K grows from the top
+  // centre). Closing plays a 115ms fade-and-shrink (WAAPI, so it can be interrupted), then the native close() runs and
+  // focus returns as before. Reopening mid-close cancels the fade.
+  const still = matchMedia('(prefers-reduced-motion: reduce)');
+  let closing = null;
+  const isOpen = () => dlg.open && !closing;
+  const shut = () => {
+    if (!dlg.open || closing) return;
+    if (still.matches || !dlg.animate) return dlg.close();
+    const ease = { duration: 115, easing: 'cubic-bezier(.4, 0, 1, 1)' };
+    const a = closing = dlg.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'scale(.96)' }], ease);
+    let b = null;
+    try { b = dlg.animate([{ opacity: 1 }, { opacity: 0 }], { ...ease, pseudoElement: '::backdrop' }); } catch (e) { /* no pseudo-element animation: the backdrop just goes */ }
+    a.onfinish = () => { if (closing === a) { closing = null; dlg.close(); } };
+    a.oncancel = () => { if (b) b.cancel(); };
+  };
   const open = (withHelp, from) => {
+    if (closing) { const a = closing; closing = null; a.cancel(); input.focus(); return; }
     if (dlg.open) return;
     // Safari does not focus a clicked button, so the opener passes itself
     returnTo = from || document.activeElement; input.value = ''; pickRandom();
     helpOn = false; help.hidden = true; list.hidden = false;
-    dlg.showModal(); input.focus();
+    dlg.showModal();
+    const o = from && from.getBoundingClientRect(), d = dlg.getBoundingClientRect();
+    dlg.style.setProperty('--origin-x', o ? `${(o.left + o.width / 2 - d.left).toFixed(1)}px` : '50%');
+    dlg.style.setProperty('--origin-y', o ? `${(o.top + o.height / 2 - d.top).toFixed(1)}px` : '0%');
+    input.focus();
     if (state === 'idle') load();
     if (withHelp) showHelp(true); else render();
   };
 
   dlg.addEventListener('close', () => { if (returnTo && returnTo.isConnected && returnTo !== document.body) returnTo.focus({ preventScroll: true }); });
-  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); }); // the backdrop is the dialog element itself
+  dlg.addEventListener('click', e => { if (e.target === dlg) shut(); }); // the backdrop is the dialog element itself
+  dlg.addEventListener('cancel', e => { e.preventDefault(); shut(); }); // Esc: animate out instead of vanishing
+  dlg.addEventListener('close', () => { if (closing) { const a = closing; closing = null; a.cancel(); } }); // closed some other way mid-fade
   // Keep the page from scrolling behind the dialog. (Locking html's overflow instead crashes WebKit when a view transition is running.)
   // The results and the help list keep their own scrolling, and a two-finger pinch still zooms.
   for (const ev of ['wheel', 'touchmove']) dlg.addEventListener(ev, e => { if (!e.target.closest('.cmdk-list, .cmdk-help') && !(e.touches && e.touches.length > 1)) e.preventDefault(); }, { passive: false });
-  $('.cmdk-x').addEventListener('click', () => dlg.close());
+  $('.cmdk-x').addEventListener('click', shut);
   input.addEventListener('input', () => { helpOn = false; help.hidden = true; list.hidden = false; render(); });
-  list.addEventListener('click', e => { if (e.target.closest('a')) dlg.close(); });
+  list.addEventListener('click', e => { if (e.target.closest('a')) dlg.close(); }); // navigating away: no fade to wait for
   list.addEventListener('mousemove', e => { const o = e.target.closest('[role=option]'), i = opts.indexOf(o); if (o && i !== active) setActive(i, false); });
   dlg.addEventListener('keydown', e => {
     if (e.isComposing || e.keyCode === 229) return; // 229: Safari's Enter that ends an IME composition
@@ -245,7 +268,7 @@
 
   document.addEventListener('keydown', e => {
     if (e.defaultPrevented || e.isComposing) return;
-    if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && e.key.toLowerCase() === 'k') { e.preventDefault(); if (dlg.open) dlg.close(); else open(false); }
+    if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && e.key.toLowerCase() === 'k') { e.preventDefault(); if (isOpen()) shut(); else open(false); }
   });
 
   opener.addEventListener('click', () => open(false, opener));

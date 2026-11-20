@@ -12,10 +12,13 @@ Usage: include codeforces-profile.html
   <dl class="cf-facts">
     <div><dt>Rating</dt><dd>{% if cf.rating %}<span class="rk t-{{ _now }}">{{ cf.rating }}</span>{% else %}<span class="na">Unrated</span>{% endif %}<small>{{ cf.rank | default: "no rank yet" }}</small></dd></div>
     <div><dt>Highest</dt><dd>{% if cf.max_rating %}<span class="rk t-{{ _max }}">{{ cf.max_rating }}</span>{% else %}<span class="na">None yet</span>{% endif %}<small>{{ cf.max_rank | default: "" }}</small></dd></div>
-    <div><dt>Rated contests</dt><dd>{{ cf.contests }}</dd></div>
+    <div><dt>Rated contest{% if cf.contests != 1 %}s{% endif %}</dt><dd>{{ cf.contests }}</dd></div>
     <div><dt>Accepted problems</dt><dd>{{ cf.accepted_count }}</dd></div>
   </dl>
-  {%- if cf.spark and cf.spark != "" %}
+  {%- if cf.history.size == 1 %}
+  {%- assign _h = cf.history.first %}
+  <p class="cf-one">One rated contest so far: {{ _h.contest }} on {{ _h.date | date: "%-d %b %Y" }}, rating <span class="rk">{{ _h.rating }}</span> afterwards.</p>
+  {%- elsif cf.spark and cf.spark != "" %}
   <figure class="cf-spark">
     <svg viewBox="0 0 300 60" preserveAspectRatio="none" role="img" aria-label="Rating after each of {{ cf.contests }} rated contests, from {{ cf.history.first.rating }} to {{ cf.history.last.rating }}"><polyline points="{{ cf.spark }}" /></svg>
     <figcaption>Rating history, {{ cf.history.first.date | date: "%b %Y" }} to {{ cf.history.last.date | date: "%b %Y" }}</figcaption>

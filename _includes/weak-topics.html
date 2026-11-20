@@ -1,10 +1,10 @@
-{%- comment -%} Homepage tile: the three weakest topics from mastery-data.html (include it first). mastery.js adds quiz recall. {%- endcomment -%}
+{%- comment -%} Homepage tile: the three weakest topics from mastery-data.html (include it first). mastery.js adds quiz recall. The segmented bar shows solved myself out of all logged problems in the topic. {%- endcomment -%}
 <div class="tile tile-weak" data-reveal>
   <h3>Weakest topics</h3>
   {%- if mx_weak.size > 0 %}
   <ol class="weak-list">
-    {%- for r in mx_weak limit: 3 -%}{%- assign _f = r | split: "~" %}
-    <li><a href="{{ '/' | relative_url }}?topics={{ _f[1] }}#index"><span class="weak-name">{{ _f[2] }}</span><span class="weak-frac">{{ _f[3] }}/{{ _f[6] }} solved myself</span></a><span class="weak-q mx-quiz"{% if _f[8] %} data-qids="{{ _f[8] }}"{% endif %} data-short></span></li>
+    {%- for r in mx_weak limit: 3 -%}{%- assign _f = r | split: "~" -%}{%- assign _sm = _f[3] | plus: 0 %}
+    <li><a href="{{ '/' | relative_url }}?topics={{ _f[1] }}#index"><span class="weak-name">{{ _f[2] }}</span><span class="weak-frac">{{ _f[3] }}/{{ _f[6] }} solved myself</span><span class="z1-seg" style="--n:{{ _f[6] }}" aria-hidden="true">{% for i in (1.._f[6]) %}<i{% if forloop.index <= _sm %} class="on"{% endif %}></i>{% endfor %}</span></a><span class="weak-q mx-quiz"{% if _f[8] %} data-qids="{{ _f[8] }}"{% endif %} data-short></span></li>
     {%- endfor %}
   </ol>
   {%- else %}

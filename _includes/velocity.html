@@ -24,12 +24,12 @@ The plot is aria-hidden: the figcaption sentence and the "Weekly numbers" table 
     {%- assign _ym = _hi | minus: _f[3] | times: 100.0 | divided_by: _span | round: 2 -%}
     {%- if _prev -%}{%- capture _path -%}{{ _path }} L{{ _x }} {{ _yh }}{%- endcapture -%}{%- else -%}{%- capture _path -%}{{ _path }} M{{ _x }} {{ _yh }}{%- endcapture -%}{%- endif -%}
     {%- assign _prev = true -%}
-    {%- capture _pts -%}{{ _pts }}<span class="vel-pt md" style="left:{{ _x }}%;top:{{ _ym }}%"></span><span class="vel-pt hi {% if _x < 50 %}l{% else %}r{% endif %}" style="left:{{ _x }}%;top:{{ _yh }}%" data-tip="{{ _f[0] }}: hardest {{ _f[2] }}, median {{ _f[3] }}"></span>{%- endcapture -%}
+    {%- capture _pts -%}{{ _pts }}<span class="vel-pt md" data-reveal style="left:{{ _x }}%;top:{{ _ym }}%"></span><span data-reveal class="vel-pt hi {% if _x < 50 %}l{% else %}r{% endif %}" style="left:{{ _x }}%;top:{{ _yh }}%" data-tip="{{ _f[0] }}: hardest {{ _f[2] }}, median {{ _f[3] }}"></span>{%- endcapture -%}
   {%- else -%}{%- assign _prev = false -%}{%- endif -%}
 {%- endfor %}
 <figure class="vel">
   <div class="vel-chart" aria-hidden="true">
-    <div class="vel-plot">
+    <div class="vel-plot" data-reveal-group style="--stagger:18ms">
       {%- for i in (0.._steps) -%}{%- assign _top = i | times: 10000.0 | divided_by: _span | round: 2 %}
       <div class="rule" style="top:{{ _top }}%"></div>
       {%- endfor %}

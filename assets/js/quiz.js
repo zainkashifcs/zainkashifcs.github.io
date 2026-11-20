@@ -10,7 +10,7 @@
   // Revision history, kept in this browser only:
   // { questionId: { right, wrong, last: 'right' | 'wrong', at, box: 0-4, due } }, dates as local YYYY-MM-DD.
   // Spaced repetition (Leitner boxes): a right answer moves the question up one box, a wrong one sends it back to
-  // box 0. Box n comes due INTERVALS[n] days after the answer, so a mistake is due again tomorrow (the Mistakes
+  // box 0. Box n comes due INTERVALS[n] days after the answer, so a mistake is due again tomorrow (the Missed recently
   // mode is there for a same-day retry). Records saved before boxes existed get theirs from `last` and `at`.
   const INTERVALS = [1, 3, 7, 14, 30];
   const DAY = /^\d{4}-\d{2}-\d{2}$/;
@@ -42,6 +42,19 @@
     h[qid] = answer(h[qid], ok, localDay());
     try { localStorage.setItem(STORE, JSON.stringify(h)); } catch (e) { /* storage unavailable: the quiz still works */ }
     document.dispatchEvent(new CustomEvent('quiz:recorded'));
+  };
+  const celebrate = el => { // shared .fx-celebrate one-liner (motion CSS does nothing under reduced motion)
+    el.classList.remove('fx-celebrate'); void el.offsetWidth;
+    el.classList.add('fx-celebrate'); el.addEventListener('animationend', () => el.classList.remove('fx-celebrate'), { once: true });
+  };
+  // Homepage recall card: after the check, offer the deck and how many more of its questions are due today.
+  const recalled = (form, fs, ok) => {
+    if (ok) celebrate(fs);
+    const card = form.closest('[data-recall]') || document;
+    const after = card.querySelector('[data-recall-after]'); if (after) after.hidden = false;
+    const dueLink = card.querySelector('[data-recall-due]'), h = history(), today = localDay();
+    const m = (card.dataset?.qids || '').split(' ').filter(id => id && isDue(h[id], today)).length;
+    if (dueLink && m > 0) { dueLink.textContent = `Review ${m} more due today`; dueLink.hidden = false; }
   };
 
   function enhance(form) {
@@ -78,6 +91,7 @@
         done++; if (ok) right++;
         record(fs.dataset.qid, ok);
         progress();
+        if (form.matches('[data-instant]')) recalled(form, fs, ok);
         if (score && done === qs.length) {
           score.querySelector('h2, h3').textContent = `You got ${right} of ${qs.length}`;
           const list = score.querySelector('ul');
@@ -85,19 +99,26 @@
             const missed = new Map(qs.filter(q => q.querySelector('.wrong')).map(q => q.querySelector('.from a')).filter(Boolean).map(a => [a.textContent, a.getAttribute('href')]));
             list.innerHTML = missed.size ? [...missed].map(([t, h]) => `<li><a href="${esc(h)}">${esc(t)}</a></li>`).join('') : '<li>Nothing to revisit this round.</li>';
           }
-          score.hidden = false; score.focus();
+          score.hidden = false; score.focus(); celebrate(score);
         }
       });
     });
     progress();
   }
 
-  // Homepage: one random approved question from any write-up.
+  // Homepage: one approved question. Due today first (earliest review date), then one never tried, then any.
   const tryOne = document.querySelector('[data-try]');
   if (tryOne) {
-    const all = [...tryOne.querySelectorAll('.try')], keep = all[Math.floor(Math.random() * all.length)];
+    const all = [...tryOne.querySelectorAll('.try')], h = history(), today = localDay();
+    const rec = t => h[t.querySelector('.q')?.dataset.qid];
+    const pickOf = list => list[Math.floor(Math.random() * list.length)];
+    const due = all.filter(t => isDue(rec(t), today)), soonest = due.map(t => review(rec(t)).due).sort()[0];
+    const unseen = all.filter(t => !review(rec(t)));
+    const [keep, why] = due.length ? [pickOf(due.filter(t => review(rec(t)).due === soonest)), 'Due for review today']
+      : unseen.length ? [pickOf(unseen), 'A question you haven’t tried yet'] : [pickOf(all), 'A question you’ve answered before'];
     all.forEach(t => { if (t !== keep) t.remove(); });
     if (keep) keep.hidden = false;
+    const whyEl = tryOne.closest('[data-recall]')?.querySelector('[data-recall-why]'); if (whyEl && keep) whyEl.textContent = why;
   }
 
   const mixed = document.querySelector('[data-mixed]');
@@ -184,7 +205,7 @@
         deal();
         mixed.querySelector('.q')?.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
       });
-      // Progress panel: what this browser remembers, the weakest topics, and the All / Mistakes / Due today modes.
+      // Progress panel: what this browser remembers, the weakest topics, and the All / Missed recently / Due today modes.
       const revise = panel.querySelector('[data-revise]'), label = Object.fromEntries(chips.map(c => [c.dataset.tag, c.firstChild.textContent.trim()]));
       const showProgress = () => {
         const h = history(), seen = bank.filter(q => review(h[q.dataset.qid]));
@@ -239,6 +260,17 @@
     if (!check) return; // not enhanced (no JS run for this question)
     if (e.key === 'Enter') { if (t.closest('a, button, summary')) return; e.preventDefault(); check.click(); return; } // links and buttons keep Enter
     const input = /^[1-9]$/.test(e.key) && fs.querySelectorAll('.choice input')[Number(e.key) - 1];
-    if (input && !input.disabled) { e.preventDefault(); input.checked = true; input.focus(); input.dispatchEvent(new Event('change', { bubbles: true })); }
+    if (input && !input.disabled) {
+      e.preventDefault(); input.checked = true; input.focus(); input.dispatchEvent(new Event('change', { bubbles: true }));
+      if (fs.closest('[data-instant]')) check.click();
+    }
   });
+  // Instant check (homepage recall): a real pointer click on a choice checks it at once. Arrow keys and Space fire
+  // click with detail 0, so they only select; Enter or a number key checks.
+  document.querySelectorAll('form[data-instant]').forEach(form => form.addEventListener('click', e => {
+    const choice = e.detail > 0 ? e.target.closest('.choice') : null, fs = choice?.closest('fieldset.q');
+    const input = choice?.querySelector('input'), check = fs?.querySelector('.q-actions button');
+    if (!check || fs.classList.contains('locked') || input.disabled) return;
+    input.checked = true; input.focus({ preventScroll: true }); check.click();
+  }));
 })();

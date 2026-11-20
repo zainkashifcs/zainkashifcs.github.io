@@ -7,7 +7,7 @@ ties in alphabetical order. Same status split as stats-rating.html. Sort key: 10
   {%- assign _ps = site.data.problems | where_exp: "p", "p.topics contains t.id" -%}
   {%- if _ps.size > 0 -%}
     {%- if _ps.size > _max -%}{%- assign _max = _ps.size -%}{%- endif -%}
-    {%- assign _h = _ps | where: "status", "help" | size -%}
+    {%- assign _h1 = _ps | where: "status", "help" | size -%}{%- assign _h2 = _ps | where: "status", "redo" | size -%}{%- assign _h = _h1 | plus: _h2 -%}
     {%- assign _u1 = _ps | where: "status", "attempted" | size -%}{%- assign _u2 = _ps | where: "status", "unsolved" | size -%}{%- assign _u = _u1 | plus: _u2 -%}
     {%- assign _key = 1000 | minus: _ps.size | prepend: "000" | slice: -4, 4 -%}
     {%- capture _rows -%}{{ _rows }}{{ _key }}~{{ t.label }}~{{ _ps.size | minus: _h | minus: _u }}~{{ _h }}~{{ _u }}^{%- endcapture -%}

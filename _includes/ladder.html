@@ -2,7 +2,7 @@
 The climb: every rated problem in the archive in the order I started it (left to right), placed by its Codeforces
 rating (bottom 700, top 1900). Dashed rules mark the rank boundaries at 1200, 1400, 1600 and 1900 and the 1800 goal.
 The amber line steps up to the hardest problem solved independently so far, over a fading amber wash. Each dot links to
-its problem and shows a tooltip on hover and keyboard focus (Esc hides it, assets/js/index.js). Built at build time from
+its problem and shows a tooltip on hover and keyboard focus (assets/js/home.js turns these into one shared tooltip that glides between dots; Esc hides it). Built at build time from
 _data/problems.json; positions are percentages so the figure scales without distorting its marks.
 {%- endcomment -%}
 {%- assign _ps = site.data.problems | where_exp: "p", "p.rating != nil" | sort: "first_date" -%}
@@ -25,12 +25,12 @@ _data/problems.json; positions are percentages so the figure scales without dist
   {%- if _x < 18 -%}{%- assign _tip = " tip-l" -%}{%- elsif _x > 82 -%}{%- assign _tip = " tip-r" -%}{%- endif -%}
   {%- if _y < 30 -%}{%- assign _tip = _tip | append: " tip-b" -%}{%- endif -%}
   {%- assign _date = p.first_date | date: "%-d %b %Y" -%}
-  {%- capture _marks -%}{{ _marks }}<a class="pt {{ _kind }}{{ _tip }}" href="{{ p.post | default: p.page | relative_url }}" style="left:{{ _x }}%;top:{{ _y }}%" aria-label="{{ p.id | escape }} {{ p.name | escape }}: rated {{ rating }}, {{ _what }}, started {{ _date }}"><span class="dot-tip" aria-hidden="true"><span class="rb{% if _kind == 'help' %} help{% elsif _kind == 'open' %} open{% endif %}">{{ p.id | escape }}</span><b>{{ p.name | escape }}</b><span class="m">{{ rating }} · {{ _what }} · {{ _date }}</span><span class="go">Open {% if p.post %}the write-up{% else %}the problem page{% endif %}</span></span></a>{%- endcapture -%}
+  {%- capture _marks -%}{{ _marks }}<a class="pt {{ _kind }}{{ _tip }}" data-reveal href="{{ p.post | default: p.page | relative_url }}" style="left:{{ _x }}%;top:{{ _y }}%" aria-label="{{ p.id | escape }} {{ p.name | escape }}: rated {{ rating }}, {{ _what }}, started {{ _date }}"><span class="dot-tip" aria-hidden="true"><span class="rb{% if _kind == 'help' %} help{% elsif _kind == 'open' %} open{% endif %}">{{ p.id | escape }}</span><b>{{ p.name | escape }}</b><span class="m">{{ rating }} · {{ _what }} · {{ _date }}</span><span class="go">Open {% if p.post %}the write-up{% else %}the problem page{% endif %}</span></span></a>{%- endcapture -%}
 {%- endfor -%}
 {%- if _path != "" -%}{%- capture _area -%}{{ _path }} H100 V100 H{{ _x0 }} Z{%- endcapture -%}{%- capture _path -%}{{ _path }} H100{%- endcapture -%}{%- else -%}{%- assign _area = "M0 100" -%}{%- assign _path = "M0 100" -%}{%- endif -%}
 <figure class="ladder" data-enter>
   <div class="ladder-chart">
-    <div class="ladder-plot" style="--n:{{ _n }}">
+    <div class="ladder-plot" data-reveal-group style="--n:{{ _n }};--stagger:18ms">
       <div class="rule" style="top:0" aria-hidden="true"></div>
       <div class="rule goal" style="top:8.33%" aria-hidden="true"></div>
       <div class="rule" style="top:25%" aria-hidden="true"></div>
