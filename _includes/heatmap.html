@@ -1,4 +1,6 @@
-{%- comment -%} Contribution heatmap (drawn by assets/js/activity.js), day panel and progress figures. {%- endcomment -%}
+{%- comment -%} Contribution heatmap (drawn by assets/js/activity.js), day panel and progress figures.
+Usage: include heatmap.html [home=true]. On the homepage (home=true) there is no day panel or progress list: clicking a
+day filters the problem index to that date instead. {%- endcomment -%}
 {%- assign s = site.data.activity_stats -%}
 <p class="activity-summary"><b>{{ s.verified_entries }} verified activities</b> across <b>{{ s.active_days }} days</b> since the log began on {{ s.log_start | date: "%-d %B %Y" }}: <b>{{ s.independent_total.size }}</b> problems solved independently, <b>{{ s.assisted_solves.size }}</b> with help, and <b>{{ s.redos.size }}</b> redos.</p>
 <div class="heat-wrap" data-heatmap>
@@ -7,6 +9,7 @@
   <div class="legend"><span class="before"><span class="d none"></span>Before the log started</span><span class="scale" aria-label="Fewer to more activities"><span>Less</span><span class="d"></span><span class="d l1"></span><span class="d l2"></span><span class="d l3"></span><span class="d l4"></span><span>More</span></span></div>
 </div>
 <noscript><p>The calendar needs JavaScript; every entry is listed in the activity feed.</p></noscript>
+{%- unless include.home %}
 <div class="activity-cols">
   <div class="dayview" data-dayview aria-live="polite"><h3>Select a day</h3><p>Choose a coloured square to see what happened.</p><ul></ul></div>
   <div class="progress"><h3>Progress</h3>
@@ -20,4 +23,5 @@
     <p class="stat-note">Counts are distinct problems. Assisted work and message-only entries never count as independent solves.</p>
   </div>
 </div>
-<script id="activity-data" type="application/json">{"start": {{ s.log_start | jsonify }}, "today": {{ site.time | date: "%Y-%m-%d" | jsonify }}, "base": {{ site.baseurl | default: "" | jsonify }}, "pages": { {%- for p in site.data.problems -%}{{ p.id | jsonify }}: {{ p.post | default: p.page | jsonify }}{% unless forloop.last %}, {% endunless %}{%- endfor -%} }, "events": {{ site.data.activity | jsonify | replace: "</", "<\/" }}}</script>
+{%- endunless %}
+<script id="activity-data" type="application/json">{"start": {{ s.log_start | jsonify }}, "today": {{ site.time | date: "%Y-%m-%d" | jsonify }}, "base": {{ site.baseurl | default: "" | jsonify }}, "pages": { {%- for p in site.data.problems -%}{{ p.id | jsonify }}: {{ p.post | default: p.page | jsonify }}{% unless forloop.last %}, {% endunless %}{%- endfor -%} }, "ratings": { {%- assign _rp = site.data.problems | where_exp: "p", "p.rating != nil" -%}{%- for p in _rp -%}{{ p.id | jsonify }}: {{ p.rating | jsonify }}{% unless forloop.last %}, {% endunless %}{%- endfor -%} }, "events": {{ site.data.activity | jsonify | replace: "</", "<\/" }}}</script>

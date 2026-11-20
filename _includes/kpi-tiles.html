@@ -1,0 +1,87 @@
+{%- comment -%}
+Homepage zone 1: the four KPI tiles, each with a small build-time picture of real data (aria-hidden; a .vh sentence
+carries the numbers). Weeks start on Monday: (day + 3) / 7 numbers them, as in mastery-data.html. A day counts as
+active when it has a verified entry (not a milestone, not message-only: the activity.js rule). Each picture is checked
+against activity_stats.json and left out if it disagrees, so a tile never shows a mismatch.
+{%- endcomment -%}
+{%- assign s = site.data.activity_stats -%}
+{%- comment -%} a missing first_day (empty log) falls back to the build date, so the date maths never errors; the self-checks then drop the pictures {%- endcomment -%}
+{%- assign _first = s.first_day | default: site.time | date: "%Y-%m-%d" -%}
+{%- assign _k0 = _first | append: " 12:00:00 +0000" | date: "%s" | divided_by: 86400 | plus: 3 | divided_by: 7 -%}
+{%- assign _k1 = site.time | date: "%Y-%m-%d" | append: " 12:00:00 +0000" | date: "%s" | divided_by: 86400 | plus: 3 | divided_by: 7 -%}
+{%- assign _kn = _k1 | minus: _k0 -%}{%- if _kn < 1 -%}{%- assign _kn = 1 -%}{%- endif -%}
+{%- assign _mon0 = _k0 | times: 7 | minus: 3 | times: 86400 | plus: 43200 | date: "%-d %b" -%}
+{%- assign _KS = site.data.problems | where: "status", "solved" | where_exp: "p", "p.solved_date != nil" -%}
+{%- capture _kw -%}{%- for p in _KS -%}{{ p.solved_date | append: " 12:00:00 +0000" | date: "%s" | divided_by: 86400 | plus: 3 | divided_by: 7 }}~{{ p.rating | default: 0 }} {% endfor -%}{%- endcapture -%}
+{%- assign _kw = _kw | strip | split: " " -%}
+{%- assign _V = site.data.activity | where_exp: "e", "e.type != 'milestone'" | where_exp: "e", "e.verification != 'message'" | map: "date" | uniq -%}
+{%- capture _vw -%}{%- for d in _V -%}{{ d | append: " 12:00:00 +0000" | date: "%s" | divided_by: 86400 | plus: 3 | divided_by: 7 }} {% endfor -%}{%- endcapture -%}
+{%- assign _vw = _vw | strip | split: " " -%}
+
+{%- comment -%} one pass over the weeks: cumulative solves, active days, running hardest {%- endcomment -%}
+{%- assign _cum = "" | split: "" -%}{%- assign _act = "" | split: "" -%}{%- assign _top = "" | split: "" -%}
+{%- assign _asum = 0 -%}
+{%- for i in (0.._kn) -%}
+  {%- assign _w = _k0 | plus: i -%}{%- assign _c = 0 -%}{%- assign _h = 0 -%}{%- assign _a = 0 -%}
+  {%- for x in _kw -%}{%- assign _xf = x | split: "~" -%}{%- assign _xw = _xf[0] | plus: 0 -%}{%- assign _xr = _xf[1] | plus: 0 -%}
+    {%- if _xw <= _w -%}{%- assign _c = _c | plus: 1 -%}{%- if _xr > _h -%}{%- assign _h = _xr -%}{%- endif -%}{%- endif -%}
+  {%- endfor -%}
+  {%- for x in _vw -%}{%- assign _xw = x | plus: 0 -%}{%- if _xw == _w -%}{%- assign _a = _a | plus: 1 -%}{%- endif -%}{%- endfor -%}
+  {%- assign _cum = _cum | push: _c -%}{%- assign _act = _act | push: _a -%}{%- assign _top = _top | push: _h -%}
+  {%- assign _asum = _asum | plus: _a -%}
+{%- endfor -%}
+{%- assign _cmax = _cum.last | plus: 0 -%}{%- if _cmax < 1 -%}{%- assign _cmax = 1 -%}{%- endif -%}
+{%- assign _bw = 100.0 | divided_by: _cum.size -%}
+
+{%- comment -%} streak strip: one cell per day from first_day to the build (at most the last 56) {%- endcomment -%}
+{%- assign _d1 = site.time | date: "%Y-%m-%d" | append: " 12:00:00 +0000" | date: "%s" | divided_by: 86400 -%}
+{%- assign _d0 = _first | append: " 12:00:00 +0000" | date: "%s" | divided_by: 86400 -%}
+{%- assign _dmin = _d1 | minus: 55 -%}{%- if _d0 < _dmin -%}{%- assign _d0 = _dmin -%}{%- endif -%}
+{%- assign _lead = _d0 | plus: 3 | modulo: 7 -%}
+{%- assign _scount = 0 -%}{%- assign _ocount = 0 -%}{%- assign _ncount = 0 -%}
+{%- capture _cells -%}
+  {%- for i in (1.._lead) -%}<i class="pad"></i>{%- endfor -%}
+  {%- for i in (_d0.._d1) -%}
+    {%- assign _ds = i | times: 86400 | plus: 43200 | date: "%Y-%m-%d" -%}{%- assign _ncount = _ncount | plus: 1 -%}
+    {%- assign _cls = "" -%}
+    {%- if _V contains _ds -%}{%- assign _cls = "on" -%}{%- assign _ocount = _ocount | plus: 1 -%}{%- endif -%}
+    {%- if s.longest_streak.start and _ds >= s.longest_streak.start and _ds <= s.longest_streak.end -%}{%- assign _cls = _cls | append: " streak" -%}{%- assign _scount = _scount | plus: 1 -%}{%- endif -%}
+    <i{% if _cls != "" %} class="{{ _cls | strip }}"{% endif %}></i>
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- assign _hr = s.highest_rating -%}
+{%- assign _goal = site.data.roadmap.goal | default: 1800 -%}
+
+<div class="tile stat kpi" data-reveal><dl><dt>Solved independently</dt><dd>{{ s.independent_total.size }}<small>incl. {{ s.independent_upsolves.size }} upsolve{% if s.independent_upsolves.size != 1 %}s{% endif %}; plus {{ s.assisted_solves.size }} with help</small></dd></dl>
+  {%- if _cum.last == s.independent_total.size %}
+  {%- capture _p -%}M0 {{ _cum.first | times: 34.0 | divided_by: _cmax | minus: 36 | abs | round: 2 }}{%- for c in _cum offset: 1 -%} H{{ forloop.index | times: 100.0 | divided_by: _kn | round: 2 }} V{{ c | times: 34.0 | divided_by: _cmax | minus: 36 | abs | round: 2 }}{%- endfor -%}{%- endcapture %}
+  <svg class="kpi-viz kpi-spark" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path class="kpi-area" d="{{ _p }} V40 H0 Z"/><path class="kpi-line" d="{{ _p }}"/></svg>
+  <p class="vh">Running total by week since {{ _mon0 }}: {{ _cum | join: ", " }}.</p>
+  {%- endif %}
+</div>
+<div class="tile stat kpi" data-reveal><dl><dt>Active days</dt><dd>{{ s.active_days }}<small>first active {{ s.first_day | date: "%-d %b %Y" }}</small></dd></dl>
+  {%- if _asum == s.active_days %}
+  <svg class="kpi-viz kpi-bars" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    {%- for a in _act -%}{%- assign _x = forloop.index0 | times: _bw | plus: 0.8 | round: 2 -%}{%- assign _bh = a | times: 40.0 | divided_by: 7 | round: 2 -%}
+    <rect class="kpi-track" x="{{ _x }}" y="0" width="{{ _bw | minus: 1.6 | round: 2 }}" height="40"/>{% if a > 0 %}<rect class="kpi-fill" x="{{ _x }}" y="{{ 40 | minus: _bh }}" width="{{ _bw | minus: 1.6 | round: 2 }}" height="{{ _bh }}"/>{% endif %}
+    {%- endfor -%}
+  </svg>
+  <p class="vh">Active days in each week since {{ _mon0 }}, out of 7: {{ _act | join: ", " }}.</p>
+  {%- endif %}
+</div>
+<div class="tile stat kpi" data-reveal><dl><dt>Longest streak</dt><dd>{{ s.longest_streak.days }}<span class="unit"> day{% if s.longest_streak.days != 1 %}s{% endif %}</span><small>{{ s.longest_streak.start | date: "%-d %b" }} to {{ s.longest_streak.end | date: "%-d %b" }}</small></dd></dl>
+  {%- if _scount == s.longest_streak.days %}
+  <div class="kpi-viz kpi-days" aria-hidden="true">{{ _cells }}</div>
+  <p class="vh">{{ _ocount }} active of the last {{ _ncount }} days; the longest run is {{ s.longest_streak.days }} days in a row.</p>
+  {%- endif %}
+</div>
+<div class="tile stat stat-goal kpi" data-reveal><dl><dt>Hardest solved / goal</dt><dd>{% if _hr %}{{ _hr[0] }}<span class="unit"> / {{ _goal }}</span><small>Hardest problem solved independently ({{ _hr[1] }}); {{ _goal }} is the rating goal.</small>{% else %}{{ _goal }}<small>Codeforces rating goal</small>{% endif %}</dd></dl>
+  {%- assign _tlast = _top.last | plus: 0 -%}
+  {%- if _hr and _tlast == _hr[0] %}
+  {%- capture _p -%}{%- for t in _top -%}{%- assign _tv = t | plus: 0 -%}{%- if _tv < 800 -%}{%- assign _tv = 800 -%}{%- endif -%}{%- assign _ty = 1800 | minus: _tv | times: 0.04 | round: 2 -%}{%- if forloop.first -%}M0 {{ _ty }}{%- else %} H{{ forloop.index0 | times: 100.0 | divided_by: _kn | round: 2 }} V{{ _ty }}{%- endif -%}{%- endfor -%}{%- endcapture %}
+  <svg class="kpi-viz kpi-goal" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true" focusable="false"><line class="kpi-rule" x1="0" y1="0.5" x2="100" y2="0.5"/><line class="kpi-tick" x1="0" y1="16" x2="100" y2="16"/><path class="kpi-amber" d="{{ _p }}"/></svg>
+  <p class="vh">Hardest independent solve by week since {{ _mon0 }}: {{ _top | join: ", " }}. The top line is {{ _goal }}, the dashed one 1400.</p>
+  {%- endif %}
+  <a class="more" href="{{ '/roadmap/' | relative_url }}">See the roadmap</a>
+</div>

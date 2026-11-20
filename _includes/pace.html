@@ -1,0 +1,18 @@
+{%- comment -%}
+Pace simulator under the climb chart (assets/js/home.js fills it; hidden without JavaScript). The data is the same
+set as the velocity chart: problems solved independently, each with its solved date and rating. The projection is
+plain arithmetic on those dates and ratings, labelled as such.
+{%- endcomment -%}
+{%- assign _PS = site.data.problems | where: "status", "solved" | where_exp: "p", "p.solved_date != nil" | sort: "solved_date" -%}
+<div class="pace" data-pace-root hidden>
+  <div class="pace-head">
+    <h4 id="pace-h">Pace simulator</h4>
+    <div class="pace-pills" role="group" aria-labelledby="pace-h">
+      <button type="button" class="chip tactile" data-pace="1400" aria-pressed="true">Average pace</button>
+      <button type="button" class="chip tactile" data-pace="1800" aria-pressed="false">Target 1800</button>
+    </div>
+  </div>
+  <p class="pace-out" data-pace-out aria-live="polite"></p>
+  <p class="pace-note" data-pace-note></p>
+  <script type="application/json" id="pace-data">{"built": {{ site.time | date: "%Y-%m-%d" | jsonify }}, "peak_id": {{ site.data.activity_stats.highest_rating[1] | jsonify }}, "solves": [{% for p in _PS %}[{{ p.solved_date | jsonify }}, {{ p.rating | jsonify }}]{% unless forloop.last %},{% endunless %}{% endfor %}]}</script>
+</div>

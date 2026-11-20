@@ -4,7 +4,7 @@
   const root = document.querySelector('[data-heatmap]');
   const src = document.getElementById('activity-data');
   if (!root || !src) return;
-  const { start, today, base, pages = {}, events } = JSON.parse(src.textContent);
+  const { start, today, base, pages = {}, ratings = {}, events } = JSON.parse(src.textContent);
   const LABEL = { solved: 'Solved', upsolved: 'Upsolved', redo: 'Redo', attempted: 'Attempted', practice: 'Practice', published: 'Published', milestone: 'Milestone' };
   const MONTHS = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ');
   const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -41,18 +41,43 @@
   days.innerHTML = '<span>Mon</span><span></span><span>Wed</span><span></span><span>Fri</span><span></span><span></span>';
   root.querySelector('.heat').append(months, days, grid);
 
+  // Frosted tooltip "6 Nov 2026 · 3 solved · max 1100": one element that glides from cell to cell, growing out of the
+  // cell it describes. Solved = independent solves and upsolves with file or post evidence; max = their hardest rating.
+  const still = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const dmy = s => { const d = day(s); return `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`; };
+  const solvedOn = s => (byDay.get(s) || []).filter(e => (e.type === 'solved' || e.type === 'upsolved') && e.assisted === false && e.verification !== 'message');
+  const tipText = s => {
+    if (s < start) return `${dmy(s)}: before the log started`;
+    const sv = solvedOn(s);
+    if (!sv.length) return `${dmy(s)} · ${plural(count(s)).replace(/^No/, 'no')}`;
+    const rs = sv.map(e => ratings[e.problem]).filter(Number.isFinite);
+    return `${dmy(s)} · ${sv.length} solved${rs.length ? ` · max ${Math.max(...rs)}` : ''}`;
+  };
   const tip = root.querySelector('.tip');
+  tip.classList.add('z2-tip'); tip.setAttribute('aria-hidden', 'true'); // every day button names its own count
+  let tipTimer = 0;
   const show = el => {
     const s = el.dataset.date; if (!s || el.classList.contains('future')) return;
-    tip.textContent = s < start ? `${fmt(s, { day: 'numeric', month: 'short' })}: before the log started`
-      : `${plural(count(s))} on ${fmt(s, { day: 'numeric', month: 'short', year: 'numeric' })}`;
+    clearTimeout(tipTimer);
+    const was = tip.classList.contains('is-open');
+    tip.hidden = false; tip.textContent = tipText(s);
     const r = el.getBoundingClientRect(), w = root.getBoundingClientRect();
-    tip.style.left = (r.left - w.left + r.width / 2) + 'px'; tip.style.top = (r.top - w.top) + 'px'; tip.hidden = false;
+    const cx = r.left - w.left + r.width / 2, tw = tip.offsetWidth, th = tip.offsetHeight;
+    const tx = Math.max(0, Math.min(w.width - tw, cx - tw / 2)), ty = r.top - w.top - th - 8;
+    tip.classList.toggle('z2-snap', !was || still());
+    tip.style.setProperty('--tx', tx + 'px'); tip.style.setProperty('--ty', ty + 'px');
+    tip.style.setProperty('--origin-x', (cx - tx) + 'px'); tip.style.setProperty('--origin-y', (th + 8) + 'px');
+    if (!was) void tip.offsetWidth;
+    tip.classList.add('is-open');
   };
+  // closed = no .is-open (fades out), then [hidden] once the fade is over
+  const shut = () => { tip.classList.remove('is-open'); tipTimer = setTimeout(() => { tip.hidden = true; }, 140); };
+  const hide = () => { clearTimeout(tipTimer); tipTimer = setTimeout(shut, 90); };
   grid.addEventListener('mouseover', e => e.target.classList.contains('d') && show(e.target));
   grid.addEventListener('focusin', e => show(e.target));
-  grid.addEventListener('mouseleave', () => { tip.hidden = true; });
-  grid.addEventListener('focusout', () => { tip.hidden = true; });
+  grid.addEventListener('mouseleave', hide);
+  grid.addEventListener('focusout', hide);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !tip.hidden) { clearTimeout(tipTimer); shut(); } });
 
   const panel = document.querySelector('[data-dayview]');
   const item = e => {
@@ -76,7 +101,22 @@
       panel.animate([{ opacity: 0, transform: 'translateY(3px)' }, { opacity: 1, transform: 'none' }], { duration: 220, easing: 'cubic-bezier(.22,.61,.36,1)' });
     select.ready = true;
   };
-  grid.addEventListener('click', e => e.target.matches('button.d') && select(e.target));
-  const latest = [...grid.querySelectorAll('button.d')].pop(); if (latest) select(latest);
+  const press = d => grid.querySelectorAll('button.d').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.date === d)));
+  if (panel) { // /activity/: the day panel beside the calendar
+    grid.addEventListener('click', e => e.target.matches('button.d') && select(e.target));
+    const latest = [...grid.querySelectorAll('button.d')].pop(); if (latest) select(latest);
+  } else if (document.querySelector('[data-index]')) {
+    // Homepage: a day filters the problem index below to that date (assets/js/index.js); pressing it again clears it.
+    root.querySelector('.heat').setAttribute('aria-label', 'Verified activity since the log began. Days with activity are buttons that filter the problem index to that day.');
+    grid.addEventListener('click', e => {
+      if (!e.target.matches('button.d')) return;
+      const date = e.target.getAttribute('aria-pressed') === 'true' ? '' : e.target.dataset.date;
+      if (date) document.getElementById('index')?.scrollIntoView({ block: 'start', behavior: still() ? 'auto' : 'smooth' });
+      document.dispatchEvent(new CustomEvent('index:date', { detail: { date } }));
+    });
+    document.addEventListener('index:date', e => press((e.detail && e.detail.date) || ''));
+    const q = new URLSearchParams(location.search).get('date');
+    if (q && /^\d{4}-\d{2}-\d{2}$/.test(q)) press(q);
+  }
   const sc = root.querySelector('.heat-scroll'); sc.scrollLeft = sc.scrollWidth; // phones start at the most recent weeks
 })();

@@ -210,7 +210,6 @@ a.rb { text-decoration: none; }
 .bento .stat { grid-column: span 3; }
 .bento .tile-wide { grid-column: 1 / -1; }
 .bento .tile-post { grid-column: span 7; }
-.bento .tile-quiz { grid-column: span 5; }
 .bento h3 { margin-bottom: var(--s4); }
 .bento .tile > h3 { font-size: .8125rem; font-weight: 500; letter-spacing: -.006em; color: var(--text-3); }
 .stat dl { margin: 0; }
@@ -221,9 +220,7 @@ a.rb { text-decoration: none; }
 .stat .more { margin-top: auto; padding-top: var(--s3); font-size: .8125rem; }
 .tile-title { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin: 0 0 var(--s3); font-size: 1.25rem; font-weight: 600; letter-spacing: -.02em; }
 .tile-quote { max-width: 58ch; font-size: 1rem; line-height: 1.55; color: var(--text-2); }
-.tile-post .more, .tile-quiz .btn { margin-top: auto; align-self: flex-start; }
-.tile-quiz p { color: var(--text-2); }
-.tile-quiz .big { display: block; margin-bottom: .35rem; font-size: clamp(1.75rem, 3.2vw, 2.25rem); font-weight: 600; line-height: 1; letter-spacing: -.03em; color: var(--text); font-variant-numeric: tabular-nums; }
+.tile-post .more { margin-top: auto; align-self: flex-start; }
 /* "Next up" (7 columns) and "Weakest topics" (5): a second row of tiles, full width under 48rem */
 .bento .tile-next { grid-column: span 7; }
 .bento .tile-weak { grid-column: span 5; }
@@ -383,11 +380,6 @@ button.d:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .ev.milestone .type::before { rotate: 45deg; background: var(--text); }
 
 /* ---------- quiz questions (homepage, write-ups and the quiz page) ---------- */
-.quiz-band { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s7); align-items: start; margin-top: clamp(3.5rem, 8vw, 5.5rem); padding-block: clamp(3rem, 7vw, 4.5rem); border-block: 1px solid var(--hair); }
-.quiz-band.bleed { border-image: linear-gradient(var(--hair), var(--hair)) 1 / 1px 0 / 0 100vmax; }
-.quiz-band h2 { margin-bottom: var(--s3); }
-.quiz-band p { color: var(--text-2); font-size: 1rem; }
-.quiz-band .small { font-size: .875rem; color: var(--text-3); }
 .q { min-width: 0; margin: 0 0 var(--s6); padding: 0; border: 0; }
 .q legend { padding: 0; display: contents; }
 .q .qtext { display: block; margin-bottom: var(--s4); font-size: 1.125rem; font-weight: 600; line-height: 1.4; letter-spacing: -.016em; }
@@ -688,7 +680,7 @@ html.lenis, html.lenis body { height: auto; }
 @media (max-width: 60rem) {
   .thead, .row { grid-template-columns: 5rem minmax(0, 1fr) 3.5rem 6rem; }
   .thead span:nth-child(3), .row .topics { display: none; }
-  .activity-cols, .quiz-band { grid-template-columns: minmax(0, 1fr); gap: var(--s5); }
+  .activity-cols { grid-template-columns: minmax(0, 1fr); gap: var(--s5); }
   .cf-facts { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 48rem) {
@@ -701,7 +693,7 @@ html.lenis, html.lenis body { height: auto; }
   header.site nav::-webkit-scrollbar { display: none; }
   .hero { grid-template-columns: minmax(0, 1fr); gap: var(--s6); }
   .bento .stat { grid-column: span 6; }
-  .bento .tile-post, .bento .tile-quiz { grid-column: 1 / -1; }
+  .bento .tile-post { grid-column: 1 / -1; }
 }
 @media (max-width: 44rem) {
   .bento { gap: .75rem; }
@@ -1062,6 +1054,104 @@ html:not(.js) .idx-hint { display: none; }
 @keyframes fx-pop { 40% { transform: scale(1.035); } }
 @keyframes mo-cmdk-in { from { opacity: 0; transform: scale(.96); } }
 @media (forced-colors: active) { .r1800::after { display: none; } }
+
+/* ---------- overnight H: homepage zones 1-2 (fragments/H.css) ---------- */
+/* ===== H: homepage zones 1-2 (kpi- pace- feat- recall- z1- z2-) ===== */
+
+/* zone 1: 12-column grid. 4 KPI tiles (3 columns each), then the climb tile (8) beside a stack of Next up and Weakest topics (4) */
+.bento.z1-grid { gap: 16px; }
+.z1-grid > .tile-wide { grid-column: span 8; }
+.z1-side { grid-column: span 4; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.z1-side > .tile { flex: 1 1 auto; }
+@media (max-width: 64rem) {
+  .z1-grid > .tile-wide, .z1-side { grid-column: 1 / -1; }
+  .z1-side { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 48rem) { .z1-side { grid-template-columns: minmax(0, 1fr); } }
+
+/* KPI micro-visuals: build-time SVG, decorative (the number above is the fact) */
+.kpi dl { flex: 1 0 auto; }
+.kpi-viz { display: block; width: 100%; height: 2.75rem; margin-top: var(--s4); overflow: visible; }
+.kpi-line { fill: none; stroke: var(--text-2); stroke-width: 1.5; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.kpi-area { fill: var(--fill-2); stroke: none; }
+.kpi-track { fill: var(--fill); }
+.kpi-fill { fill: color-mix(in srgb, var(--text) 50%, transparent); }
+.kpi-rule { stroke: var(--text-3); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.kpi-tick { stroke: var(--hair-2); stroke-width: 1; stroke-dasharray: 3 3; vector-effect: non-scaling-stroke; }
+.kpi-amber { fill: none; stroke: var(--accent-display); stroke-width: 2; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.kpi-days { --c: 5px; display: grid; grid-template-rows: repeat(7, var(--c)); grid-auto-flow: column; grid-auto-columns: var(--c); gap: 2px; width: auto; height: auto; }
+.kpi-days i { border-radius: 1.5px; background: var(--fill-2); }
+.kpi-days i.on { background: color-mix(in srgb, var(--text) 38%, transparent); }
+.kpi-days i.streak { background: var(--text); }
+.kpi-days i.pad { visibility: hidden; }
+.stat-goal.kpi .more { margin-top: var(--s3); padding-top: 0; }
+
+/* Weakest topics: solved myself out of all logged problems, one segment per problem */
+.z1-seg { display: grid; grid-template-columns: repeat(var(--n, 1), minmax(0, 1fr)); gap: 2px; width: min(100%, 9rem); height: 4px; margin-top: .4rem; }
+.z1-seg i { border-radius: 1px; background: var(--fill-2); box-shadow: inset 0 0 0 1px var(--hair); }
+.z1-seg i.on { background: var(--text-2); box-shadow: none; }
+
+/* pace simulator under the climb chart (assets/js/home.js) */
+.pace { margin-top: var(--s4); padding-top: var(--s4); border-top: 1px solid var(--hair); }
+.pace-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s2) var(--s4); }
+.pace-head h4 { margin: 0; font-size: .8125rem; font-weight: 500; letter-spacing: -.006em; color: var(--text-3); }
+.pace-pills { display: inline-flex; gap: 2px; padding: 2px; border: 1px solid var(--hair); border-radius: var(--r-pill); background: var(--fill); }
+.pace-pills .chip { min-height: 2.25rem; padding: 0 .85rem; border-color: transparent; border-radius: var(--r-pill); background: transparent; font-size: .8125rem; }
+.pace-pills .chip[aria-pressed="true"] { background: var(--tile-2); border-color: var(--hair-2); color: var(--text); box-shadow: var(--spec); }
+.pace-out { display: grid; gap: .2rem; margin: var(--s3) 0 0; }
+.pace-to { font: 500 11px/1.4 var(--mono); color: var(--text-3); }
+.pace-main { font-size: 1.125rem; font-weight: 600; letter-spacing: -.02em; line-height: 1.3; font-variant-numeric: tabular-nums; }
+.pace-so { font-size: .8125rem; color: var(--text-2); font-variant-numeric: tabular-nums; }
+.pace-note { max-width: 72ch; margin: var(--s2) 0 0; font-size: .75rem; line-height: 1.5; color: var(--text-3); }
+
+/* the climb chart: one shared tooltip (home.js) replaces the per-dot ones once JavaScript runs */
+.ladder-plot.z1-glide .pt .dot-tip { display: none !important; }
+.ladder-plot .z1-tip { display: grid; z-index: 4; left: 0; top: 0; bottom: auto; translate: var(--tx, 0) var(--ty, 0);
+  transform-origin: var(--origin-x, 50%) var(--origin-y, 100%); visibility: hidden; opacity: 0; }
+.ladder-plot .z1-tip.is-open { visibility: visible; opacity: 1; }
+
+/* the heatmap tooltip (activity.js): positioned by translate so it can glide; grows from the cell it describes */
+.heat-wrap .tip.z2-tip { left: 0; top: 0; transform: none; translate: var(--tx, 0) var(--ty, 0); transform-origin: var(--origin-x, 50%) var(--origin-y, 100%); opacity: 0; }
+.heat-wrap .tip.z2-tip.is-open { opacity: 1; }
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  .ladder-plot .z1-tip, .heat-wrap .tip.z2-tip { transform: scale(.96);
+    transition: opacity var(--t-close, 115ms) var(--ease-exit, cubic-bezier(.4,0,1,1)), transform var(--t-close, 115ms) var(--ease-exit, cubic-bezier(.4,0,1,1)), visibility 0s var(--t-close, 115ms), translate 0s; }
+  .ladder-plot .z1-tip.is-open, .heat-wrap .tip.z2-tip.is-open { transform: none;
+    transition: opacity var(--t-open, 180ms) var(--ease), transform var(--t-open, 180ms) var(--ease), visibility 0s, translate 180ms cubic-bezier(.34, 1.25, .64, 1); }
+  .ladder-plot .z1-tip.z1-snap, .heat-wrap .tip.z2-tip.z2-snap { transition-property: opacity, transform, visibility; }
+}
+
+/* zone 2: heatmap, then the latest write-up (7) beside 1-Minute Recall (5) */
+.bento.z2-grid { gap: 16px; margin-top: 16px; }
+.z2-grid > .tile-post { grid-column: span 7; }
+.z2-grid > .tile-recall { grid-column: span 5; }
+@media (max-width: 64rem) { .z2-grid > .tile-post, .z2-grid > .tile-recall { grid-column: 1 / -1; } }
+
+/* Latest write-up: editorial card with a code peek */
+.feat-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin: 0 0 var(--s4); }
+.feat-rating { padding: 2px 7px; border: 1px solid var(--hair-2); border-radius: var(--r-key); background: var(--fill-2); color: var(--text); font: 500 .75rem/1.4 var(--mono); font-variant-numeric: tabular-nums; }
+.feat-key { padding: 1px 6px; border: 1px solid var(--hair-2); border-bottom-width: 2px; border-radius: var(--r-key); background: var(--fill); color: var(--text-2); font: 500 11px/1.5 var(--mono); }
+.feat-meta time { margin-inline-start: auto; font: 500 11px/1.4 var(--mono); color: var(--text-3); }
+.feat-quote { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; margin: 0 0 var(--s4); }
+.feat-peek { position: relative; flex: 1 1 auto; min-height: 9rem; max-height: 17rem; margin: 0 0 var(--s4); border: 1px solid var(--hair); border-radius: var(--r-card); background: var(--tile-2); overflow: hidden; }
+.feat-peek pre.highlight { margin: 0; padding: .8rem 1rem; overflow: hidden; border: 0; border-radius: 0; background: transparent; box-shadow: none; font: 400 12.5px/1.6 var(--mono); white-space: pre; }
+.feat-peek::before, .feat-peek::after { content: ""; position: absolute; pointer-events: none; }
+.feat-peek::before { inset: 0 0 0 auto; width: 2.5rem; background: linear-gradient(90deg, transparent, var(--tile-2)); }
+.feat-peek::after { inset: auto 0 0 0; height: 2.25rem; background: linear-gradient(transparent, var(--tile-2)); }
+
+/* 1-Minute Recall (markup here; quiz.js behaviour) */
+.recall { display: flex; flex: 1 1 auto; flex-direction: column; min-width: 0; }
+.recall > h3 { margin: 0 0 var(--s2); font-size: .8125rem; font-weight: 500; letter-spacing: -.006em; color: var(--text-3); }
+.recall-why { margin: 0 0 var(--s3); font: 500 11px/1.4 var(--mono); color: var(--text-2); }
+.recall-why:empty { display: none; }
+.recall .q { margin-bottom: var(--s3); }
+.recall-after, .recall-deck { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5); margin: var(--s3) 0 0; font-size: .875rem; }
+.recall-deck { margin-top: auto; padding-top: var(--s3); }
+
+/* Codeforces profile with a single rated contest: the rating, not an empty sparkline */
+.cf-one { max-width: 40rem; margin: 0 auto var(--s4); font-size: .875rem; line-height: 1.5; color: var(--text-2); text-align: center; }
+.cf-one .rk { color: var(--text); }
 
 /* ---------- print: write-ups, problem pages and /stats/ as clean black-on-white single columns ---------- */
 @media print {
