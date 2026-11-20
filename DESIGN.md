@@ -10,8 +10,9 @@ Jekyll 3.10 + one stylesheet (`assets/css/style.css`) + vanilla JS. This file is
 1. **One signal colour.** Amber means progress toward 1800 and nothing else: the rating-progress bar, the climb
    step-line (and the gradient under it), peak heatmap cells, the hardest-solved series on /stats/ and the brand
    mark's wedge while the brand link is hovered or focused. Never on buttons, links, tags, headings or badges.
-2. **Light comes from above.** A faint top spotlight on the canvas and a 1px inset highlight on every card. No drop
-   shadows on dark, no glows, no gradients except the spotlight and the amber fill under the climb line.
+2. **Light comes from above.** A faint ambient glow behind the page and a 1px inset highlight on every card. No drop
+   shadows on dark cards (the metal focus card is the one grounded exception), no gradients except the ambient glow,
+   the metal sheen and the amber fill under the climb line.
 3. **Monochrome everything else.** Zinc greys, white, hairlines. Status is shape and wording, never hue.
 4. **Real data only.** Goal 1800. Hardest problem solved independently: 1300 (4C). He has **no Codeforces rating**;
    never show 1300 (or any number) as "rating", "current" or "my rating".
@@ -40,8 +41,7 @@ Jekyll 3.10 + one stylesheet (`assets/css/style.css`) + vanilla JS. This file is
 
 | Token | Dark (default) | Light (`[data-theme="light"]`) | Contrast intent |
 |---|---|---|---|
-| `--bg` | `#09090B` | `#FAFAFA` | canvas |
-| `--spot` | `rgb(255 255 255 / .06)` | `rgb(9 9 11 / .035)` | top spotlight tint |
+| `--bg` | `#0B0C0E` | `#F8F9FB` | canvas |
 | `--tile` | `#101013` | `#FFFFFF` | cards, panels |
 | `--tile-2` | `#16161A` | `#F4F4F5` | raised field, row hover base |
 | `--text` | `#FAFAFA` | `#09090B` | 19.1:1 / 19.9:1 |
@@ -110,7 +110,7 @@ Prose keeps `--read: 44rem`. Code blocks use 0.875rem mono and scroll horizontal
 
 | Level | Recipe |
 |---|---|
-| Canvas | `--bg` + `background-image: radial-gradient(ellipse 80% 50% at 50% -20%, var(--spot), transparent)` fixed to the top of `body` (not `fixed` attachment: avoids repaint on scroll) |
+| Canvas | `html` paints `--bg`; a `position: fixed` `body::before` layer at `z-index: -1` carries `--ambient` (three faint radial glows), so scrolling repaints nothing |
 | Card (`.tile`, `.panel`) | `background: var(--tile); border: 1px solid var(--hair); box-shadow: var(--spec); border-radius: var(--r-tile)` |
 | Glass (navbar, tooltip, palette) | `background: var(--glass); backdrop-filter: saturate(1.4) blur(16px); border: 1px solid var(--hair)`; `@supports not (backdrop-filter)` → `--tile` at 96% |
 | Overlay scrim | `rgb(0 0 0 / .55)` behind the palette `<dialog>` |
@@ -133,9 +133,8 @@ or focus. `assets/favicon.svg` is the same drawing (viewBox 1 1 18 18), `#09090B
 Tokens: `--chip-bg` (dark `linear-gradient(180deg, rgb(255 255 255 / .065), rgb(255 255 255 / .025))`), `--chip-bg-hover`,
 `--chip-bg-on`, `--chip-border` (white 11%), `--chip-border-hover` (20%), `--chip-rim` (`inset 0 1px 0` white 18% plus
 `0 1px 2px` black 35%), with light equivalents. They style `kbd`, `.key-cap`, `.rb`, `.chip`, `.tag`, `.kc` and the
-problem index rail tabs. The `.glass-chip` class adds `backdrop-filter: blur(8px) saturate(130%)` and is used only
-over moving or translucent content (the scene switcher); inside the header and on the matte focus card the blur is
-switched off because it cannot show. Status shapes still win: a not-solved `.rb` stays dashed with no fill or rim.
+problem index rail tabs. The `.glass-chip` class adds `backdrop-filter: blur(8px) saturate(130%)` and adds the blur;
+inside the header and on the metal focus card the blur is switched off because it cannot show there. Status shapes still win: a not-solved `.rb` stays dashed with no fill or rim.
 
 **Navbar.** Sticky, height 3.25rem, glass, bottom hairline. Brand left; 14px links in `--text-2`, current link
 `--text` with a 1px × 16px-wide `--text` underline indicator (not amber); ⌘K search pill; theme toggle.
@@ -152,7 +151,9 @@ inner dot = with help, dashed border = not solved.
 **Primary CTA.** White pill (`--accent-fill`/`--on-accent-fill`), 2.5rem min height (2.75rem touch), 15px/600.
 One per view. Secondary = `.btn.quiet`: `--fill` + `--hair` border, `--text`.
 
-**Current focus card (hero).** Matte card (`--tile`, hairline, `--spec`, `--r-tile`), built from the data files with
+**Current focus card (hero).** Machined metal: `--metal` (dark `linear-gradient(145deg, #1C1D21, #131417 50%, #191A1E)`, light
+anodised aluminium `#F6F7F9 / #EBEDF0 / #F3F4F6`) under a faint 1px brushed grain, a `--metal-rim` hairline and
+`--metal-shadow` (top bevel highlight plus a grounded 0 12px 32px shadow), `--r-tile`, built from the data files with
 fallbacks (`_includes/focus-card.html`). "Boss fight": the first not-solved problem in the Next up order, as a dashed
 keycap, name, rating, topic tags, an optional one-line note from `_data/focus.json` (by problem ID) and its last
 attempt, linking to the problem on Codeforces. Rank progress: the Codeforces rating (`_data/codeforces.json`) on a
@@ -221,11 +222,15 @@ dots); reset only after the element has fully left the viewport plus 48px, over 
 are shown without animating. Everything is off under `prefers-reduced-motion: reduce` and in print.
 
 Hero animals (`assets/js/hero-animals.js`, adapted under MIT from "ASCII Animals" by Pawan-webdeveloper): a full-bleed
-canvas of pixel/ASCII koi (default; a click on empty hero space drops food they swim to and eat) or jellyfish (a click
-startles them), at `--animals-alpha` .32 dark / .24 light, fading out over the bottom 28%. Never takes pointer events;
-loops only while on screen, visible and not paused; one still frame under reduced motion. Scene switcher (Koi |
-Jellyfish | Pause) is a `.glass-chip` pill, saved in localStorage `hero-scene`. Secondary hero text uses
-`--hero-text-2` (#D4D4D8 dark) so it keeps at least 5:1 contrast over a passing koi.
+canvas of pixel/ASCII koi (a click on empty hero space drops food they swim to, eat and then disperse from),
+jellyfish or cranes (a click startles them). One animal per page load, never the one shown last time (localStorage
+`heroLastAnimal`). Creatures start one per cell of a two-row grid across the whole canvas and keep about 165px apart
+with a soft separation force. `--animals-alpha` .32 dark / .24 light, fading out over the bottom 28%; never takes
+pointer events; loops only while on screen and visible; one still frame under reduced motion. Secondary hero text
+uses `--hero-text-2` (#D4D4D8 dark) so it keeps at least 5:1 contrast over a passing animal.
+
+Ambient page glow: a fixed `body::before` layer behind everything with three faint radial glows (`--ambient`: sky top
+right, amber middle left, indigo bottom right) over `--bg` (#0B0C0E dark, #F8F9FB light). Hidden in print.
 
 ## 8. Do / Don't
 

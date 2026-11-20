@@ -1,11 +1,13 @@
-// Hero background: procedural pixel/ASCII koi and jellyfish on a character grid. Zero dependencies.
+// Hero background: procedural pixel/ASCII koi, jellyfish or cranes on a character grid. Zero dependencies.
 // Solid body cells go into a one-pixel-per-cell buffer that is scaled up with smoothing off; trails, tentacles and
-// ripples are drawn as characters on top. Clicking empty hero space drops food for the koi or startles the jellyfish.
-// The scene (koi, jellyfish or paused) is saved in localStorage 'hero-scene'; ?hero=koi|jelly|pause overrides it for
-// one visit. The loop stops while the hero is off screen, the tab is hidden or the scene is paused; with
-// prefers-reduced-motion a single still frame is drawn. window.__hero reports the mode and frame count (tests).
+// ripples are drawn as characters on top. Clicking empty hero space drops food for the koi, or startles the
+// jellyfish and cranes. Each page load picks one animal at random, never the one shown last time (localStorage
+// 'heroLastAnimal'); ?hero=koi|jelly|cranes forces one for a visit. Creatures start spread over a 2-row grid of the
+// full-bleed canvas and keep apart with a soft separation force. The loop runs only while the hero is on screen and
+// the tab is visible; with prefers-reduced-motion a single still frame is drawn. window.__hero reports the animal,
+// the frame count and positions (tests).
 //
-// The koi and jellyfish shape functions, swim and pulse maths are adapted from "ASCII Animals"
+// The koi, jellyfish and crane shape functions, swim, pulse and flight maths are adapted from "ASCII Animals"
 // (https://github.com/Pawan-webdeveloper/Ascii-Animals-extension) under the MIT License:
 //   Copyright (c) 2026 Pawan-webdeveloper
 //   Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -23,15 +25,15 @@
   const ctx = canvas && canvas.getContext('2d');
   if (!ctx) return;
   const hero = canvas.closest('.hero');
-  const switcher = hero.querySelector('[data-scenes]');
   const still = matchMedia('(prefers-reduced-motion: reduce)');
-  const KEY = 'hero-scene', SCENES = ['koi', 'jelly', 'pause'];
+  const KEY = 'heroLastAnimal', ANIMALS = ['koi', 'jelly', 'cranes'];
   const TAU = Math.PI * 2, CELL_CSS = 9;
 
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const lerp = (a, b, t) => a + (b - a) * t;
   const rand = (a, b) => a + Math.random() * (b - a);
   const sq = x => x * x;
+  const ell = (u, v, cu, cv, ru, rv) => sq((u - cu) / ru) + sq((v - cv) / rv);
   const hash2 = (i, j, s) => { const h = Math.sin(i * 127.1 + j * 311.7 + s * 74.7) * 43758.5453; return h - Math.floor(h); };
   const smooth = t => t * t * (3 - 2 * t);
   function vnoise(x, y, s) {   // value noise for the koi patches
@@ -121,29 +123,60 @@
         return null;
       },
     },
+    cranes: {
+      radius: 15, scale: 1.15, speed: 5.5, turn: 0.5, phaseRate: 3.4,
+      trail: { chars: "'`.", color: [190, 200, 225], at: -9 },
+      palettes: [
+        { white: [226, 230, 240], black: [44, 46, 54], feather: [78, 82, 96], crown: [222, 42, 42] },
+        { white: [214, 220, 238], black: [50, 54, 62], feather: [88, 92, 106], crown: [210, 52, 52] },
+        { white: [172, 180, 196], black: [64, 68, 78], feather: [98, 104, 120], crown: [200, 56, 56] },
+      ],
+      prep(e) { e.f = 0.55 + 0.45 * Math.cos(e.phase); e.span = 3.5 + 9.5 * e.f; },   // wing beat
+      sample(u, v, e) {
+        const av = Math.abs(v), P = e.pal;
+        if (u > 9.0 && u < 10.8 && av < 0.34) return hit([196, 186, 136]);   // beak
+        if (ell(u, v, 8.3, 0, 0.95, 0.78) < 1) return u > 8.3 && av < 0.42 ? hit(P.crown) : hit(P.black);   // head
+        if (u > 2.3 && u <= 8.3 && av < 0.5) return hit(u > 4.6 ? P.black : P.white);   // neck
+        if (ell(u, v, -1, 0, 3.8, 1.45) < 1) return hit(P.white);   // body
+        if (u < -4.4 && u > -6.0 && av < 0.9) return hit(P.black);   // tail
+        if (u <= -5.6 && u > -10.5 && Math.abs(av - 0.45) < 0.32) return glyph(':|', [130, 130, 136], 0.8);   // legs
+        if (av >= 1.1 && av < 1.1 + e.span) {   // wings
+          const w = av - 1.1, q = w / e.span;
+          const uf = 1.5 - 1.7 * q - (q > 0.82 ? sq((q - 0.82) * 9) * 0.5 : 0);
+          const ub = -2.5 - 1.0 * q + (q > 0.74 ? sq((q - 0.74) * 6.5) : 0);
+          if (u < uf && u > ub) {
+            if (u - ub < 0.55 && ((w * 1.4) | 0) & 1) return null;
+            const shade = 0.72 + 0.28 * e.f;
+            if (q > 0.84 || (q < 0.74 && u - ub < (uf - ub) * 0.4)) return hit(P.feather, 1, shade);
+            return hit(P.white, 1, shade);
+          }
+        }
+        return null;
+      },
+    },
   };
+  const FLIGHT = -Math.PI / 4;   // the cranes' flow: up and to the right
 
   // ---- state ----
   const R = { dpr: 1, W: 0, H: 0, cell: 9, cols: 0, rows: 0, lo: document.createElement('canvas'), img: null, font: '' };
   const loCtx = R.lo.getContext('2d');
   let animals = [];
   const foods = [], trails = [], ripples = [];
-  let species = 'koi', scene = 'koi', simTime = 0, frames = 0, raf = 0, last = 0, onScreen = true;
-  const status = window.__hero = { mode: species, paused: false, frames: 0 };
+  let species = 'koi', simTime = 0, frames = 0, raf = 0, last = 0, onScreen = true;
+  const status = window.__hero = { mode: species, frames: 0, positions: () => animals.map(e => [e.x / (R.W || 1), e.y / (R.H || 1)]) };
 
-  function spawn(kindName, i, n) {
+  function spawn(kindName, i, n, cx, cy) {
     const A = KINDS[kindName], z = Math.pow(Math.random(), 0.85);
     const base = R.W / R.dpr < 640 ? 0.72 : 1;
     const e = {
       kind: A, z, seed: Math.random() * 100, pal: A.palettes[i % A.palettes.length],
       k: base * (A.scale || 1) * lerp(0.62, 1.05, z),
-      x: rand(0.08, 0.92) * R.W, y: rand(0.15, 0.85) * R.H,
+      x: cx * R.W, y: cy * R.H, baseOff: rand(-1, 1),
       phase: rand(0, TAU), rateMul: rand(0.85, 1.15), speedMul: rand(0.8, 1.15),
-      heading: kindName === 'jelly' ? -Math.PI / 2 + rand(-0.4, 0.4) : rand(0, TAU),
+      heading: kindName === 'jelly' ? -Math.PI / 2 + rand(-0.4, 0.4) : kindName === 'cranes' ? FLIGHT + rand(-0.3, 0.3) : rand(0, TAU),
       retargetAt: 0, scared: 0, sx: 0, sy: 0, fade: 0, lastCell: -1, speedMod: 1, amp: 1.3 * 0.85, c: 0,
     };
     e.target = e.heading;
-    if (kindName === 'jelly') e.x = (i + 0.5) / n * R.W + rand(-0.1, 0.1) * R.W;
     if (e.pal.base) e.fin = mix(e.pal.base, WHITE, 0.25);
     return e;
   }
@@ -151,8 +184,11 @@
   function populate(kindName) {
     species = kindName;
     const w = R.W / R.dpr;
-    const n = kindName === 'koi' ? clamp(Math.round(w / 300), 3, 5) : clamp(Math.round(w / 420), 3, 4);
-    animals = Array.from({ length: n }, (_, i) => spawn(kindName, i, n)).sort((a, b) => a.z - b.z);
+    const n = ({ koi: 6, jelly: 5, cranes: 6 })[kindName] - (w < 640 ? 1 : 0);
+    const cols = Math.ceil(n / 2), cells = [];   // a cols x 2 grid over the whole canvas, one creature per cell
+    for (let r = 0; r < 2; r++) for (let c = 0; c < cols; c++) cells.push([(c + rand(0.2, 0.8)) / cols, 0.12 + (r + rand(0.15, 0.85)) * 0.76 / 2]);
+    for (let i = cells.length - 1; i > 0; i--) { const j = (Math.random() * (i + 1)) | 0; [cells[i], cells[j]] = [cells[j], cells[i]]; }
+    animals = Array.from({ length: n }, (_, i) => spawn(kindName, i, n, cells[i][0], cells[i][1])).sort((a, b) => a.z - b.z);
     foods.length = 0; trails.length = 0; ripples.length = 0;
   }
 
@@ -167,6 +203,7 @@
     R.lo.width = R.cols; R.lo.height = R.rows;
     R.img = loCtx.createImageData(R.cols, R.rows);
     R.font = `600 ${Math.round(R.cell * 1.02)}px "Geist Mono", ui-monospace, monospace`;
+    atlas.clear();
     return true;
   }
 
@@ -196,16 +233,17 @@
           }
         } else if (t > e.retargetAt) wander(e, t);
       } else if (t > e.retargetAt) wander(e, t);
+      let steer = separate(e, foods.length && species === 'koi' ? 0.5 : 1);
       if (e.scared > 0) {   // startled: steer away, pulse faster
-        e.target = Math.atan2(e.sy, e.sx); boost *= 1 + 2.2 * e.scared; turnMul *= 1 + 4 * e.scared;
+        e.target = steer = Math.atan2(e.sy, e.sx); boost *= 1 + 2.2 * e.scared; turnMul *= 1 + 4 * e.scared;
         e.speedMod = Math.max(e.speedMod, 0.9);
         e.scared = Math.max(0, e.scared - dt / 1.4);
       }
-      e.heading += clamp(angleTo(e.heading, e.target), -A.turn * turnMul * dt, A.turn * turnMul * dt);
+      e.heading += clamp(angleTo(e.heading, steer), -A.turn * turnMul * dt, A.turn * turnMul * dt);
       const sp = A.speed * e.speedMul * (e.speedMod || 1) * boost * R.cell * e.k * 0.6 * (0.55 + 0.45 * e.z);
       e.x += Math.cos(e.heading) * sp * dt; e.y += Math.sin(e.heading) * sp * dt;
       e.phase += dt * A.phaseRate * e.rateMul * (1 + e.scared * 1.6) * (0.55 + 0.45 * Math.min(boost, 2) / 2);
-      const m = (A.radius + 4) * e.k * R.cell;   // wrap at the edges, re-entering anywhere along the far side
+      const m = (A.radius + 0.5) * e.k * R.cell;   // wrap just past the body's edge, re-entering anywhere along the far side
       if (e.x < -m) { e.x = R.W + m; e.y = rand(0, R.H); } else if (e.x > R.W + m) { e.x = -m; e.y = rand(0, R.H); }
       if (e.y < -m) { e.y = R.H + m; e.x = rand(0, R.W); } else if (e.y > R.H + m) { e.y = -m; e.x = rand(0, R.W); }
       emitTrail(e);
@@ -217,8 +255,23 @@
 
   function wander(e, t) {
     if (species === 'jelly') e.target = -Math.PI / 2 + rand(-0.35, 0.35) + 0.18 * Math.sin(t * 0.4 + e.seed * 3);
+    else if (species === 'cranes') e.target = FLIGHT + e.baseOff * 0.13 + 0.08 * Math.sin(t * 0.5 + e.seed * 2);
     else e.target = e.heading + rand(-1, 1) * Math.PI * 0.9;
-    e.retargetAt = t + rand(2.5, 6);
+    e.retargetAt = t + (species === 'cranes' ? rand(0.8, 1.6) : rand(2.5, 6));
+  }
+
+  // Boids-style separation: the heading to steer for this frame (e.target itself is left alone, so the push stays soft).
+  function separate(e, weight) {
+    const minD = 165 * R.dpr * (R.W / R.dpr < 640 ? 0.72 : 1);
+    let sx = 0, sy = 0;
+    for (const o of animals) {
+      if (o === e) continue;
+      const dx = e.x - o.x, dy = e.y - o.y, d = Math.hypot(dx, dy);
+      if (d > 0 && d < minD) { const f = (1 - d / minD) / d; sx += dx * f; sy += dy * f; }
+    }
+    if (!sx && !sy) return e.target;
+    const w = 1.6 * weight;
+    return Math.atan2(Math.sin(e.target) + sy * w, Math.cos(e.target) + sx * w);
   }
 
   function emitTrail(e) {
@@ -268,10 +321,10 @@
       data[p] = FOOD[0] * f.tint; data[p + 1] = FOOD[1] * f.tint; data[p + 2] = FOOD[2] * f.tint; data[p + 3] = 255 * a;
     }
     loCtx.putImageData(R.img, 0, 0);
+    ctx.globalAlpha = 1;
     ctx.clearRect(0, 0, R.W, R.H);
     ctx.imageSmoothingEnabled = false;
     ctx.drawImage(R.lo, 0, 0, cols * cell, rows * cell);
-    ctx.font = R.font; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     const covered = (i, j) => i >= 0 && j >= 0 && i < cols && j < rows && data[(j * cols + i) * 4 + 3] > 128;
     for (const tr of trails) if (!covered(tr.i, tr.j)) text(tr.ch, tr.i, tr.j, tr.color, tr.life * 0.55);
     for (const g of glyphs) if (!covered(g.i, g.j)) text(g.ch, g.i, g.j, g.c, g.a);
@@ -286,12 +339,28 @@
     }
     if (!canvas.classList.contains('ready')) canvas.classList.add('ready');
     frames++;
-    status.mode = species; status.paused = scene === 'pause'; status.frames = frames;
+    status.mode = species; status.frames = frames;
   }
 
+  // Glyph atlas: each character/colour pair is drawn once to a small canvas and then stamped with drawImage and a
+  // per-glyph globalAlpha, which is far cheaper than shaping text with fillText for every cell on every frame.
+  // Bounded: about 15 characters x 12 colours. Cleared when the font size changes (resize) or the font loads.
+  const rgb = new WeakMap(), atlas = new Map();
   function text(ch, i, j, c, a) {
-    ctx.fillStyle = `rgba(${c[0] | 0},${c[1] | 0},${c[2] | 0},${a.toFixed(3)})`;
-    ctx.fillText(ch, i * R.cell + R.cell / 2, j * R.cell + R.cell / 2);
+    let css = rgb.get(c);
+    if (!css) { css = `rgb(${c[0] | 0},${c[1] | 0},${c[2] | 0})`; rgb.set(c, css); }
+    const key = ch + css;
+    let g = atlas.get(key);
+    if (!g) {
+      g = document.createElement('canvas');
+      g.width = g.height = Math.ceil(R.cell * 1.5);
+      const x = g.getContext('2d');
+      x.font = R.font; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = css;
+      x.fillText(ch, g.width / 2, g.height / 2);
+      atlas.set(key, g);
+    }
+    ctx.globalAlpha = a;
+    ctx.drawImage(g, i * R.cell + (R.cell - g.width) / 2, j * R.cell + (R.cell - g.height) / 2);
   }
 
   function rasterize(e, data) {
@@ -314,7 +383,7 @@
   }
 
   // ---- loop and controls ----
-  const running = () => scene !== 'pause' && !document.hidden && onScreen && !still.matches;
+  const running = () => !document.hidden && onScreen && !still.matches;
   function frame(now) {
     raf = 0;
     if (!running()) return;
@@ -327,28 +396,21 @@
   const stopLoop = () => { if (raf) cancelAnimationFrame(raf); raf = 0; };
   const drawStill = () => { if (R.W) { for (const e of animals) e.fade = 1; step(0); render(); } };
 
-  function setScene(name, save) {
-    scene = name;
-    if (name !== 'pause' && name !== species) populate(name);
-    if (switcher) switcher.querySelectorAll('[data-scene]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.scene === name)));
-    if (save) { try { localStorage.setItem(KEY, name); } catch (err) { /* storage blocked: the choice lasts this visit */ } }
-    if (running()) start(); else { stopLoop(); drawStill(); }
+  // one animal per page load, never the same as last time; ?hero=koi|jelly|cranes forces one (not saved)
+  let pick = (/[?&]hero=(\w+)/.exec(location.search) || [])[1];
+  if (!ANIMALS.includes(pick)) {
+    let prev = null;
+    try { prev = localStorage.getItem(KEY); } catch (err) { /* storage blocked: any animal */ }
+    const choices = ANIMALS.filter(a => a !== prev);
+    pick = choices[(Math.random() * choices.length) | 0];
+    try { localStorage.setItem(KEY, pick); localStorage.removeItem('hero-scene'); } catch (err) { /* storage blocked: no memory of the last animal */ }   // hero-scene: retired switcher key
   }
-
-  let initial = (/[?&]hero=(\w+)/.exec(location.search) || [])[1];
-  const fromUrl = SCENES.includes(initial);
-  if (!fromUrl) { try { initial = localStorage.getItem(KEY); } catch (err) { initial = null; } }
-  if (!SCENES.includes(initial)) initial = 'koi';
 
   let ready = false;
   function init() {   // runs the first time the canvas has a size (normally at once)
     ready = true;
-    populate(initial === 'jelly' ? 'jelly' : 'koi');
-    if (switcher) {
-      switcher.hidden = false;
-      switcher.addEventListener('click', ev => { const b = ev.target.closest('[data-scene]'); if (b) setScene(b.dataset.scene, true); });
-    }
-    setScene(initial, false);
+    populate(pick);
+    if (running()) start(); else drawStill();
   }
   const onResize = () => { if (!resize()) return; if (!ready) init(); else if (!running()) drawStill(); };
   (function watchDensity() {   // moving to a screen with another pixel density re-sizes the buffer
@@ -361,7 +423,7 @@
   // Clicks anywhere over the canvas (it spans the full width) feed or startle, except on controls, text and the card.
   document.addEventListener('pointerdown', ev => {
     if (!ready || ev.button !== 0 || !running()) return;
-    if (ev.target.closest('header, a, button, input, select, textarea, label, summary, .focus, [data-scenes], .lede, #intro-h')) return;
+    if (ev.target.closest('header, a, button, input, select, textarea, label, summary, .focus, .lede, #intro-h')) return;
     const r = canvas.getBoundingClientRect();
     if (ev.clientX < r.left || ev.clientX > r.right || ev.clientY < r.top || ev.clientY > r.bottom) return;
     const x = (ev.clientX - r.left) * R.dpr, y = (ev.clientY - r.top) * R.dpr;
@@ -370,5 +432,5 @@
   new IntersectionObserver(es => { onScreen = es[0].isIntersecting; if (running()) start(); else stopLoop(); }).observe(hero);
   document.addEventListener('visibilitychange', () => { if (running()) start(); else stopLoop(); });
   still.addEventListener('change', () => { if (running()) start(); else { stopLoop(); drawStill(); } });
-  if (document.fonts) document.fonts.ready.then(() => { if (ready && !running()) drawStill(); });
+  if (document.fonts) document.fonts.ready.then(() => { atlas.clear(); if (ready && !running()) drawStill(); });
 })();

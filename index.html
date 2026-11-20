@@ -9,7 +9,6 @@
   {%- assign _cfr = site.data.codeforces.rating %}
   <p class="lede">First-year Computer Science student at the University of Nottingham. Documenting my climb {% if site.data.codeforces.status == "ok" and _cfr %}from {{ _cfr }} {% endif %}to an {{ site.data.roadmap.goal | default: 1800 }} Codeforces rating.</p>
   <p class="cta" data-enter><a class="btn" href="#index">Browse problems</a>{% if latest %}<a class="btn quiet" href="{{ latest.url | relative_url }}">Latest write-up</a>{% endif %}</p>
-  <div class="scene-switch glass-chip" role="group" aria-label="Background animation" data-scenes hidden><button type="button" data-scene="koi" aria-pressed="true">Koi</button><button type="button" data-scene="jelly" aria-pressed="false">Jellyfish</button><button type="button" data-scene="pause" aria-pressed="false">Pause</button></div>
   </div>
   {% include focus-card.html %}
 </section>

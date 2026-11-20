@@ -9,7 +9,7 @@
 
 /* ---------- tokens ---------- */
 :root {
-  --bg: #09090B; --spot: rgb(255 255 255 / .06); --tile: #101013; --tile-2: #16161A;
+  --bg: #0B0C0E; --tile: #101013; --tile-2: #16161A;
   --text: #FAFAFA; --text-2: #A1A1AA; --text-3: #8A8A93;
   --hair: rgb(255 255 255 / .08); --hair-2: rgb(255 255 255 / .14);
   --spec: inset 0 1px 0 rgb(255 255 255 / .06);
@@ -25,10 +25,19 @@
   --chip-rim: inset 0 1px 0 rgb(255 255 255 / .18), 0 1px 2px rgb(0 0 0 / .35);
   /* the hero animals canvas (assets/js/hero-animals.js) */
   --animals-alpha: .32; --hero-text-2: #D4D4D8;
+  /* ambient glow behind the whole site (body::before): sky, amber and indigo, all faint */
+  --ambient: radial-gradient(ellipse 80% 50% at 72% 8%, rgb(56 189 248 / .055), transparent 65%),
+    radial-gradient(ellipse 70% 45% at 15% 42%, rgb(245 158 11 / .035), transparent 65%),
+    radial-gradient(ellipse 80% 55% at 80% 78%, rgb(99 102 241 / .045), transparent 70%);
+  /* machined metal for the hero focus card */
+  --metal: linear-gradient(145deg, #1C1D21 0%, #131417 50%, #191A1E 100%);
+  --metal-rim: rgb(255 255 255 / .09);
+  --metal-shadow: inset 0 1px 0 rgb(255 255 255 / .14), 0 12px 32px rgb(0 0 0 / .45);
+  --metal-grain: rgb(255 255 255 / .014);
   color-scheme: dark;
 }
 :root[data-theme="light"] {
-  --bg: #FAFAFA; --spot: rgb(9 9 11 / .035); --tile: #FFFFFF; --tile-2: #F4F4F5;
+  --bg: #F8F9FB; --tile: #FFFFFF; --tile-2: #F4F4F5;
   --text: #09090B; --text-2: #52525B; --text-3: #6B6B74;  /* 4.8:1 on the lightest grey tile */
   --hair: rgb(9 9 11 / .08); --hair-2: rgb(9 9 11 / .14);
   --spec: inset 0 1px 0 rgb(255 255 255 / .9), 0 1px 2px rgb(9 9 11 / .04);
@@ -42,6 +51,13 @@
   --chip-border: rgb(9 9 11 / .12); --chip-border-hover: rgb(9 9 11 / .22);
   --chip-rim: inset 0 1px 0 rgb(255 255 255 / .95), 0 1px 2px rgb(9 9 11 / .08);
   --animals-alpha: .24; --hero-text-2: var(--text-2);
+  --ambient: radial-gradient(ellipse 80% 50% at 72% 8%, rgb(14 165 233 / .06), transparent 65%),
+    radial-gradient(ellipse 70% 45% at 15% 42%, rgb(245 158 11 / .045), transparent 65%),
+    radial-gradient(ellipse 80% 55% at 80% 78%, rgb(99 102 241 / .045), transparent 70%);
+  --metal: linear-gradient(145deg, #F6F7F9 0%, #EBEDF0 50%, #F3F4F6 100%);
+  --metal-rim: rgb(0 0 0 / .09);
+  --metal-shadow: inset 0 1px 0 rgb(255 255 255 / .95), 0 12px 32px rgb(9 9 11 / .08);
+  --metal-grain: rgb(9 9 11 / .012);
   color-scheme: light;
 }
 :root {
@@ -56,9 +72,12 @@
 /* ---------- base ---------- */
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--nav-h) + var(--s4)); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; background: var(--bg); }
-/* light from above: one faint spotlight at the top of the page, scrolling with it (no fixed attachment, no repaint) */
-body { margin: 0; background: var(--bg) radial-gradient(ellipse 80% 50% at 50% -20%, var(--spot), transparent) no-repeat; background-size: 100% 60rem;
+/* ambient glow: one fixed layer behind everything (composited once, no repaint while scrolling); html paints the
+   base colour and body stays transparent so the layer is not covered */
+html { background-color: var(--bg); }
+body { margin: 0;
   color: var(--text); font: 400 1rem/1.6 var(--sans); letter-spacing: -.011em; }
+body::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background-color: var(--bg); background-image: var(--ambient); }
 ::selection { background: color-mix(in srgb, var(--text) 22%, transparent); color: var(--text); }
 a { color: var(--text); text-decoration: underline; text-decoration-color: var(--hair-2); text-decoration-thickness: 1px; text-underline-offset: .22em; transition: text-decoration-color var(--t1) var(--ease), color var(--t1) var(--ease); }
 @media (hover: hover) { a:hover { text-decoration-color: currentColor; } }
@@ -207,7 +226,7 @@ a.rb { text-decoration: none; }
   -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent 100%); mask-image: linear-gradient(to bottom, #000 72%, transparent 100%); transition: opacity 1.2s var(--ease); }
 .hero-bg.ready { opacity: var(--animals-alpha); }
 
-/* Liquid Glass, only on small chips over moving or translucent content (brand pill, scene switcher, focus badges);
+/* Liquid Glass, only on small chips over moving or translucent content (brand pill, focus badges);
    the chips on matte panels use the same rim without the blur (see kbd, .rb, .chip, .tag, .kc) */
 .glass-chip { border: 1px solid var(--chip-border); background: var(--chip-bg); box-shadow: var(--chip-rim);
   -webkit-backdrop-filter: blur(8px) saturate(130%); backdrop-filter: blur(8px) saturate(130%); }
@@ -216,15 +235,11 @@ header.site .glass-chip, .focus .glass-chip { -webkit-backdrop-filter: none; bac
 .glass-chip--interactive:focus-visible { background: var(--chip-bg-hover); border-color: var(--chip-border-hover); }
 .glass-chip--interactive:active { background: var(--chip-bg-on); }
 
-/* scene switcher: Koi | Jellyfish | Pause, a segmented glass pill (shown by hero-animals.js) */
-.scene-switch { display: inline-flex; gap: 2px; margin-top: var(--s5); padding: 3px; border-radius: var(--r-pill); }
-.scene-switch[hidden] { display: none; }
-.scene-switch button { min-height: 2.25rem; padding: 0 .85rem; border: 0; border-radius: var(--r-pill); background: none; color: var(--hero-text-2); font: 500 .8125rem var(--sans); cursor: pointer; }
-@media (hover: hover) { .scene-switch button:hover { color: var(--text); } }
-.scene-switch button[aria-pressed="true"] { background: var(--chip-bg-on); box-shadow: var(--chip-rim); color: var(--text); }
-
-/* Current focus: one matte card wired to the data files (top unsolved problem, rating progress, streak, last sync) */
-.focus { display: flex; flex-direction: column; gap: var(--s4); padding: var(--s5); border: 1px solid var(--hair); border-radius: var(--r-tile); background: var(--tile); box-shadow: var(--spec); }
+/* Current focus: one brushed-metal card wired to the data files (top unsolved problem, rating progress, streak, last sync) */
+.focus { display: flex; flex-direction: column; gap: var(--s4); padding: var(--s5); border: 1px solid var(--metal-rim); border-radius: var(--r-tile);
+  background: repeating-linear-gradient(90deg, var(--metal-grain) 0 1px, transparent 1px 3px), var(--metal); box-shadow: var(--metal-shadow); }
+/* the lightest grey stays >= 4.5:1 on the light aluminium sheen */
+:root[data-theme="light"] .focus { --text-3: #5E5E66; }
 .focus-top { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); margin: 0; }
 .focus-label { font-size: .75rem; font-weight: 500; color: var(--text-3); }
 .focus-badge { display: inline-flex; align-items: center; gap: .4rem; min-height: 1.5rem; padding: 0 .55rem; border-radius: var(--r-pill); font: 500 11px var(--mono); color: var(--text-2); white-space: nowrap; }
@@ -694,7 +709,6 @@ ol.months { list-style: none; display: grid; grid-template-columns: repeat(auto-
   .hist { padding-inline: var(--s4); }
 }
 
-
 /* ---------- motion (merged from the motion builder) ---------- */
 /* Lenis (assets/js/lib/lenis.min.js) recommended rules */
 html.lenis, html.lenis body { height: auto; }
@@ -707,7 +721,6 @@ html.lenis, html.lenis body { height: auto; }
    .motion so reduced-motion and no-JS visitors keep the hairline). Replaces nothing: it overrides border-bottom-color. */
 .motion header.site { transition: border-bottom-color var(--t2) var(--ease); }
 .motion header.site:not([data-scrolled]) { border-bottom-color: transparent; }
-
 
 /* Reading progress on write-ups (post.js adds the element). Thin, transform-only, below the sticky header. */
 .read-progress { position: fixed; inset: 0 0 auto 0; z-index: 21; height: 1px; background: var(--text); transform: scaleX(0); transform-origin: 0 50%; pointer-events: none; }
@@ -1442,11 +1455,11 @@ html:not(.js) .idx-hint { display: none; }
   html:root:root:root {
     --bg: #fff; --tile: #fff; --tile-2: #fff; --text: #000; --text-2: #333; --hair: #999; --fill: transparent; --fill-2: transparent;
     --field: #555; --accent: #000; --accent-fill: #000; --accent-display: #000; --on-accent-fill: #fff; --text-3: #333; --hair-2: #999;
-    --focus: #000; --spec: none; --spot: transparent; --amber-wash-top: transparent;
+    --focus: #000; --spec: none; --amber-wash-top: transparent;
   }
   html, body { background: #fff; color: #000; }
   body { font-size: 11pt; line-height: 1.45; }
-  header.site, footer.site, .skip, canvas, .hero-bg, .read-progress, .theme-toggle, .btn, .copy, .check, .pn, .more, .stats-more, .activity-more { display: none !important; }
+  body::before, header.site, footer.site, .skip, canvas, .hero-bg, .read-progress, .theme-toggle, .btn, .copy, .check, .pn, .more, .stats-more, .activity-more { display: none !important; }
   .frame { max-width: none; padding-inline: 0; }
   .tile, .panel, .spec, .takeaway, .hist, .dayview, .progress { background: none !important; box-shadow: none !important; border-radius: 0; }
   .tile, .panel { padding: 0; }
