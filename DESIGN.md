@@ -8,8 +8,8 @@ Jekyll 3.10 + one stylesheet (`assets/css/style.css`) + vanilla JS. This file is
 ## 1. Principles
 
 1. **One signal colour.** Amber means progress toward 1800 and nothing else: the rating-progress bar, the climb
-   step-line (and the gradient under it), peak heatmap cells, the hardest-solved series on /stats/ and the peak step
-   of the brand mark. Never on buttons, links, tags, headings or badges.
+   step-line (and the gradient under it), peak heatmap cells, the hardest-solved series on /stats/ and the brand
+   mark's wedge while the brand link is hovered or focused. Never on buttons, links, tags, headings or badges.
 2. **Light comes from above.** A faint top spotlight on the canvas and a 1px inset highlight on every card. No drop
    shadows on dark, no glows, no gradients except the spotlight and the amber fill under the climb line.
 3. **Monochrome everything else.** Zinc greys, white, hairlines. Status is shape and wording, never hue.
@@ -119,13 +119,16 @@ Hairlines are always 1px; never stack a border and a shadow ring.
 
 ## 6. Components
 
-**Brand mark.** `_includes/logo-mark.html`: a 24×24 inline SVG, `aria-hidden`, before the site name in the header.
-A rounded tile (`rx 6`, `--fill` with a 1.5px `--hair-2` stroke) holding three ascending steps: the two lower steps
-`currentColor`, the peak step `--accent-display` (the climb to 1800, the one place amber appears in the chrome).
-On hover or keyboard focus of the brand link the peak lifts 1.5px in 150ms, only under
-`prefers-reduced-motion: no-preference`. `assets/favicon.svg` repeats it with fixed colours (dark tile `#101013`,
-steps `#FAFAFA`, peak `#F59E0B`, light `#FFF`/`#09090B`/`#B45309` via `prefers-color-scheme`). The PNG icons
-(32, 180, 192, 512, maskable 512 on `#09090B`) are rendered from the same drawing.
+**Brand mark.** `_includes/logo-mark.html`: a 24×24 inline SVG, `aria-hidden`, before the site name in the header,
+1.375rem square, no container. A geometric Z built from two filled shapes on the 24-unit grid (glyph 3 to 21): a "7"
+(top bar 4.75 deep plus a diagonal 7 wide running to the baseline) and a right-angled wedge for the bottom bar,
+separated by a 1.6-unit diagonal cut parallel to the stroke. Both shapes are `currentColor` (`--text`). On hover or
+keyboard focus of the brand link the wedge turns `--accent-display` in 140ms (`--ease`) and, only under
+`prefers-reduced-motion: no-preference`, slides 0.6px away from the cut. Forced colours keep both shapes
+`currentColor`. `assets/favicon.svg` is the same drawing without a container (viewBox 2 2 20 20), `#09090B`, or
+`#FAFAFA` under `prefers-color-scheme: dark`. The PNG icons (32, 180, 192, 512, and maskable 512 with the glyph inside
+the safe zone) are the `#FAFAFA` Z on full-bleed `#09090B`, because platforms put a tile behind app icons anyway;
+`assets/img/og-card.png` uses the same mark.
 
 **Navbar.** Sticky, height 3.25rem, glass, bottom hairline. Brand left; 14px links in `--text-2`, current link
 `--text` with a 1px × 16px-wide `--text` underline indicator (not amber); ⌘K search pill; theme toggle.
