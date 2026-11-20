@@ -1219,6 +1219,38 @@ html:not(.js) .idx-hint { display: none; }
   .idx-acts .btn { flex: 0 1 auto; }
 }
 
+/* ---------- overnight Q: quiz stage and recall (fragments/Q.css) ---------- */
+/* ---------- Q: quiz keycap choices (every quiz), /quiz/ flashcard stage, summary card ---------- */
+/* Each choice is a key: the radio covers the whole row (still the focusable, checkable control) and the numbered
+   keycap shows the state. Rows stay >= 3rem tall. */
+.choice { position: relative; grid-template-columns: auto minmax(0, 1fr) auto; }
+.choice input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; appearance: none; border: 0; border-radius: 0; background: none; outline: none; cursor: inherit; }
+.q-cap { display: inline-grid; place-items: center; min-width: 1.75rem; height: 1.75rem; padding: 0 .4rem;
+  border: 1px solid var(--hair-2); border-bottom-width: 2px; border-radius: var(--r-key); background: var(--fill);
+  color: var(--text-2); font: 500 .8125rem/1 var(--mono); font-variant-numeric: tabular-nums;
+  transition: background-color var(--t1) var(--ease), color var(--t1) var(--ease), border-color var(--t1) var(--ease); }
+@media (hover: hover) { .choice:not(:has(input:disabled, input:checked)):hover .q-cap { color: var(--text); border-color: var(--field); } }
+.choice:has(input:checked) .q-cap, .q .choice.correct .q-cap { background: var(--accent-fill); border-color: var(--accent-fill); color: var(--on-accent-fill); }
+.q .choice.wrong .q-cap { background: var(--fill); border-color: var(--hair-2); color: var(--text-2); border-style: dashed; }
+@media screen and (prefers-reduced-motion: no-preference) {
+  .q-cap { transition: translate var(--t-release, 140ms) var(--ease), border-bottom-width var(--t-release, 140ms) var(--ease),
+    background-color var(--t1) var(--ease), color var(--t1) var(--ease), border-color var(--t1) var(--ease); }
+  .choice:not(:has(input:disabled)):active .q-cap { translate: 0 1px; border-bottom-width: 1px; transition-duration: var(--t-press, 80ms); }
+}
+@media (forced-colors: active) { .choice:has(input:checked) .q-cap, .q .choice.correct .q-cap { forced-color-adjust: none; background: Highlight; color: HighlightText; border-color: Highlight; } }
+
+/* /quiz/: one stage per question, the progress bar on top, a summary card at the end */
+.quizpage .quizbar { padding: var(--s3) var(--s4); border: 1px solid var(--hair); border-radius: var(--r-card); background: var(--tile); box-shadow: var(--spec); }
+.quizpage .meter { height: 6px; border-radius: 3px; }
+.quizpage [data-mixed] .q { padding: clamp(1rem, 3vw, 1.75rem); border: 1px solid var(--hair); border-radius: var(--r-tile); background: var(--tile); box-shadow: var(--spec); }
+.quizpage [data-mixed] .choices { background: var(--bg); }
+.quizpage [data-mixed] .feedback { background: var(--tile-2); }
+.quizpage .q .qnum .qn { font-family: var(--mono); letter-spacing: 0; }
+.quizpage .score { padding: clamp(1.25rem, 3vw, 2rem); border-radius: var(--r-tile); }
+.quizpage .score h2 { font-size: clamp(1.5rem, 3.5vw, 2rem); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.score:focus { outline: 2px solid var(--focus); outline-offset: 3px; }
+.score:focus:not(:focus-visible) { outline: none; }
+
 /* ---------- overnight R: reader pages and the /stats/ dashboard (fragments/R.css) ---------- */
 /* ==== R: reader pages (rd-) ==== */
 /* Two panes from 64rem: sticky rail | reading column. Below, one column: title, rail, text. */
