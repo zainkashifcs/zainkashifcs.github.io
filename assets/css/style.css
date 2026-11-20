@@ -113,7 +113,6 @@ footer.site a { color: var(--text-2); text-decoration-color: transparent; }
 .btn.quiet { background: var(--fill); border-color: var(--hair-2); color: var(--text); }
 @media (hover: hover) { .btn.quiet:hover { background: var(--fill-2); } }
 .btn:disabled { opacity: .45; cursor: not-allowed; }
-.btn:not(:disabled):active, .chip:active, .copy:active { scale: .97; }
 /* text link with a chevron */
 .more { color: var(--text); font-weight: 500; text-decoration: none; white-space: nowrap; }
 .more::after { content: "\203A"; display: inline-block; margin-inline-start: .3em; font-size: 1.15em; line-height: 1; color: var(--text-3); transition: translate var(--t2) var(--ease), color var(--t1) var(--ease); }
@@ -759,11 +758,6 @@ html.lenis, html.lenis body { height: auto; }
   background: var(--glass); -webkit-backdrop-filter: saturate(1.4) blur(16px); backdrop-filter: saturate(1.4) blur(16px); color: var(--text); border: 1px solid var(--hair-2); box-shadow: var(--spec), 0 24px 64px -24px rgb(0 0 0 / .6); overflow: hidden; }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .cmdk { background: color-mix(in srgb, var(--tile) 96%, transparent); } }
 .cmdk::backdrop { background: rgb(0 0 0 / .55); }
-@media (prefers-reduced-motion: no-preference) {
-  .cmdk[open] { animation: cmdk-in var(--t2) var(--ease); }
-  .cmdk[open]::backdrop { animation: cmdk-fade var(--t2) var(--ease); }
-}
-@keyframes cmdk-in { from { opacity: 0; transform: translateY(-6px) scale(.985); } }
 @keyframes cmdk-fade { from { opacity: 0; } }
 
 .cmdk-bar { display: flex; align-items: center; gap: var(--s3); padding: 0 var(--s3) 0 var(--s4); border-bottom: 1px solid var(--hair); }
@@ -993,6 +987,81 @@ html:not(.js) .idx-hint { display: none; }
   .stats-totals { grid-template-columns: minmax(0, 1fr); }
   .stats-totals .stat-lead { grid-column: auto; }
 }
+
+/* ---------- overnight M: motion engine, shared utilities, palette open/close (fragments/M.css) ---------- */
+/* ---------- M: motion system (assets/js/motion.js, palette.js) ----------
+   Every rule that hides or moves content sits inside `@media screen and (prefers-reduced-motion: no-preference)` and,
+   for reveals, under html.reveal-on (set by motion.js only). Print, no-JS and reduced motion always show everything.
+   Only transform / opacity / clip-path / stroke-dashoffset animate (plus the card's 1px border light). */
+:root { --ease-exit: cubic-bezier(.4, 0, 1, 1); --t-open: 180ms; --t-close: 115ms; --t-press: 80ms; --t-release: 140ms; --t-exit: 180ms; }
+
+/* popovers (hint drawers, chart tooltips): toggle .is-open, never [hidden]; set --origin-x/--origin-y to the trigger */
+.pop { transform-origin: var(--origin-x, 50%) var(--origin-y, 0%); }
+.pop:not(.is-open) { visibility: hidden; opacity: 0; pointer-events: none; }
+.pop.is-open { visibility: visible; opacity: 1; pointer-events: auto; }
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  /* reveals: hidden only while armed and out of view; :focus-within keeps a focused descendant visible */
+  .reveal-on :is([data-reveal], .section-head > *):not(.is-in):not(:focus-within) { opacity: 0; transform: translateY(14px) scale(.985);
+    transition: opacity var(--t-exit) var(--ease-exit), transform var(--t-exit) var(--ease-exit); }
+  .reveal-on :is([data-reveal], .section-head > *):is(.is-in, :focus-within) { transition: opacity var(--t-reveal) var(--ease), transform var(--t-reveal) var(--ease);
+    transition-delay: calc(var(--index, 0) * var(--stagger, 35ms)); }
+
+  /* the climb chart: the amber step line and its wash wipe in left to right on every entry. A clip-path wipe, not
+     stroke-dashoffset: with vector-effect: non-scaling-stroke, Chromium, Firefox and WebKit all measure dashes in screen
+     pixels and ignore pathLength (checked 20 Nov 2026, overnight/M/pathlength.py), so a dash draw turns dotted. */
+  .reveal-on .ladder-plot:not(.is-in) .best { clip-path: inset(-4px 100% -4px -4px); transition: clip-path var(--t-exit) var(--ease-exit); }
+  .reveal-on .ladder-plot.is-in .best { clip-path: inset(-4px -4px -4px -4px); transition: clip-path 720ms var(--ease) 120ms; }
+
+  /* the activity calendar wipes in column by column as one block (no per-cell work); the -6px keeps focus rings */
+  .reveal-on .mo-wipe:not(.is-in) > .grid { clip-path: inset(-6px 100% -6px -6px); transition: clip-path var(--t-exit) var(--ease-exit); }
+  .reveal-on .mo-wipe.is-in > .grid { clip-path: inset(-6px -6px -6px -6px); transition: clip-path 420ms var(--ease) 60ms; }
+
+  /* homepage hero entrance, once per tab (motion.js sets html.intro); the headline is never hidden */
+  .intro .hero [data-enter] { animation: enter-rise 600ms var(--ease) both; }
+  .intro .hero [data-enter] ~ [data-enter] { animation-delay: 90ms; }
+
+  /* Road to 1800 card: scroll parallax on `translate` (tilt owns the inline transform) and a light on the border */
+  .motion [data-tilt] { translate: 0 calc(var(--par, 0) * 8px); }
+  .motion .r1800::after { content: ""; position: absolute; inset: 0; z-index: 2; padding: 1px; border-radius: inherit; pointer-events: none;
+    background: linear-gradient(115deg, transparent 40%, rgb(255 255 255 / .5) 50%, transparent 60%) no-repeat;
+    background-size: 300% 100%; background-position: calc(100% - var(--sweep, 0) * 100%) 0;
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+  :root[data-theme="light"].motion .r1800::after { background-image: linear-gradient(115deg, transparent 40%, rgb(255 255 255 / .95) 50%, transparent 60%); }
+
+  /* section depth: zone wrappers settle from .985 to full size as they reach the viewport centre (never #index) */
+  @supports (animation-timeline: view()) {
+    [data-depth]:not(#index) { animation: depth linear both; animation-timeline: view(); animation-range: entry 0% cover 50%; }
+  }
+
+  /* tactile press on high-frequency controls: 80ms in, 140ms spring back */
+  :is(.tactile, .btn, .chip, [data-seg], .idx-x, .q-actions button, [data-copy], .palette-btn, .theme-toggle) {
+    transition: scale var(--t-release) var(--ease), background-color var(--t1) var(--ease), color var(--t1) var(--ease), border-color var(--t1) var(--ease), opacity var(--t1) var(--ease); }
+  :is(.tactile, .btn, .chip, [data-seg], .idx-x, .q-actions button, [data-copy], .palette-btn, .theme-toggle):active:not(:disabled) {
+    scale: .975; transition-duration: var(--t-press), var(--t1), var(--t1), var(--t1), var(--t1); }
+
+  .fx-celebrate { animation: fx-pop 420ms var(--ease); }
+
+  .pop { transform: scale(.96); transition: opacity var(--t-close) var(--ease-exit), transform var(--t-close) var(--ease-exit), visibility 0s var(--t-close); }
+  .pop.is-open { transform: none; transition: opacity var(--t-open) var(--ease), transform var(--t-open) var(--ease), visibility 0s; }
+  .glide { transition: translate 180ms cubic-bezier(.34, 1.25, .64, 1); }
+
+  details.drawer::details-content { opacity: 0; transform: scale(.98); transform-origin: var(--origin-x, 0) 0;
+    transition: opacity var(--t-close) var(--ease-exit), transform var(--t-close) var(--ease-exit), content-visibility var(--t-close) allow-discrete; }
+  details.drawer[open]::details-content { opacity: 1; transform: none; transition-duration: var(--t-open); transition-timing-function: var(--ease); }
+
+  /* command palette: grows from its trigger (palette.js sets --origin-x/-y); the 115ms close is WAAPI in palette.js */
+  .cmdk { transform-origin: var(--origin-x, 50%) var(--origin-y, 0%); }
+  .cmdk[open] { animation: mo-cmdk-in var(--t-open) var(--ease); }
+  .cmdk[open]::backdrop { animation: cmdk-fade var(--t-open) var(--ease); }
+}
+@media (prefers-reduced-motion: reduce) { :is(.btn, .chip, .copy, .palette-btn):active { scale: none; } }
+@keyframes enter-rise { from { opacity: 0; transform: translateY(16px); } }
+@keyframes depth { from { transform: scale(.985); } to { transform: none; } }
+@keyframes fx-pop { 40% { transform: scale(1.035); } }
+@keyframes mo-cmdk-in { from { opacity: 0; transform: scale(.96); } }
+@media (forced-colors: active) { .r1800::after { display: none; } }
 
 /* ---------- print: write-ups, problem pages and /stats/ as clean black-on-white single columns ---------- */
 @media print {
