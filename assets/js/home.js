@@ -67,6 +67,21 @@
     }
   }
 
+  // ---- the climb chart draws in left to right every time it enters the viewport, scrolling down or back up.
+  // Hysteresis: it draws once a quarter is visible and resets only when it is fully out (20px inside each edge).
+  // Never unobserved. Without .motion (reduced motion, or the head script did not run) nothing is armed, so the chart
+  // simply stays drawn.
+  const draw = document.querySelector('.ladder-plot');
+  if (draw && document.documentElement.classList.contains('motion') && 'IntersectionObserver' in window) {
+    const r = draw.getBoundingClientRect();
+    if (r.top < innerHeight && r.bottom > 0) draw.classList.add('is-drawn');   // already on screen: no flash
+    draw.classList.add('draw-armed');
+    new IntersectionObserver(([e]) => {
+      if (e.intersectionRatio >= 0.25) draw.classList.add('is-drawn');
+      else if (!e.isIntersecting) draw.classList.remove('is-drawn');
+    }, { rootMargin: '-20px 0px -20px 0px', threshold: [0, 0.25] }).observe(draw);
+  }
+
   // ---- the climb chart: one tooltip that glides between dots, origin at the dot; Esc hides it (WCAG 1.4.13)
   // until the pointer or focus leaves that dot. (Moved here from index.js.)
   const plot = document.querySelector('.ladder-plot');

@@ -319,17 +319,36 @@ header.site .glass-chip, .focus .glass-chip { -webkit-backdrop-filter: none; bac
 .vel-line { margin: var(--s4) 0 0; padding-top: var(--s3); border-top: 1px solid var(--hair); font-size: .8125rem; line-height: 1.5; color: var(--text-2); font-variant-numeric: tabular-nums; }
 .vel-k { margin-inline-end: .4rem; color: var(--text); font-weight: 500; }
 
-/* the climb (built in _includes/ladder.html): dashed rank rules, an amber step line over a fading amber wash, and a
-   focusable dot per problem with a frosted tooltip */
-.ladder { margin: 0; min-width: 0; }
+/* the climb (built in _includes/ladder.html): a 5-problem rolling-average spline over a translucent wash, both painted
+   with a vertical altitude gradient (--g1 at 800 up to --g5 at the top), milestone pins with glass badges, and a
+   focusable point per problem on the curve with a frosted tooltip */
+.ladder-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s2) var(--s3); margin-bottom: var(--s4); }
+.ladder-tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); margin-inline-start: auto; }
+.ladder-goal { display: inline-flex; align-items: center; min-height: 1.75rem; padding: 0 .7rem; border-radius: var(--r-pill); color: var(--text); font: 500 .75rem/1 var(--mono); white-space: nowrap; }
+.ladder { margin: 0; min-width: 0;
+  /* "forged": brushed graphite at the base that heats through bronze into the site's amber at the peak */
+  --g1: #6E6E78; --g2: #A8A29E; --g3: #D08A2E; --g4: #F59E0B; --g5: #FCD34D; --wash: .2; }
+:root[data-theme="light"] .ladder { --g1: #8A8A93; --g2: #8C7B66; --g3: #B4691F; --g4: #B45309; --g5: #92400E; --wash: .16; }
+.ladder .g1 { stop-color: var(--g1); } .ladder .g2 { stop-color: var(--g2); } .ladder .g3 { stop-color: var(--g3); }
+.ladder .g4 { stop-color: var(--g4); } .ladder .g5 { stop-color: var(--g5); }
 .ladder-chart { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--s3); }
 .ladder-plot { position: relative; height: clamp(14rem, 28vw, 20rem); border-bottom: 1px solid var(--hair-2); }
 .rule { position: absolute; inset-inline: 0; height: 0; border-top: 1px dashed var(--hair-2); }
+.ladder .rule.rank { border-top-color: var(--field); }
+.ladder-draw { position: absolute; inset: 0; pointer-events: none; }
 .ladder .best { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.ladder .best .line { fill: none; stroke: var(--accent-display); stroke-width: 2; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
-.ladder .best .area { stroke: none; }
-.ladder .best .w0 { stop-color: var(--amber-wash-top); }
-.ladder .best .w1 { stop-color: var(--accent-display); stop-opacity: 0; }
+.ladder .best .line { fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.ladder .best .area { stroke: none; fill-opacity: var(--wash); }
+/* milestone pins: a dashed drop line from the problem's rating to the floor, a dot, and a glass badge above it */
+/* no z-index on .pin itself: the badges must stack above every pin's drop line, not just their own */
+.pin { --tint: var(--g4); position: absolute; bottom: 0; width: 0; pointer-events: none; }
+.pin.t-lo { --tint: var(--g1); } .pin.t-mid { --tint: var(--g3); }
+.pin::before { content: ""; position: absolute; top: 0; bottom: 0; left: -.5px; z-index: 1; border-left: 1px dashed var(--tint); opacity: .8; }
+.pin::after { content: ""; position: absolute; top: 0; left: 0; width: 9px; height: 9px; translate: -50% -50%; z-index: 2; border-radius: 50%; background: var(--tint); box-shadow: 0 0 0 2.5px var(--tile); }
+.pin-badge { position: absolute; z-index: 3; bottom: calc(100% + 10px); left: 0; translate: -50% 0; display: inline-flex; align-items: center; gap: .4rem; padding: 3px 9px; border-radius: var(--r-pill); color: var(--text); font: 500 11px/1.4 var(--mono); white-space: nowrap; }
+.pin-badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--tint); }
+.pin.end .pin-badge { translate: calc(-100% + 12px) 0; }
+.pin.start .pin-badge { translate: -12px 0; }
 /* each dot is a 24px-tall link, as wide as its column up to 24px, so neighbours never overlap (WCAG 2.5.8; where columns
    are narrower than 24px every problem is also linked from the index below: the equivalent-control exception) */
 .ladder-plot { container-type: inline-size; }
@@ -359,9 +378,12 @@ header.site .glass-chip, .focus .glass-chip { -webkit-backdrop-filter: none; bac
 .ladder-time { display: flex; justify-content: space-between; margin: .4rem 0 0; font: 500 11px/1.4 var(--mono); color: var(--text-3); font-variant-numeric: tabular-nums; }
 .ladder figcaption { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s5); margin-top: var(--s4); font-size: .8125rem; color: var(--text-2); text-align: start; }
 .ladder .key { display: inline-flex; align-items: center; gap: .45rem; }
-.ladder .key .pt { position: relative; width: 10px; height: 10px; margin: 0; flex: none; }
-.ladder .key .pt::before { inset: 0; width: auto; height: auto; translate: none; }
-.ladder .key .line { width: 1.25rem; height: 2px; border-radius: 2px; background: var(--accent-display); }
+.ladder .key .line { width: 1.5rem; height: 3px; border-radius: 2px; background: linear-gradient(90deg, var(--g1), var(--g3), var(--g5)); }
+.ladder .key .pin-key { width: 9px; height: 9px; border-radius: 50%; background: var(--g4); }
+.ladder-axis li.rank { color: var(--text-2); }
+/* the points sit on the curve and stay invisible until hovered or focused, so the line reads on its own */
+.ladder-plot .pt::before { scale: 0; }
+.ladder-plot .pt:is(:hover, :focus-visible)::before { scale: 1; }
 .ladder-note { flex-basis: 100%; color: var(--text-3); }
 
 /* ---------- problem ledger ---------- */
@@ -1076,11 +1098,13 @@ html:not(.js) .idx-hint { display: none; }
   .reveal-on :is([data-reveal], .section-head > *):is(.is-in, :focus-within) { transition: opacity var(--t-reveal) var(--ease), transform var(--t-reveal) var(--ease);
     transition-delay: calc(var(--index, 0) * var(--stagger, 35ms)); }
 
-  /* the climb chart: the amber step line and its wash wipe in left to right on every entry. A clip-path wipe, not
+  /* the climb chart: the curve, its wash and the milestone pins wipe in left to right each time the chart enters the
+     viewport (home.js toggles .is-drawn) and reset, without animating, once it has left. A clip-path wipe, not
      stroke-dashoffset: with vector-effect: non-scaling-stroke, Chromium, Firefox and WebKit all measure dashes in screen
-     pixels and ignore pathLength (checked 20 Nov 2026, overnight/M/pathlength.py), so a dash draw turns dotted. */
-  .reveal-on .ladder-plot:not(.is-in) .best { clip-path: inset(-4px 100% -4px -4px); transition: clip-path var(--t-exit) var(--ease-exit); }
-  .reveal-on .ladder-plot.is-in .best { clip-path: inset(-4px -4px -4px -4px); transition: clip-path 720ms var(--ease) 120ms; }
+     pixels and ignore pathLength (checked 20 Nov 2026, overnight/M/pathlength.py), so a dash draw turns dotted. The
+     -60px top inset keeps the pin badges uncut. */
+  .ladder-plot.draw-armed .ladder-draw { clip-path: inset(-60px 100% -8px -8px); }
+  .ladder-plot.draw-armed.is-drawn .ladder-draw { clip-path: inset(-60px -8px -8px -8px); transition: clip-path 900ms cubic-bezier(.22, 1, .36, 1); }
 
   /* the activity calendar wipes in column by column as one block (no per-cell work); the -6px keeps focus rings */
   .reveal-on .mo-wipe:not(.is-in) > .grid { clip-path: inset(-6px 100% -6px -6px); transition: clip-path var(--t-exit) var(--ease-exit); }
