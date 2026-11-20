@@ -1,0 +1,57 @@
+{%- comment -%}
+Current focus (homepage hero). Everything is read from the data files, with fallbacks:
+- the "boss fight" is the first entry of nu_rows (mastery-data.html, include it first) when it is not solved yet
+  (group 1); its one-line note comes from _data/focus.json "notes" by problem ID and is left out when absent;
+- the rating bar maps _data/codeforces.json "rating" onto 0..goal (_data/roadmap.json "goal", default 1800), with the
+  Codeforces rank floors as ticks; without cached Codeforces data it says so instead of drawing a bar;
+- the footer shows activity_stats "longest_streak" and the last solutions-repo commit synced (_data/sync_state.json).
+{%- endcomment -%}
+{%- assign _goal = site.data.roadmap.goal | default: 1800 -%}
+{%- assign _cf = site.data.codeforces -%}
+{%- assign _boss = nil -%}
+{%- assign _r0 = nu_rows | first -%}
+{%- if _r0 and _r0 != "" -%}{%- assign _f = _r0 | split: "~" -%}{%- if _f[0] == "1" -%}{%- assign _i = _f[4] | plus: 0 -%}{%- assign _boss = site.data.problems[_i] -%}{%- endif -%}{%- endif -%}
+<aside class="focus" aria-labelledby="focus-h">
+  <p class="focus-top"><span class="focus-label" id="focus-h">Current focus</span>{% if _boss %}<span class="focus-badge glass-chip"><i class="stx" aria-hidden="true"></i>Boss fight</span>{% endif %}</p>
+  {%- if _boss %}
+  {%- include rating.html pid=_boss.id rating=_boss.rating %}
+  <a class="focus-boss" href="{{ _boss.link }}"><span class="rb open">{{ _boss.id }}</span><span class="focus-name">{{ _boss.name | escape }}</span>{% if rating %}<span class="rk"><span class="vh">rated </span>{{ rating }}</span>{% endif %}<span class="vh"> (opens the problem on Codeforces)</span></a>
+  {%- if _boss.topics.size > 0 %}
+  <p class="tags">{% for g in site.data.topics %}{% for t in g.topics %}{% if _boss.topics contains t.id %}<span class="tag">{{ t.label }}</span>{% endif %}{% endfor %}{% endfor %}</p>
+  {%- endif %}
+  {%- assign _note = site.data.focus.notes[_boss.id] -%}
+  {%- if _note %}
+  <p class="focus-note">{{ _note | escape }}</p>
+  {%- endif %}
+  {%- assign _notes = _boss.post | default: _boss.page %}
+  <p class="focus-status">{{ _boss.status_label | default: "Attempted" }}{% if _boss.last_date %} {{ _boss.last_date | date: "%-d %b" }}{% endif %}, not solved yet.{% if _notes %} <a href="{{ _notes | relative_url }}">My notes</a>{% endif %}</p>
+  {%- else %}
+  <p class="focus-note">Nothing unsolved in the log right now. The roadmap has the next topics to practise.</p>
+  <p class="focus-status"><a href="{{ '/roadmap/' | relative_url }}">Roadmap to {{ _goal }}</a></p>
+  {%- endif %}
+  <div class="focus-rank">
+    {%- if _cf.status == "ok" and _cf.rating %}
+    {%- assign _pct = _cf.rating | times: 100.0 | divided_by: _goal | round: 1 -%}{%- if _pct > 100 -%}{%- assign _pct = 100 -%}{%- endif %}
+    <p class="focus-rank-head"><span>Codeforces rating</span><span><b>{{ _cf.rating }}</b> <small>/ {{ _goal }} goal</small></span></p>
+    <div class="rank-bar" role="img" aria-label="Codeforces rating {{ _cf.rating }}, {{ _pct | round }}% of the way to {{ _goal }}"><i style="width:{{ _pct }}%"></i>
+      {%- for m in (1..3) -%}{%- assign _m = m | times: 200 | plus: 1000 -%}{%- if _m < _goal -%}<b style="left:{{ _m | times: 100.0 | divided_by: _goal | round: 2 }}%"></b>{%- endif -%}{%- endfor -%}</div>
+    <ul class="rank-marks" aria-label="Rank milestones">
+      {%- assign _marks = "Pupil~1200|Specialist~1400|Expert~1600" | split: "|" -%}
+      {%- for x in _marks -%}{%- assign _xm = x | split: "~" -%}{%- assign _xv = _xm[1] | plus: 0 -%}{%- if _xv < _goal %}
+      <li class="glass-chip{% if _cf.rating >= _xv %} reached{% endif %}">{{ _xm[0] }} {{ _xv }}</li>
+      {%- endif -%}{%- endfor %}
+      <li class="glass-chip{% if _cf.rating >= _goal %} reached{% endif %}">Goal {{ _goal }}</li>
+    </ul>
+    {%- else %}
+    <p class="focus-rank-head"><span>Codeforces rating</span><span>Not rated yet <small>/ {{ _goal }} goal</small></span></p>
+    {%- endif %}
+  </div>
+  {%- assign _streak = site.data.activity_stats.longest_streak -%}
+  {%- assign _sync = site.data.sync_state -%}
+  {%- if _streak.days or _sync.solutions_head_short %}
+  <p class="focus-foot">
+    {%- if _streak.days %}<span class="focus-badge glass-chip">{{ _streak.days }}-day best streak</span>{% endif -%}
+    {%- if _sync.solutions_head_short %}<a class="focus-badge glass-chip glass-chip--interactive" href="{{ site.solutions_repo }}/commit/{{ _sync.solutions_head }}">Last synced <code>{{ _sync.solutions_head_short }}</code></a>{% endif -%}
+  </p>
+  {%- endif %}
+</aside>

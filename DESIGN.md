@@ -119,16 +119,23 @@ Hairlines are always 1px; never stack a border and a shadow ring.
 
 ## 6. Components
 
-**Brand mark.** `_includes/logo-mark.html`: a 24×24 inline SVG, `aria-hidden`, before the site name in the header,
-1.375rem square, no container. A geometric Z built from two filled shapes on the 24-unit grid (glyph 3 to 21): a "7"
-(top bar 4.75 deep plus a diagonal 7 wide running to the baseline) and a right-angled wedge for the bottom bar,
-separated by a 1.6-unit diagonal cut parallel to the stroke. Both shapes are `currentColor` (`--text`). On hover or
-keyboard focus of the brand link the wedge turns `--accent-display` in 140ms (`--ease`) and, only under
-`prefers-reduced-motion: no-preference`, slides 0.6px away from the cut. Forced colours keep both shapes
-`currentColor`. `assets/favicon.svg` is the same drawing without a container (viewBox 2 2 20 20), `#09090B`, or
-`#FAFAFA` under `prefers-color-scheme: dark`. The PNG icons (32, 180, 192, 512, and maskable 512 with the glyph inside
-the safe zone) are the `#FAFAFA` Z on full-bleed `#09090B`, because platforms put a tile behind app icons anyway;
-`assets/img/og-card.png` uses the same mark.
+**Brand mark.** `_includes/logo-mark.html`: a 20×20 sunrise, `aria-hidden`, `currentColor`: a half sun on the horizon
+over two shortening reflection bars (no rays). It sits in the brand link `a.brand.brand-pill.glass-chip`, a square-ish
+glass pill (7px padding, 10px radius). Where hovering exists the pill shows only the sun and widens on `:hover` or
+`:focus-visible` to reveal "Zain's Blog": a CSS grid column animates `0fr` to `1fr` over 360ms
+`cubic-bezier(.22, 1, .36, 1)` while the name goes from `opacity: 0; translate: -4px 0` to rest. The brand keeps
+`margin-inline-end: auto`, so it grows into free space and the nav links never move. On touch (`hover: none`) the name
+is always visible. The name stays in the accessibility tree when collapsed. The sun turns `--accent-display` on hover
+or focus. `assets/favicon.svg` is the same drawing (viewBox 1 1 18 18), `#09090B`, or `#FAFAFA` under
+`prefers-color-scheme: dark`.
+
+**Glass chips.** Small chips, badges and keycaps carry a Liquid Glass rim; cards, panels and ledger rows stay matte.
+Tokens: `--chip-bg` (dark `linear-gradient(180deg, rgb(255 255 255 / .065), rgb(255 255 255 / .025))`), `--chip-bg-hover`,
+`--chip-bg-on`, `--chip-border` (white 11%), `--chip-border-hover` (20%), `--chip-rim` (`inset 0 1px 0` white 18% plus
+`0 1px 2px` black 35%), with light equivalents. They style `kbd`, `.key-cap`, `.rb`, `.chip`, `.tag`, `.kc` and the
+problem index rail tabs. The `.glass-chip` class adds `backdrop-filter: blur(8px) saturate(130%)` and is used only
+over moving or translucent content (the scene switcher); inside the header and on the matte focus card the blur is
+switched off because it cannot show. Status shapes still win: a not-solved `.rb` stays dashed with no fill or rim.
 
 **Navbar.** Sticky, height 3.25rem, glass, bottom hairline. Brand left; 14px links in `--text-2`, current link
 `--text` with a 1px × 16px-wide `--text` underline indicator (not amber); ⌘K search pill; theme toggle.
@@ -145,13 +152,14 @@ inner dot = with help, dashed border = not solved.
 **Primary CTA.** White pill (`--accent-fill`/`--on-accent-fill`), 2.5rem min height (2.75rem touch), 15px/600.
 One per view. Secondary = `.btn.quiet`: `--fill` + `--hair` border, `--text`.
 
-**Road to 1800 card (hero).** Dark-titanium plate: `linear-gradient(160deg, #1A1A1F, #0E0E11 55%, #141418)`, hairline
-+ specular, `--r-tile`. Contents (all from data): label "Road to 1800", big "1800" goal, a progress track whose amber
-fill is `hardest_solved / 1800` labelled **"Hardest solved independently: 1300 (4C)"**, problems solved count, and
-a "No Codeforces rating yet" note. Pointer tilt max ±6° via `transform: perspective(900px) rotateX/rotateY`, plus a
-specular layer `radial-gradient(circle at var(--mx) var(--my), rgb(255 255 255 / .12), transparent 45%)`. Tilt
-only for `(hover: hover) and (pointer: fine)` and motion allowed; resets on `pointerleave`. Light theme: brushed
-aluminium `linear-gradient(160deg, #FFFFFF, #EDEDF0)`. Static, fully readable without JS.
+**Current focus card (hero).** Matte card (`--tile`, hairline, `--spec`, `--r-tile`), built from the data files with
+fallbacks (`_includes/focus-card.html`). "Boss fight": the first not-solved problem in the Next up order, as a dashed
+keycap, name, rating, topic tags, an optional one-line note from `_data/focus.json` (by problem ID) and its last
+attempt, linking to the problem on Codeforces. Rank progress: the Codeforces rating (`_data/codeforces.json`) on a
+0 to goal track with an amber fill, ticks at the 1200 / 1400 / 1600 rank floors (3:1 track outline) and milestone
+badges (Pupil 1200, Specialist 1400, Expert 1600, Goal 1800; reached ones get a tick). Footer badges: best streak
+(`activity_stats.longest_streak`) and the last solutions-repo commit synced (`sync_state.solutions_head_short`,
+linking to the commit). The hero's own text no longer repeats the KPI numbers.
 
 **KPI strip.** Four cards: 12px `--text-3` label above, tabular KPI numeral, one muted 12px footnote.
 Solved independently 29 · Active days 17 · Longest streak 10 days · Goal 1800 ("hardest solved 1300"). Values come
@@ -207,14 +215,17 @@ it is progress. Roadmap stage progress may use amber (it is rating progress).
 | `--t3` | 320ms | palette open, theme cross-fade |
 | `--t-reveal` | 480ms | scroll reveal |
 
-Scroll reveal (`[data-reveal]`, section heads): from `opacity: 0; translateY(12px)` to rest, 480ms `--ease`, once,
-triggered at 12% of the element inside the viewport (`start: 'top 88%'`), 50ms sibling stagger, transform/opacity
-only, elements keep their box (zero CLS). Elements already in view on load are not hidden. Hero tilt uses rAF with
-lerp 0.12. Everything above is off under `prefers-reduced-motion: reduce` (the `.motion` class is not set).
+Scroll reveal (`[data-reveal]`, section heads; assets/js/motion.js): replays in both directions. Enter when 12% is in
+view, from `opacity: 0; translateY(14px) scale(.985)` over 480ms `--ease` with a 35ms sibling stagger (18ms for chart
+dots); reset only after the element has fully left the viewport plus 48px, over 180ms. Elements already in view on load
+are shown without animating. Everything is off under `prefers-reduced-motion: reduce` and in print.
 
-Hero canvas scenes (network, mesh, field, grid, sort): zinc hairlines `--hero-line: 161 161 170`, dots
-`--hero-dot: 250 250 250`, highlight `--hero-hi: 245 158 11`, `--hero-alpha: .28` dark / `.22` light
-(`9 9 11` lines in light). They sit behind the hero text and never compete with it.
+Hero animals (`assets/js/hero-animals.js`, adapted under MIT from "ASCII Animals" by Pawan-webdeveloper): a full-bleed
+canvas of pixel/ASCII koi (default; a click on empty hero space drops food they swim to and eat) or jellyfish (a click
+startles them), at `--animals-alpha` .32 dark / .24 light, fading out over the bottom 28%. Never takes pointer events;
+loops only while on screen, visible and not paused; one still frame under reduced motion. Scene switcher (Koi |
+Jellyfish | Pause) is a `.glass-chip` pill, saved in localStorage `hero-scene`. Secondary hero text uses
+`--hero-text-2` (#D4D4D8 dark) so it keeps at least 5:1 contrast over a passing koi.
 
 ## 8. Do / Don't
 
@@ -231,4 +242,4 @@ Hero canvas scenes (network, mesh, field, grid, sort): zinc hairlines `--hero-li
 - No 12px text below 4.5:1; no `#71717A` text on dark.
 - No single-key global shortcuts (`?`, `/`, `j/k` work only while focus is inside the palette or a widget).
 - Never label 1300 as a rating; never invent stats, ratings or links.
-- No new runtime framework or CDN; Blender/Higgsfield renders are replaced by the CSS/SVG titanium card.
+- No new runtime framework or CDN; Blender/Higgsfield renders are not used; the hero is the Current focus card over a canvas.
