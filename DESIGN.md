@@ -41,7 +41,7 @@ Jekyll 3.10 + one stylesheet (`assets/css/style.css`) + vanilla JS. This file is
 
 | Token | Dark (default) | Light (`[data-theme="light"]`) | Contrast intent |
 |---|---|---|---|
-| `--bg` | `#0B0C0E` | `#F8F9FB` | canvas |
+| `--bg` | `#0B0C0E` | `#F4F6F9` | canvas |
 | `--tile` | `#101013` | `#FFFFFF` | cards, panels |
 | `--tile-2` | `#16161A` | `#F4F4F5` | raised field, row hover base |
 | `--text` | `#FAFAFA` | `#09090B` | 19.1:1 / 19.9:1 |
@@ -74,17 +74,28 @@ element is an obsidian surface in light mode and a no-op in dark. New markup sho
 
 ## 3. Typography
 
-Geist (variable, self-hosted latin subset, weights 400 to 700) for UI and prose, Geist Mono (400 to 500) for IDs,
-keycaps, axis labels and code blocks. Files: `assets/fonts/Geist-Variable-latin.woff2` and
-`GeistMono-Variable-latin.woff2`, both under the OFL (`OFL-geist.txt`). `--sans` and `--mono` point at them, the
-default layout preloads Geist and `sw.js` precaches both. No OpenType feature switches. `font-variant-numeric:
-tabular-nums` goes on every number in KPIs, the ledger, charts, dates and ratings. Mono weights stay at 400 or 500 (the
-file ships no heavier weight).
+**Mona Sans** (GitHub's variable grotesk: weight 200 to 900 plus an optical-size axis) for display, UI and prose;
+**Mona Sans Mono** (weight 200 to 900) for problem IDs, keycaps, axis labels and code. Files:
+`assets/fonts/MonaSans-Variable.woff2` (137 KB) and `MonaSansMono-Variable.woff2` (39 KB), self-hosted so the offline
+cache keeps working and no visitor makes a third-party request. Both are OFL 1.1 with the Reserved Font Name
+"Mona Sans" (`OFL-mona-sans.txt`), so they ship unmodified: subsetting would mean renaming the family.
+
+Why this pair: the site is a developer's journal, and Mona Sans comes out of the same place (GitHub) without being the
+default every dev site already uses. Its optical-size axis tightens the letterforms at display sizes and opens them at
+11 to 13px, so one family covers the hero and the 11px labels. The mono is drawn on the same skeleton, so IDs like
+`1791D` sit beside prose without a change of voice. Runners-up were Instrument Sans (body) and Martian Mono.
+
+Tokens: `--font-display`, `--font-sans`, `--font-mono` (`--sans` and `--mono` stay as short aliases). Both faces use
+`font-display: swap`; the default layout preloads both and `sw.js` precaches both. Features: `font-optical-sizing:
+auto` and `"ss03"` (the tailed l, so l, I and 1 stay distinct in IDs and prose) on body; code, keycaps and quiz caps
+reset to the mono's own glyphs. `font-variant-numeric: tabular-nums` goes on every number in KPIs, the ledger, ratings,
+keycaps, chart labels (`svg text`) and dates. The canvas scripts (constellation labels, hero animals) name the same
+families.
 
 | Role | Size | Weight | Line-height | Tracking |
 |---|---|---|---|---|
-| Display (hero h1) | `clamp(2.5rem, 6vw, 4.25rem)` | 650 (Geist variable) | 1.05 | -0.04em |
-| H2 section | `clamp(1.5rem, 3vw, 2rem)` | 600 | 1.15 | -0.03em |
+| Display (hero h1) | `clamp(2.5rem, 6vw, 4.25rem)` | 650 (Mona Sans, optical size auto) | 1.05 | -0.025em |
+| H2 section | `clamp(1.5rem, 3vw, 2rem)` | 600 | 1.15 | -0.025em |
 | H3 card title | 1rem | 600 | 1.3 | -0.015em |
 | KPI numeral | `clamp(1.75rem, 3.2vw, 2.25rem)` | 600 | 1 | -0.03em |
 | Body | 1rem (prose 1.0625rem) | 400 | 1.6 | -0.011em |
@@ -132,8 +143,13 @@ or focus. `assets/favicon.svg` is the same drawing (viewBox 1 1 18 18), `#09090B
 **Glass chips.** Small chips, badges and keycaps carry a Liquid Glass rim; cards, panels and ledger rows stay matte.
 Tokens: `--chip-bg` (dark `linear-gradient(180deg, rgb(255 255 255 / .065), rgb(255 255 255 / .025))`), `--chip-bg-hover`,
 `--chip-bg-on`, `--chip-border` (white 11%), `--chip-border-hover` (20%), `--chip-rim` (`inset 0 1px 0` white 18% plus
-`0 1px 2px` black 35%), with light equivalents. They style `kbd`, `.key-cap`, `.rb`, `.chip`, `.tag`, `.kc` and the
-problem index rail tabs. The `.glass-chip` class adds `backdrop-filter: blur(8px) saturate(130%)` and adds the blur;
+`0 1px 2px` black 35%), `--chip-top` (the top border; same as `--chip-border` in dark) and `--chip-blur`. Light is a
+real glass, not a flat white chip: `--chip-bg` `linear-gradient(180deg, rgb(255 255 255 / .92) 0%, rgb(232 238 247 / .72)
+55%, rgb(255 255 255 / .85) 100%)`, border `rgb(15 23 42 / .14)` with a pure white top edge, rim `inset 0 1.5px 1px #FFF,
+inset 0 -1.5px 2.5px rgb(15 23 42 / .08), 0 2px 6px -1px rgb(15 23 42 / .1), 0 1px 2px rgb(15 23 42 / .06)`, blur
+`blur(12px) saturate(160%)`. They style `kbd`, `.key-cap`, `.rb`, `.chip`, `.tag`, `.kc`, the problem index rail tabs
+and, in light only, the quiz option caps 1 to 4 (the selected, correct and wrong states still win). The `.glass-chip`
+class adds the `--chip-blur` backdrop filter (dark `blur(8px) saturate(130%)`);
 inside the header and on the metal focus card the blur is switched off because it cannot show there. Status shapes still win: a not-solved `.rb` stays dashed with no fill or rim.
 
 **Navbar.** Sticky, height 3.25rem, glass, bottom hairline. Brand left; 14px links in `--text-2`, current link
@@ -230,7 +246,8 @@ pointer events; loops only while on screen and visible; one still frame under re
 uses `--hero-text-2` (#D4D4D8 dark) so it keeps at least 5:1 contrast over a passing animal.
 
 Ambient page glow: a fixed `body::before` layer behind everything with three faint radial glows (`--ambient`: sky top
-right, amber middle left, indigo bottom right) over `--bg` (#0B0C0E dark, #F8F9FB light). Hidden in print.
+right, amber middle left, indigo bottom right) over `--bg` (#0B0C0E dark, #F4F6F9 light). Light uses stronger alphas so the glow reads on a pale page: sky
+.14, amber .11, indigo .11 (dark .055 / .035 / .045). Hidden in print.
 
 Algorithm dry-runs (`assets/js/algo-visualizer.js`, `_includes/visualizer.html`, mounted when `_data/visualizers.json`
 has an entry for the problem ID): a card with the demo's inputs, a drawing on `--tile-2`, the key code lines (the current

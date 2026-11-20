@@ -19,6 +19,11 @@
         "value": "geist mono",
         "createdAt": "2026-11-20T00:17:08.450Z",
         "reason": "User-specified typeface in the Firecrawl/logo/typography brief"
+      },
+      {
+        "rule": "overused-font",
+        "value": "mona sans",
+        "createdAt": "2026-11-20T21:21:08.974Z"
       }
     ]
   }

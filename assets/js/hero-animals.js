@@ -202,7 +202,7 @@
     R.cols = Math.ceil(R.W / R.cell) + 1; R.rows = Math.ceil(R.H / R.cell) + 1;
     R.lo.width = R.cols; R.lo.height = R.rows;
     R.img = loCtx.createImageData(R.cols, R.rows);
-    R.font = `600 ${Math.round(R.cell * 1.02)}px "Geist Mono", ui-monospace, monospace`;
+    R.font = `600 ${Math.round(R.cell * 1.02)}px "Mona Sans Mono", ui-monospace, monospace`;
     atlas.clear();
     return true;
   }

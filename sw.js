@@ -27,8 +27,8 @@ const PRECACHE = [
   {{ '/assets/js/hero-animals.js' | relative_url | append: VERSION | jsonify }},
   {{ '/assets/js/algo-visualizer.js' | relative_url | append: VERSION | jsonify }},
   {{ '/assets/js/constellation-graph.js' | relative_url | append: VERSION | jsonify }},
-  {{ '/assets/fonts/Geist-Variable-latin.woff2' | relative_url | jsonify }},
-  {{ '/assets/fonts/GeistMono-Variable-latin.woff2' | relative_url | jsonify }}
+  {{ '/assets/fonts/MonaSans-Variable.woff2' | relative_url | jsonify }},
+  {{ '/assets/fonts/MonaSansMono-Variable.woff2' | relative_url | jsonify }}
 ];
 
 self.addEventListener('install', (event) => {

@@ -213,7 +213,7 @@
     const boxes = hubList.filter(h => dim(h) >= 0.3).map(h => { const [x, y] = toScreen(h.x, h.y), r = (h.r + 5) * view.s; return { x: x - r, y: y - r, w: 2 * r, h: 2 * r, hub: h }; });
     const hits = (b, self) => boxes.some(o => o.hub !== self && b.x < o.x + o.w && b.x + b.w > o.x && b.y < o.y + o.h && b.y + b.h > o.y);
     const big = R.w > 560;
-    ctx.font = `600 ${big ? 13 : 12}px Geist, system-ui, sans-serif`;
+    ctx.font = `600 ${big ? 13 : 12}px "Mona Sans", system-ui, sans-serif`;
     let overlaps = 0;
     for (const h of hubList) {
       if (dim(h) < 0.3 && !(lit && lit.has(h))) continue;
@@ -230,7 +230,7 @@
     }
     lastHubLabelOverlaps = overlaps;
     if (!labels && !lit) return;
-    ctx.font = '500 10px "Geist Mono", ui-monospace, monospace';
+    ctx.font = '500 10px "Mona Sans Mono", ui-monospace, monospace';
     const zoomedOut = view.s < 0.8;   // narrow screens start below this, so only hub labels show until you zoom or hover
     const order = nodes.filter(n => n.type === 'problem' && visible(n)).sort((a, b) => (lit ? (lit.has(b) - lit.has(a)) : 0) || b.r - a.r);
     for (const n of order) {

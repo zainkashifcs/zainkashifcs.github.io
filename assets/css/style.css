@@ -4,8 +4,9 @@
    Order: tokens, base, chrome, components, sections, homepage, shared lists and quiz, code, then the page fragments
    ("pages"), motion, palette, stats and print. */
 
-@font-face { font-family: "Geist"; src: url("../fonts/Geist-Variable-latin.woff2") format("woff2"); font-weight: 400 700; font-style: normal; font-display: swap; }
-@font-face { font-family: "Geist Mono"; src: url("../fonts/GeistMono-Variable-latin.woff2") format("woff2"); font-weight: 400 500; font-style: normal; font-display: swap; }
+/* Mona Sans and Mona Sans Mono (GitHub, OFL 1.1 with a Reserved Font Name, so the files ship unmodified; OFL-mona-sans.txt) */
+@font-face { font-family: "Mona Sans"; src: url("../fonts/MonaSans-Variable.woff2") format("woff2"); font-weight: 200 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "Mona Sans Mono"; src: url("../fonts/MonaSansMono-Variable.woff2") format("woff2"); font-weight: 200 900; font-style: normal; font-display: swap; }
 
 /* ---------- tokens ---------- */
 :root {
@@ -21,7 +22,8 @@
   --chip-bg: linear-gradient(180deg, rgb(255 255 255 / .065) 0%, rgb(255 255 255 / .025) 100%);
   --chip-bg-hover: linear-gradient(180deg, rgb(255 255 255 / .1) 0%, rgb(255 255 255 / .04) 100%);
   --chip-bg-on: linear-gradient(180deg, rgb(255 255 255 / .14) 0%, rgb(255 255 255 / .06) 100%);
-  --chip-border: rgb(255 255 255 / .11); --chip-border-hover: rgb(255 255 255 / .2);
+  --chip-border: rgb(255 255 255 / .11); --chip-border-hover: rgb(255 255 255 / .2); --chip-top: var(--chip-border);
+  --chip-blur: blur(8px) saturate(130%);
   --chip-rim: inset 0 1px 0 rgb(255 255 255 / .18), 0 1px 2px rgb(0 0 0 / .35);
   /* the hero animals canvas (assets/js/hero-animals.js) */
   --animals-alpha: .32; --hero-text-2: #D4D4D8;
@@ -37,7 +39,7 @@
   color-scheme: dark;
 }
 :root[data-theme="light"] {
-  --bg: #F8F9FB; --tile: #FFFFFF; --tile-2: #F4F4F5;
+  --bg: #F4F6F9; --tile: #FFFFFF; --tile-2: #F4F4F5;
   --text: #09090B; --text-2: #52525B; --text-3: #6B6B74;  /* 4.8:1 on the lightest grey tile */
   --hair: rgb(9 9 11 / .08); --hair-2: rgb(9 9 11 / .14);
   --spec: inset 0 1px 0 rgb(255 255 255 / .9), 0 1px 2px rgb(9 9 11 / .04);
@@ -45,15 +47,16 @@
   --accent: #B45309; --accent-display: #B45309; --amber-wash-top: rgb(180 83 9 / .16);
   --accent-fill: #09090B; --on-accent-fill: #FAFAFA; --focus: #09090B;
   --glass: rgb(250 250 250 / .78);
-  --chip-bg: linear-gradient(180deg, rgb(255 255 255 / .95) 0%, rgb(255 255 255 / .6) 100%);
-  --chip-bg-hover: linear-gradient(180deg, #FFFFFF 0%, rgb(255 255 255 / .8) 100%);
-  --chip-bg-on: linear-gradient(180deg, #FFFFFF 0%, rgb(244 244 245 / .9) 100%);
-  --chip-border: rgb(9 9 11 / .12); --chip-border-hover: rgb(9 9 11 / .22);
-  --chip-rim: inset 0 1px 0 rgb(255 255 255 / .95), 0 1px 2px rgb(9 9 11 / .08);
+  --chip-bg: linear-gradient(180deg, rgb(255 255 255 / .92) 0%, rgb(232 238 247 / .72) 55%, rgb(255 255 255 / .85) 100%);
+  --chip-bg-hover: linear-gradient(180deg, #FFFFFF 0%, rgb(238 243 250 / .85) 55%, #FFFFFF 100%);
+  --chip-bg-on: linear-gradient(180deg, #FFFFFF 0%, rgb(226 233 243 / .9) 55%, rgb(250 251 253 / .95) 100%);
+  --chip-border: rgb(15 23 42 / .14); --chip-border-hover: rgb(15 23 42 / .24); --chip-top: #FFFFFF;
+  --chip-rim: inset 0 1.5px 1px #FFFFFF, inset 0 -1.5px 2.5px rgb(15 23 42 / .08), 0 2px 6px -1px rgb(15 23 42 / .1), 0 1px 2px rgb(15 23 42 / .06);
+  --chip-blur: blur(12px) saturate(160%);
   --animals-alpha: .24; --hero-text-2: var(--text-2);
-  --ambient: radial-gradient(ellipse 80% 50% at 72% 8%, rgb(14 165 233 / .06), transparent 65%),
-    radial-gradient(ellipse 70% 45% at 15% 42%, rgb(245 158 11 / .045), transparent 65%),
-    radial-gradient(ellipse 80% 55% at 80% 78%, rgb(99 102 241 / .045), transparent 70%);
+  --ambient: radial-gradient(ellipse 80% 50% at 72% 8%, rgb(14 165 233 / .14), transparent 65%),
+    radial-gradient(ellipse 70% 45% at 15% 42%, rgb(245 158 11 / .11), transparent 65%),
+    radial-gradient(ellipse 80% 55% at 80% 78%, rgb(99 102 241 / .11), transparent 70%);
   --metal: linear-gradient(145deg, #F6F7F9 0%, #EBEDF0 50%, #F3F4F6 100%);
   --metal-rim: rgb(0 0 0 / .09);
   --metal-shadow: inset 0 1px 0 rgb(255 255 255 / .95), 0 12px 32px rgb(9 9 11 / .08);
@@ -61,8 +64,10 @@
   color-scheme: light;
 }
 :root {
-  --sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-  --mono: "Geist Mono", ui-monospace, Consolas, monospace;
+  --font-sans: "Mona Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-display: var(--font-sans);   /* one variable family: optical sizing tightens it at display sizes */
+  --font-mono: "Mona Sans Mono", ui-monospace, Consolas, monospace;
+  --sans: var(--font-sans); --mono: var(--font-mono);   /* short aliases used across the sheet */
   --s1: .25rem; --s2: .5rem; --s3: .75rem; --s4: 1rem; --s5: 1.5rem; --s6: 2rem; --s7: 3rem; --s8: 4.5rem;
   --r-tile: 16px; --r-card: 12px; --r-ctl: 8px; --r-key: 4px; --r-pill: 999px;
   --gutter: clamp(1rem, 4vw, 2rem); --page: 64rem; --read: 44rem; --nav-h: 3.25rem;
@@ -76,14 +81,15 @@ html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--nav-h) + v
    base colour and body stays transparent so the layer is not covered */
 html { background-color: var(--bg); }
 body { margin: 0;
-  color: var(--text); font: 400 1rem/1.6 var(--sans); letter-spacing: -.011em; }
+  color: var(--text); font: 400 1rem/1.6 var(--sans); letter-spacing: -.011em;
+  font-optical-sizing: auto; font-feature-settings: "ss03"; }   /* ss03: the tailed l, so l, I and 1 never blur together */
 body::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background-color: var(--bg); background-image: var(--ambient); }
 ::selection { background: color-mix(in srgb, var(--text) 22%, transparent); color: var(--text); }
 a { color: var(--text); text-decoration: underline; text-decoration-color: var(--hair-2); text-decoration-thickness: 1px; text-underline-offset: .22em; transition: text-decoration-color var(--t1) var(--ease), color var(--t1) var(--ease); }
 @media (hover: hover) { a:hover { text-decoration-color: currentColor; } }
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
-h1, h2, h3 { font-family: var(--sans); font-weight: 600; line-height: 1.15; letter-spacing: -.03em; text-wrap: balance; margin: 0; }
-h1 { font-size: clamp(2.5rem, 6vw, 4.25rem); font-weight: 650; line-height: 1.05; letter-spacing: -.04em; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.15; letter-spacing: -.025em; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.5rem, 6vw, 4.25rem); font-weight: 650; line-height: 1.05; }
 h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
 h3 { font-size: 1rem; line-height: 1.3; letter-spacing: -.015em; }
 p { margin: 0 0 var(--s4); text-wrap: pretty; }
@@ -94,7 +100,8 @@ p { margin: 0 0 var(--s4); text-wrap: pretty; }
 .small { font-size: .875rem; color: var(--text-2); }
 .muted { color: var(--text-2); }
 .unverified { display: inline-block; margin: .25rem 0 0; padding: 0 .5rem; border: 1px dashed var(--field); border-radius: var(--r-key); color: var(--text-2); font-size: .8125rem; }
-time, .rk, .count, dd { font-variant-numeric: tabular-nums; }
+time, .rk, .count, dd, kbd, svg text, .rb, .tag { font-variant-numeric: tabular-nums; }
+code, pre, kbd, .key-cap, .rb, .kc, .q-cap { font-feature-settings: normal; }   /* the mono keeps its own glyphs */
 
 /* ---------- chrome: frosted nav, footer ---------- */
 .skip { position: absolute; inset-inline-start: var(--s4); top: -3rem; z-index: 30; padding: var(--s2) var(--s4); border-radius: var(--r-pill); background: var(--accent-fill); color: var(--on-accent-fill); text-decoration: none; }
@@ -163,7 +170,7 @@ footer.site a { color: var(--text-2); text-decoration-color: transparent; }
 .bleed { background: var(--tile); box-shadow: 0 0 0 100vmax var(--tile); clip-path: inset(0 -100vmax); }
 /* keycap: problem IDs, rating bands, shortcut hints. Status is a shape, never a colour:
    solid border = solved myself, solid border + inner dot = solved with help, dashed border = not solved */
-kbd, .key-cap, .rb { display: inline-block; padding: 2px 6px; border: 1px solid var(--chip-border); border-radius: var(--r-key); background: var(--chip-bg); box-shadow: var(--chip-rim); color: var(--text-2);
+kbd, .key-cap, .rb { display: inline-block; padding: 2px 6px; border: 1px solid var(--chip-border); border-top-color: var(--chip-top); border-radius: var(--r-key); background: var(--chip-bg); box-shadow: var(--chip-rim); color: var(--text-2);
   font: 500 11px/1.4 var(--mono); font-variant-ligatures: none; letter-spacing: 0; white-space: nowrap; }
 .rb { min-width: 4.4em; color: var(--text); text-align: center; transition: background-color var(--t1) var(--ease), border-color var(--t1) var(--ease); }
 .rb.help, .row.st-help .rb { position: relative; padding-inline-start: 13px; }
@@ -178,7 +185,7 @@ a.rb { text-decoration: none; }
 .nosolve.big { margin: 0; font-size: clamp(1.125rem, 2vw, 1.375rem); }
 /* chips: hairline toggles */
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.chip { display: inline-flex; align-items: center; gap: .4rem; min-height: 2rem; padding: 0 .7rem; border: 1px solid var(--chip-border); border-radius: var(--r-ctl); background: var(--chip-bg); box-shadow: var(--chip-rim); color: var(--text-2);
+.chip { display: inline-flex; align-items: center; gap: .4rem; min-height: 2rem; padding: 0 .7rem; border: 1px solid var(--chip-border); border-top-color: var(--chip-top); border-radius: var(--r-ctl); background: var(--chip-bg); box-shadow: var(--chip-rim); color: var(--text-2);
   font: 500 .8125rem var(--sans); letter-spacing: -.005em; cursor: pointer; transition: background-color var(--t1) var(--ease), color var(--t1) var(--ease), border-color var(--t1) var(--ease), scale 150ms var(--ease); }
 @media (pointer: coarse) { .chip { min-height: 2.5rem; } }
 @media (hover: hover) { .chip:hover { background: var(--chip-bg-hover); border-color: var(--chip-border-hover); color: var(--text); } }
@@ -228,8 +235,8 @@ a.rb { text-decoration: none; }
 
 /* Liquid Glass, only on small chips over moving or translucent content (brand pill, focus badges);
    the chips on matte panels use the same rim without the blur (see kbd, .rb, .chip, .tag, .kc) */
-.glass-chip { border: 1px solid var(--chip-border); background: var(--chip-bg); box-shadow: var(--chip-rim);
-  -webkit-backdrop-filter: blur(8px) saturate(130%); backdrop-filter: blur(8px) saturate(130%); }
+.glass-chip { border: 1px solid var(--chip-border); border-top-color: var(--chip-top); background: var(--chip-bg); box-shadow: var(--chip-rim);
+  -webkit-backdrop-filter: var(--chip-blur); backdrop-filter: var(--chip-blur); }
 header.site .glass-chip, .focus .glass-chip { -webkit-backdrop-filter: none; backdrop-filter: none; }
 @media (hover: hover) { .glass-chip--interactive:hover { background: var(--chip-bg-hover); border-color: var(--chip-border-hover); } }
 .glass-chip--interactive:focus-visible { background: var(--chip-bg-hover); border-color: var(--chip-border-hover); }
@@ -549,7 +556,7 @@ pre:focus-visible { outline-offset: 2px; }
 .spec dd { margin: .2rem 0 0; font-weight: 500; font-size: .9375rem; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
 .spec .links { margin-top: var(--s5); padding-top: var(--s5); border-top: 1px solid var(--hair); }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: .35rem; }
-.tag { display: inline-flex; align-items: center; min-height: 1.75rem; padding: 0 .6rem; border: 1px solid var(--chip-border); border-radius: var(--r-ctl); background: var(--chip-bg); box-shadow: var(--chip-rim); color: var(--text-2); font-size: .8125rem; font-weight: 500; letter-spacing: -.005em; text-decoration: none; transition: background-color var(--t1) var(--ease), color var(--t1) var(--ease); }
+.tag { display: inline-flex; align-items: center; min-height: 1.75rem; padding: 0 .6rem; border: 1px solid var(--chip-border); border-top-color: var(--chip-top); border-radius: var(--r-ctl); background: var(--chip-bg); box-shadow: var(--chip-rim); color: var(--text-2); font-size: .8125rem; font-weight: 500; letter-spacing: -.005em; text-decoration: none; transition: background-color var(--t1) var(--ease), color var(--t1) var(--ease); }
 @media (hover: hover) { .tag:hover { background: var(--chip-bg-hover); border-color: var(--chip-border-hover); color: var(--text); } }
 
 .post-body { max-width: var(--read); margin: 0 auto; font-size: 1.0625rem; line-height: 1.7; }
@@ -1226,7 +1233,7 @@ html:not(.js) .idx-hint { display: none; }
 
 /* vertical status tabs: pressed = surface + a 2px bar at the start edge (shape, not only tone) */
 .idx-rail .segmented { position: relative; flex-direction: column; gap: 4px; width: auto; max-width: none; margin: 0; padding: 0; overflow: visible; border: 0; background: none; }
-.idx-rail .segmented button { display: flex; align-items: center; gap: .5rem; min-height: 2.25rem; padding: 0 .65rem; text-align: start; border: 1px solid var(--chip-border); background: var(--chip-bg); box-shadow: var(--chip-rim); }
+.idx-rail .segmented button { display: flex; align-items: center; gap: .5rem; min-height: 2.25rem; padding: 0 .65rem; text-align: start; border: 1px solid var(--chip-border); border-top-color: var(--chip-top); background: var(--chip-bg); box-shadow: var(--chip-rim); }
 @media (hover: hover) { .idx-rail .segmented button:hover { background: var(--chip-bg-hover); border-color: var(--chip-border-hover); } }
 .idx-rail .segmented button[hidden] { display: none; }
 .idx-rail .segmented button[aria-pressed="true"] { background: var(--chip-bg-on); border-color: var(--field); box-shadow: inset 2px 0 0 var(--text), var(--chip-rim); }
@@ -1253,7 +1260,7 @@ html:not(.js) .idx-hint { display: none; }
 .idx-ws .row .topics { display: flex; flex-wrap: wrap; gap: 4px; margin-top: .4rem; }
 .idx-ws .row .topics:empty { display: none; }
 @media (max-width: 44rem) { .idx-ws .row .topics { grid-column: 1 / -1; grid-row: 3; margin-top: 0; } }
-.kc { display: inline-flex; align-items: center; min-height: 1.25rem; padding: 0 .4rem; border: 1px solid var(--chip-border); border-bottom-width: 2px;
+.kc { display: inline-flex; align-items: center; min-height: 1.25rem; padding: 0 .4rem; border: 1px solid var(--chip-border); border-top-color: var(--chip-top); border-bottom-width: 2px;
   border-radius: var(--r-key); background: var(--chip-bg); box-shadow: var(--chip-rim); color: var(--text-2); font: 500 11px/1 var(--mono); letter-spacing: 0; white-space: nowrap; }
 .row .stx { display: inline-block; flex: none; width: 8px; height: 8px; margin: 0 .4rem 1px 0; vertical-align: middle; border: 1.5px solid currentColor; border-radius: 50%; background: currentColor; }
 .row.st-help .stx { background: linear-gradient(90deg, currentColor 50%, transparent 50%); }
@@ -1289,6 +1296,7 @@ html:not(.js) .idx-hint { display: none; }
   border: 1px solid var(--hair-2); border-bottom-width: 2px; border-radius: var(--r-key); background: var(--fill);
   color: var(--text-2); font: 500 .8125rem/1 var(--mono); font-variant-numeric: tabular-nums;
   transition: background-color var(--t1) var(--ease), color var(--t1) var(--ease), border-color var(--t1) var(--ease); }
+:where(:root[data-theme="light"]) .q-cap { border-color: var(--chip-border); border-top-color: var(--chip-top); background: var(--chip-bg); box-shadow: var(--chip-rim); }
 @media (hover: hover) { .choice:not(:has(input:disabled, input:checked)):hover .q-cap { color: var(--text); border-color: var(--field); } }
 .choice:has(input:checked) .q-cap, .q .choice.correct .q-cap { background: var(--accent-fill); border-color: var(--accent-fill); color: var(--on-accent-fill); }
 .q .choice.wrong .q-cap { background: var(--fill); border-color: var(--hair-2); color: var(--text-2); border-style: dashed; }
@@ -1307,7 +1315,7 @@ html:not(.js) .idx-hint { display: none; }
 .quizpage [data-mixed] .feedback { background: var(--tile-2); }
 .quizpage .q .qnum .qn { font-family: var(--mono); letter-spacing: 0; }
 .quizpage .score { padding: clamp(1.25rem, 3vw, 2rem); border-radius: var(--r-tile); }
-.quizpage .score h2 { font-size: clamp(1.5rem, 3.5vw, 2rem); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.quizpage .score h2 { font-size: clamp(1.5rem, 3.5vw, 2rem); letter-spacing: -.025em; font-variant-numeric: tabular-nums; }
 .score:focus { outline: 2px solid var(--focus); outline-offset: 3px; }
 .score:focus:not(:focus-visible) { outline: none; }
 
