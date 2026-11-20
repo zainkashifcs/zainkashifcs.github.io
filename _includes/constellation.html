@@ -1,0 +1,46 @@
+{%- comment -%}
+Topic constellation: every topic hub and every problem in _data/problems.json, drawn by assets/js/constellation-graph.js
+as a force-directed graph. Built from the data at build time, so a new problem appears with no manual upkeep.
+Problem kinds: solved (solved myself), help (solved with help), redo (only a redo logged), open (attempted, not solved).
+The list in the details element is the text equivalent and works without JavaScript.
+{%- endcomment -%}
+{%- capture _cst_topics -%}{%- for g in site.data.topics -%}{%- for t in g.topics -%}
+  {%- assign _ps = site.data.problems | where_exp: "p", "p.topics contains t.id" -%}
+  {%- if _ps.size > 0 -%}{{ t.id }}~{{ t.label }}^{%- endif -%}
+{%- endfor -%}{%- endfor -%}{%- endcapture -%}
+{%- assign _cst_list = _cst_topics | split: "^" -%}
+<div class="cst" data-constellation>
+  <div class="cst-bar" hidden>
+    <div class="chips" role="group" aria-label="Show problems rated">
+      <button type="button" class="chip" data-tier="" aria-pressed="true">All</button>
+      <button type="button" class="chip" data-tier="800-900" aria-pressed="false">800–900</button>
+      <button type="button" class="chip" data-tier="1000-1100" aria-pressed="false">1000–1100</button>
+      <button type="button" class="chip" data-tier="1200-1300" aria-pressed="false">1200–1300</button>
+    </div>
+    <span class="cst-sep" aria-hidden="true"></span>
+    <button type="button" class="chip" data-cst-labels aria-pressed="true">Labels</button>
+    <button type="button" class="glass-chip glass-chip--interactive viz-btn viz-text-btn" data-cst="center">Re-center</button>
+    <button type="button" class="glass-chip glass-chip--interactive viz-btn viz-text-btn" data-cst="explode">Explode</button>
+  </div>
+  <div class="cst-stage">
+    <canvas class="cst-canvas" role="img" aria-label="Topic constellation: {{ _cst_list.size }} topics and {{ site.data.problems.size }} problems, each problem linked to its topics. The list below has the same links."></canvas>
+    <div class="cst-tip glass-chip" hidden></div>
+  </div>
+  <p class="cst-key"><span><i class="k-hub"></i>Topic, sized by problems solved myself</span><span><i class="k-solved"></i>Solved myself</span><span><i class="k-help"></i>Solved with help</span><span><i class="k-redo"></i>Only a redo logged</span><span><i class="k-open"></i>Not solved yet</span></p>
+  <details class="cst-list">
+    <summary>Browse the constellation as a list</summary>
+    <ul>
+      {%- for x in _cst_list -%}{%- assign _f = x | split: "~" -%}
+      {%- assign _ps = site.data.problems | where_exp: "p", "p.topics contains _f[0]" %}
+      <li><b>{{ _f[1] }} ({{ _ps.size }})</b>{% for p in _ps %}<a href="{{ p.post | default: p.page | relative_url }}">{{ p.id }} {{ p.name | escape }}</a>{% unless forloop.last %}, {% endunless %}{% endfor %}</li>
+      {%- endfor %}
+    </ul>
+  </details>
+  <script type="application/json" data-cst-data>{"topics": [{%- for x in _cst_list -%}{%- assign _f = x | split: "~" -%}{"id": {{ _f[0] | jsonify }}, "label": {{ _f[1] | jsonify | replace: "</", "<\/" }}}{% unless forloop.last %},{% endunless %}{%- endfor -%}],
+  "problems": [{%- for p in site.data.problems -%}
+    {%- case p.status -%}{%- when "help" -%}{%- assign _k = "help" -%}{%- when "redo" -%}{%- assign _k = "redo" -%}{%- when "attempted", "unsolved" -%}{%- assign _k = "open" -%}{%- else -%}{%- assign _k = "solved" -%}{%- endcase -%}
+    {"id": {{ p.id | jsonify }}, "name": {{ p.name | jsonify | replace: "</", "<\/" }}, "rating": {{ p.rating | jsonify }}, "kind": {{ _k | jsonify }}, "label": {{ p.status_label | jsonify }},
+     "date": {{ p.solved_date | default: p.last_date | jsonify }}, "url": {{ p.post | default: p.page | relative_url | jsonify }}, "topics": {{ p.topics | jsonify }}}{% unless forloop.last %},{% endunless %}
+  {%- endfor -%}]}</script>
+</div>
+<script src="{{ '/assets/js/constellation-graph.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>

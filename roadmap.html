@@ -9,6 +9,10 @@ description: The route from programming fundamentals to the topics a 1800 Codefo
   <p class="lede">The route from fundamentals to the topics a {{ R.goal }} Codeforces rating needs. Each stage shows what I&rsquo;ve practised so far, straight from the problem archive. Practising a topic is not the same as mastering it.</p>
 </header>
 <p class="roadmap-key"><span class="pill done">Practising</span> problems I solved myself in this stage&rsquo;s topics <span class="pill">Planned</span> not started yet</p>
+<section class="section cst-feature" aria-labelledby="cst-h">
+  <div class="section-head"><h2 id="cst-h">Topic constellation</h2><p>Where the practice so far sits: every problem linked to its topics. Drag, hover and click to explore.</p></div>
+  <div class="panel" data-reveal>{% include constellation.html %}</div>
+</section>
 <ol class="roadmap">
 {%- for st in R.stages %}
   {%- assign _solved = "" | split: "" -%}{%- assign _posts = 0 -%}

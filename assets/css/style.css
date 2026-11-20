@@ -1448,6 +1448,109 @@ html:not(.js) .idx-hint { display: none; }
 }
 @media print { .st-grid { display: block; } .st-grid > .st-card { border: 0; box-shadow: none; padding: 0; margin-top: 1.5rem; } .st-strip .stats-totals { border: 0; box-shadow: none; } }
 
+/* ---------- algorithm dry-runs (assets/js/algo-visualizer.js): the card recipe, controls reuse the glass chips.
+   Current line and current step use --text / --fill-2 and shape, never amber. ---------- */
+.viz { margin: 0 0 var(--s6); padding: clamp(1rem, 2.6vw, 1.5rem); border: 1px solid var(--hair); border-radius: var(--r-tile); background: var(--tile); box-shadow: var(--spec); }
+.viz-head h2 { margin: 0 0 .35rem; font-size: 1.125rem; }
+.viz-head p { margin: 0 0 var(--s4); font-size: .875rem; color: var(--text-2); max-width: 60ch; }
+.viz-inputs { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s3) var(--s5); margin-bottom: var(--s4); }
+.viz-inputs[hidden], .viz-controls[hidden] { display: none; }
+.viz-field { display: inline-flex; align-items: center; gap: .5rem; font: 500 .8125rem var(--mono); color: var(--text-2); }
+.viz-field input[type="range"] { width: 7.5rem; accent-color: var(--text); }
+.viz-field output { min-width: 1.5em; color: var(--text); font-variant-numeric: tabular-nums; }
+.viz-field-wide { flex-wrap: wrap; }
+.viz-field input[type="text"] { min-height: 2.25rem; width: 12rem; padding: .3rem .6rem; border: 1px solid var(--hair-2); border-radius: var(--r-ctl); background: var(--tile-2); color: var(--text); font: 500 .9375rem var(--mono); letter-spacing: .08em; }
+.viz-field-wide { flex-direction: column; align-items: flex-start; gap: .3rem; }
+.viz-field small { flex-basis: 100%; font: 400 .75rem var(--sans); color: var(--text-3); }
+.viz-stage { display: grid; gap: var(--s4); }
+.viz-canvas { display: grid; gap: var(--s3); justify-items: center; min-width: 0; padding: var(--s4); border-radius: var(--r-card); background: var(--tile-2); }
+.viz-svg { display: block; width: 100%; max-width: 26rem; margin-inline: auto; height: auto; max-height: 20rem; overflow: visible; }
+.viz-code { margin: 0; padding: .4rem 0; list-style: none; border: 1px solid var(--hair); border-radius: var(--r-card); counter-reset: vl; overflow-x: auto; }
+.viz-code li { position: relative; padding: .2rem .8rem .2rem 2.4rem; counter-increment: vl; white-space: pre; }
+.viz-code li::before { content: counter(vl); position: absolute; left: .8rem; font: 500 11px/1.9 var(--mono); color: var(--text-3); font-variant-numeric: tabular-nums; }
+.viz-code code { font: 400 .8125rem/1.7 var(--mono); color: var(--text-2); background: none; padding: 0; border: 0; box-shadow: none; }
+.viz-code li.is-now { background: var(--fill-2); box-shadow: inset 2px 0 0 var(--text); }
+.viz-code li.is-now code { color: var(--text); }
+.viz-say { min-height: 3em; margin: var(--s4) 0 var(--s3); font-size: .9375rem; color: var(--text); font-variant-numeric: tabular-nums; }
+.viz-controls { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.viz-btn { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; min-width: 2.5rem; min-height: 2.5rem; padding: 0 .6rem; border-radius: var(--r-pill); color: var(--text); font: 600 .8125rem var(--sans); cursor: pointer; }
+.viz-btn:disabled, .viz-btn[aria-disabled="true"] { opacity: .45; cursor: default; }
+.viz-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.viz-play svg { fill: currentColor; }
+.viz-play .i-pause, .viz-play[data-playing] .i-play { display: none; }
+.viz-play[data-playing] .i-pause { display: block; }
+.viz-play { padding-inline: .9rem 1rem; }
+.viz-text-btn { padding-inline: 1rem; }
+.viz-scrub { flex: 1 1 8rem; display: flex; }
+.viz-scrub input { width: 100%; min-height: 2.5rem; accent-color: var(--text); }
+.viz-count { font: 500 .75rem var(--mono); color: var(--text-2); font-variant-numeric: tabular-nums; min-width: 4.5em; text-align: end; }
+.viz-speed { display: inline-flex; gap: 2px; padding: 3px; border-radius: var(--r-pill); }
+.viz-speed button { min-height: 2.25rem; min-width: 2.75rem; border: 0; border-radius: var(--r-pill); background: none; color: var(--text-2); font: 500 .75rem var(--mono); cursor: pointer; }
+.viz-speed button[aria-pressed="true"] { background: var(--chip-bg-on); box-shadow: var(--chip-rim); color: var(--text); }
+/* drawings */
+.viz-cell { fill: none; stroke: var(--hair-2); stroke-width: .03; }
+.viz-plaza { fill: none; stroke: var(--text); stroke-width: .08; }
+.viz-stone { fill: var(--fill-2); stroke: var(--text-2); stroke-width: .06; }
+.viz-over { stroke: var(--field); stroke-width: .05; stroke-dasharray: .2 .15; }
+.viz-hatch-line { stroke: var(--text-3); stroke-width: .07; }
+.viz-guide { stroke: var(--text); stroke-width: .08; }
+.viz-wall, .viz-floor { stroke: var(--text-3); stroke-width: .06; }
+.viz-cube { fill: var(--fill-2); stroke: var(--text-2); stroke-width: .05; }
+.viz-cube.is-moved { fill: var(--text); stroke: var(--text); }
+.viz-matrix { display: grid; gap: 4px; }
+.viz-mrow { display: grid; grid-template-columns: repeat(5, 2.75rem); gap: 4px; }
+.viz-mcell { width: 2.75rem; height: 2.75rem; border: 1px solid var(--hair-2); border-radius: var(--r-ctl); background: var(--tile); color: var(--text-3); font: 500 .9375rem var(--mono); cursor: pointer; }
+.viz-mcell.is-centre { border-style: dashed; border-color: var(--field); }
+.viz-mcell.is-swap { background: var(--fill-2); }
+.viz-mcell.is-one { background: var(--text); border-color: var(--text); color: var(--bg); font-weight: 600; }
+@media (hover: hover) { .viz-mcell:not(.is-one):hover { border-color: var(--field); color: var(--text-2); } }
+.viz-word { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
+.viz-ch { display: grid; place-items: center; width: 2rem; height: 2.4rem; border: 1px solid var(--hair-2); border-radius: var(--r-ctl); font: 500 1rem var(--mono); color: var(--text-3); }
+.viz-ch.is-right { border-style: dashed; }
+.viz-ch.is-split { margin-inline-start: 14px; box-shadow: -10px 0 0 -8px var(--text); }
+.viz-ch.is-lit { background: var(--fill-2); border-color: var(--text-2); color: var(--text); }
+.viz-chart { max-width: 22rem; height: 5.5rem; }
+.viz-bar { fill: var(--text-3); }
+.viz-bar.is-best { stroke: var(--text); stroke-width: 1.5; stroke-dasharray: 3 2; vector-effect: non-scaling-stroke; }
+.viz-bar.is-now { fill: var(--text); }
+@media (prefers-reduced-motion: no-preference) {
+  .viz-cube { transition: transform 420ms var(--ease), fill var(--t2) var(--ease); }
+  .viz-new { animation: viz-in 320ms var(--ease) both; }
+  .viz-mcell { transition: background-color var(--t1) var(--ease), color var(--t1) var(--ease); }
+  .viz-ch { transition: background-color var(--t2) var(--ease), color var(--t2) var(--ease), margin var(--t2) var(--ease); }
+}
+@keyframes viz-in { from { opacity: 0; } }
+@media (forced-colors: active) { .viz-code li.is-now { outline: 2px solid Highlight; } .viz-mcell.is-one, .viz-cube.is-moved, .viz-bar.is-now { forced-color-adjust: none; background: CanvasText; fill: CanvasText; color: Canvas; } }
+
+/* ---------- topic constellation (assets/js/constellation-graph.js): an interactive canvas, so it takes pointer
+   events; the list below it is the text equivalent. The boss-fight ring is the one amber exception here. ---------- */
+.cst { position: relative; }
+.cst-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: var(--s3); }
+.cst-bar[hidden] { display: none; }
+.cst-bar .chip { min-height: 2.25rem; font-family: var(--mono); font-size: .75rem; font-variant-numeric: tabular-nums; }
+.cst-bar .cst-sep { width: 1px; height: 1.5rem; margin: 0 .25rem; background: var(--hair-2); }
+.cst-stage { position: relative; height: clamp(22rem, 52vw, 34rem); border-radius: var(--r-card); background: var(--tile-2); overflow: hidden; }
+.cst-canvas { display: block; width: 100%; height: 100%; cursor: grab; touch-action: pan-y; }
+.cst-canvas.is-dragging { cursor: grabbing; }
+.cst-tip { position: absolute; z-index: 2; max-width: 16rem; padding: .5rem .7rem; border-radius: var(--r-card); font-size: .8125rem; line-height: 1.45; color: var(--text); pointer-events: none; }
+.cst-tip[hidden] { display: none; }
+.cst-tip b { display: block; font-weight: 600; }
+.cst-tip span { display: block; font: 500 11px/1.5 var(--mono); color: var(--text-2); font-variant-numeric: tabular-nums; }
+.cst-tip a { pointer-events: auto; display: inline-block; margin-top: .3rem; font-size: .8125rem; }
+.cst-key { display: flex; flex-wrap: wrap; gap: .4rem 1.1rem; margin: var(--s3) 0 0; font-size: .75rem; color: var(--text-3); }
+.cst-key i { display: inline-block; width: 10px; height: 10px; margin-inline-end: .35rem; vertical-align: -1px; border-radius: 50%; }
+.cst-key .k-hub { background: var(--text-2); width: 14px; height: 14px; vertical-align: -3px; }
+.cst-key .k-solved { background: var(--text); }
+.cst-key .k-help { border: 1.5px solid var(--text); }
+.cst-key .k-redo { border: 1.5px dashed var(--text); }
+.cst-key .k-open { border: 2px solid var(--accent-display); }
+.cst-list { margin-top: var(--s3); font-size: .875rem; }
+.cst-list summary { cursor: pointer; color: var(--text-2); min-height: 24px; }
+.cst-list ul { columns: 15rem; column-gap: var(--s5); margin: var(--s3) 0 0; padding: 0; list-style: none; }
+.cst-list li { break-inside: avoid; margin-bottom: var(--s3); }
+.cst-list li b { display: block; font-weight: 600; }
+.cst-list a { color: var(--text-2); }
+
 /* ---------- print: write-ups, problem pages and /stats/ as clean black-on-white single columns ---------- */
 @media print {
   @page { margin: 16mm; }
@@ -1459,7 +1562,7 @@ html:not(.js) .idx-hint { display: none; }
   }
   html, body { background: #fff; color: #000; }
   body { font-size: 11pt; line-height: 1.45; }
-  body::before, header.site, footer.site, .skip, canvas, .hero-bg, .read-progress, .theme-toggle, .btn, .copy, .check, .pn, .more, .stats-more, .activity-more { display: none !important; }
+  .viz-controls, .viz-inputs, .cst-bar, .cst-stage, body::before, header.site, footer.site, .skip, canvas, .hero-bg, .read-progress, .theme-toggle, .btn, .copy, .check, .pn, .more, .stats-more, .activity-more { display: none !important; }
   .frame { max-width: none; padding-inline: 0; }
   .tile, .panel, .spec, .takeaway, .hist, .dayview, .progress { background: none !important; box-shadow: none !important; border-radius: 0; }
   .tile, .panel { padding: 0; }

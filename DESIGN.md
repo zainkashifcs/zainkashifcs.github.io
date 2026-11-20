@@ -232,6 +232,19 @@ uses `--hero-text-2` (#D4D4D8 dark) so it keeps at least 5:1 contrast over a pas
 Ambient page glow: a fixed `body::before` layer behind everything with three faint radial glows (`--ambient`: sky top
 right, amber middle left, indigo bottom right) over `--bg` (#0B0C0E dark, #F8F9FB light). Hidden in print.
 
+Algorithm dry-runs (`assets/js/algo-visualizer.js`, `_includes/visualizer.html`, mounted when `_data/visualizers.json`
+has an entry for the problem ID): a card with the demo's inputs, a drawing on `--tile-2`, the key code lines (the current
+line gets `--fill-2` and a 2px `--text` bar, never amber) and a one-line explanation in a live region. Controls are glass
+chips: reset, back, play/pause (label changes), forward, a range timeline, a 1x/2x group. No autoplay; reduced motion
+removes the tweening. Shipped for 1A, 263A, 405A and 1791D.
+
+Topic constellation (`assets/js/constellation-graph.js`, `_includes/constellation.html` on /stats/ and /roadmap/): a
+force-directed canvas built from `problems.json` and the topic list. Hubs sized by problems solved myself; problems
+sized by rating; status by shape (filled = solved myself, ring = with help, dashed ring = redo only). The pulsing amber
+ring on not-solved problems is an allowed amber exception (the boss fight), like the "Needs review" dot. Hover dims
+everything else to 15%; the details list underneath is the text equivalent. The loop runs only while on screen and
+visible, idles once the layout settles, and draws one still frame under reduced motion.
+
 ## 8. Do / Don't
 
 **Do**
