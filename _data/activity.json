@@ -787,5 +787,26 @@
     "title": "Theatre Square",
     "source_url": null,
     "seq": 38
+  },
+  {
+    "key": "9769cd7:474B:solved",
+    "date": "2026-11-21",
+    "commit": "9769cd76a4fbcd5bfb7d4821098d7e5ba5a51d40",
+    "short": "9769cd7",
+    "evidence_commit": "9769cd76a4fbcd5bfb7d4821098d7e5ba5a51d40",
+    "problem": "474B",
+    "type": "solved",
+    "assisted": false,
+    "verification": "file",
+    "file": "CF Questions/474_B_Worms.cpp",
+    "note": "",
+    "rating": 1200,
+    "display": true,
+    "decided_by": "rule",
+    "rating_source": "solution header",
+    "title": "Worms",
+    "post": null,
+    "source_url": "https://github.com/zainkashifcs/comp-program-grind/blob/9769cd76a4fbcd5bfb7d4821098d7e5ba5a51d40/CF%20Questions/474_B_Worms.cpp",
+    "seq": 39
   }
 ]

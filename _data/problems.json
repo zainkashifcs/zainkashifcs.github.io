@@ -1,5 +1,32 @@
 [
  {
+  "id": "474B",
+  "name": "Worms",
+  "slug": "474b-worms",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 1200,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "binary search",
+   "implementation"
+  ],
+  "topics": [
+   "binary-search",
+   "implementation"
+  ],
+  "first_date": "2026-11-21",
+  "last_date": "2026-11-21",
+  "solved_date": "2026-11-21",
+  "solution_file": "CF Questions/474_B_Worms.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/9769cd76a4fbcd5bfb7d4821098d7e5ba5a51d40/CF%20Questions/474_B_Worms.cpp",
+  "post": null,
+  "page": "/problems/474b-worms/",
+  "link": "https://codeforces.com/problemset/problem/474/B"
+ },
+ {
   "id": "1A",
   "name": "Theatre Square",
   "slug": "1a-theatre-square",

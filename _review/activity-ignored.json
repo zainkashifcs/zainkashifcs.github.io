@@ -400,5 +400,35 @@
     "problem": "1A",
     "file": "CF Questions/1_A_Theatre_Square.cpp",
     "reason": "edit (no verb)"
+  },
+  {
+    "commit": "9769cd7",
+    "problem": null,
+    "file": "CF Questions/Associative_Array.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "9769cd7",
+    "problem": null,
+    "file": "CF Questions/CSES_1620_Factory_Machines.cpp",
+    "reason": "new file not mentioned in the message"
+  },
+  {
+    "commit": "f5b439d",
+    "problem": "474B",
+    "file": "CF Questions/474_B_Worms.cpp",
+    "reason": "edit (no verb)"
+  },
+  {
+    "commit": "f5b439d",
+    "problem": null,
+    "file": "CF Questions/Associative_Array.cpp",
+    "reason": "edit"
+  },
+  {
+    "commit": "f5b439d",
+    "problem": null,
+    "file": "CF Questions/CSES_1620_Factory_Machines.cpp",
+    "reason": "edit"
   }
 ]

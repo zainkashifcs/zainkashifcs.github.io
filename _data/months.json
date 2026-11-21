@@ -1,9 +1,11 @@
 [
  {
   "month": "2026-11",
-  "solved": [],
+  "solved": [
+   "474B"
+  ],
   "attempted": [],
-  "active_days": 1
+  "active_days": 2
  },
  {
   "month": "2026-10",

@@ -16,6 +16,7 @@
     "405A",
     "451A",
     "467A",
+    "474B",
     "617A",
     "677A",
     "706B",
@@ -49,6 +50,7 @@
     "405A",
     "451A",
     "467A",
+    "474B",
     "617A",
     "677A",
     "706B",
@@ -77,9 +79,9 @@
   "practice_unverified": [
     "1791D"
   ],
-  "distinct_problems": 33,
-  "verified_entries": 35,
-  "active_days": 17,
+  "distinct_problems": 34,
+  "verified_entries": 36,
+  "active_days": 18,
   "first_day": "2026-09-29",
   "longest_streak": {
     "days": 10,

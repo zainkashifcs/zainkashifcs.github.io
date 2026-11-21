@@ -176,6 +176,14 @@
    "implementation"
   ]
  },
+ "474B": {
+  "name": "Worms",
+  "rating": 1200,
+  "tags": [
+   "binary search",
+   "implementation"
+  ]
+ },
  "4A": {
   "name": "Watermelon",
   "rating": 800,
