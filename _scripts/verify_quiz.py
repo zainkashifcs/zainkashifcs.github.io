@@ -95,7 +95,8 @@ def runner(cpp, cxx):
     """Compile the solution once; return run(input) with a 2 s time limit and capped output."""
     tmp = Path(tempfile.mkdtemp())
     exe = tmp / "solution.exe"
-    subprocess.run([cxx, "-std=c++17", "-O2", "-o", str(exe), str(cpp)], check=True, capture_output=True)
+    # -x c++: some solution files have no .cpp extension (e.g. "CF Questions/2188_B_Seats")
+    subprocess.run([cxx, "-std=c++17", "-O2", "-o", str(exe), "-x", "c++", str(cpp)], check=True, capture_output=True)
 
     def run(stdin):
         r = subprocess.run([str(exe)], input=stdin + "\n", capture_output=True, text=True, timeout=2)

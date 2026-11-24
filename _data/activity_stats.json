@@ -28,6 +28,7 @@
     "1742A",
     "1790D",
     "1791E",
+    "2188B",
     "2275A"
   ],
   "independent_upsolves": [
@@ -62,11 +63,14 @@
     "1742A",
     "1790D",
     "1791E",
+    "2188B",
     "2275A",
     "2275B"
   ],
   "assisted_solves": [
-    "158A"
+    "158A",
+    "433B",
+    "492B"
   ],
   "assisted_attempts": [
     "1791D"
@@ -74,14 +78,16 @@
   "redos": [
     "69A",
     "339A",
+    "433B",
+    "492B",
     "2275B"
   ],
   "practice_unverified": [
     "1791D"
   ],
-  "distinct_problems": 34,
-  "verified_entries": 36,
-  "active_days": 18,
+  "distinct_problems": 37,
+  "verified_entries": 42,
+  "active_days": 20,
   "first_day": "2026-09-29",
   "longest_streak": {
     "days": 10,

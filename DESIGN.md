@@ -269,7 +269,7 @@ Algorithm dry-runs (`assets/js/algo-visualizer.js`, `_includes/visualizer.html`,
 has an entry for the problem ID): a card with the demo's inputs, a drawing on `--tile-2`, the key code lines (the current
 line gets `--fill-2` and a 2px `--text` bar, never amber) and a one-line explanation in a live region. Controls are glass
 chips: reset, back, play/pause (label changes), forward, a range timeline, a 1x/2x group. No autoplay; reduced motion
-removes the tweening. Shipped for 1A, 263A, 405A and 1791D.
+removes the tweening. Shipped for 1A, 263A, 405A, 1791D, 2188B and 433B.
 
 Topic constellation (`assets/js/constellation-graph.js`, `_includes/constellation.html` on /stats/ and /roadmap/): a
 force-directed canvas built from `problems.json` and the topic list. Hubs sized by problems solved myself; problems

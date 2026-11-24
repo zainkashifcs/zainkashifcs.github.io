@@ -31,6 +31,88 @@
     return input;
   }
 
+  // A labelled text input with a hint under it. onInput(value) returns an error message ('' when valid), which
+  // replaces the hint and sets aria-invalid; the returned check() re-runs it when another field changes.
+  function textField(parent, label, value, maxlength, id, hintText, onInput) {
+    const box = htmlEl('div', { class: 'viz-field viz-field-wide' }, parent);
+    const wrap = htmlEl('label', { class: 'viz-field' }, box);
+    htmlEl('span', {}, wrap, label);
+    const input = htmlEl('input', { type: 'text', value, maxlength, spellcheck: 'false', autocomplete: 'off', 'aria-describedby': id }, wrap);
+    const hint = htmlEl('small', { id, 'aria-live': 'polite' }, box, hintText);
+    const check = () => {
+      const err = onInput(input.value.trim());
+      input.setAttribute('aria-invalid', String(!!err));
+      hint.textContent = err ? `${err} The run below still shows the last valid input.` : hintText;
+    };
+    input.addEventListener('input', check);
+    return check;
+  }
+
+  // 2188B Seats: steps of the real loop, one executed line each, with the values after that line ran.
+  // Seats use padded positions -1..n: -1 and n are the two virtual 0s.
+  function seatSteps(s) {
+    const n = s.length, steps = [];
+    let ans = 0, zeros, i = null, run = null, placed = [];
+    // the people `zeros / 3` stands for: a run of L zeros between two people (or past a virtual 0) seats them at
+    // run offsets 2, 5, 8, ..., the last one pulled back to L - 2 so it never touches the person ending the run
+    const fill = (start, L) => Array.from({ length: Math.floor(L / 3) }, (_, k) => start + Math.min(2 + 3 * k, L - 2));
+    const at = (line, text, extra = {}) => steps.push({ line, text, i, run, placed, ans, zeros, ...extra });
+    at(0, 'ans = 0. It will count every person at the end: the ones already seated and the ones added.');
+    zeros = 1; run = [-1, -1];
+    at(1, 'zeros = 1: the dashed seat before the string is a virtual 0, so a run at the left edge counts like any other.');
+    for (i = 0; i < n; i++) {
+      if (s[i] === '1') {
+        ans++;
+        at(4, `s[${i}] is 1: count this person, ans = ${ans}.`);
+        const added = fill(i - zeros, zeros), q = added.length;
+        placed = [...placed, ...added]; ans += q;
+        at(5, `The run before seat ${i} has ${zeros} zero${zeros === 1 ? '' : 's'}: ${zeros} / 3 = ${q}${q ? ` more ${q === 1 ? 'person fits (ringed)' : 'people fit (ringed)'}` : ', nobody fits'}. ans = ${ans}.`, { fresh: added });
+        zeros = 0; run = null;
+        at(6, `zeros = 0: a new run of empty seats starts after seat ${i}.`);
+      } else {
+        zeros++; run = [i - zeros + 1, i];
+        at(8, `s[${i}] is 0: zeros = ${zeros}, the current run of empty seats.`);
+      }
+    }
+    i = null; zeros++; run = [n - zeros + 1, n];
+    at(11, `Loop done. zeros++ adds the dashed virtual 0 after the string: zeros = ${zeros}.`);
+    const added = fill(n - zeros + 1, zeros), q = added.length;
+    placed = [...placed, ...added]; ans += q;
+    at(12, `Last run: ${zeros} / 3 = ${q}${q ? ` more ${q === 1 ? 'person (ringed)' : 'people (ringed)'}` : ', nobody fits'}. ans = ${ans}.`, { fresh: added });
+    at(13, `Output: ${ans}.`, { done: true, out: ans });
+    return steps;
+  }
+
+  // 433B Kuriyama Mirai's Stones: steps of the real program for one query (m = 1); arrays are copied, never mutated,
+  // so each step keeps its own snapshot. lit = cells just written or read; dash = the operands of that line.
+  function stoneSteps(cost, type, l, r) {
+    const n = cost.length, steps = [], set = (arr, k, v) => arr.map((x, j) => (j === k ? v : x));
+    let a = Array(n + 1).fill(0), p1 = null, p2 = null;
+    const at = (line, text, v, extra = {}) => steps.push({ line, text, v, a, p1, p2, lit: [], dash: [], ...extra });
+    at(0, `a gets n + 1 = ${n + 1} slots, all 0; a[0] is never used.`, { n });
+    p1 = Array(n + 1).fill(0); p2 = Array(n + 1).fill(0);
+    at(1, 'p1 and p2 start as zeros, so p1[0] = p2[0] = 0.', { n });
+    for (let i = 1; i <= n; i++) {
+      a = set(a, i, cost[i - 1]);
+      at(3, `Read a[${i}] = ${a[i]}.`, { i, 'a[i]': a[i] }, { lit: [['a', i]] });
+      p1 = set(p1, i, p1[i - 1] + a[i]);
+      at(4, `p1[${i}] = p1[${i - 1}] + a[${i}] = ${p1[i - 1]} + ${a[i]} = ${p1[i]}.`, { i, 'a[i]': a[i], 'p1[i]': p1[i] }, { lit: [['p1', i]], dash: [['p1', i - 1], ['a', i]] });
+    }
+    a = [a[0], ...a.slice(1).sort((x, y) => x - y)];
+    at(6, `Sort a[1..n] (a[0] stays put): ${a.slice(1).join(' ')}.`, { n, 'a[1..n]': a.slice(1).join(' ') }, { lit: a.map((_, k) => ['a', k]).slice(1) });
+    for (let i = 1; i <= n; i++) {
+      p2 = set(p2, i, p2[i - 1] + a[i]);
+      at(8, `p2[${i}] = p2[${i - 1}] + a[${i}] = ${p2[i - 1]} + ${a[i]} = ${p2[i]}.`, { i, 'a[i]': a[i], 'p2[i]': p2[i] }, { lit: [['p2', i]], dash: [['p2', i - 1], ['a', i]] });
+    }
+    at(11, 'Read m = 1: this dry-run asks one question.', { m: 1 });
+    at(12, 'while (m--): m is 1, so the body runs and m drops to 0.', { m: 0 });
+    at(14, `Read the query: type = ${type}, l = ${l}, r = ${r}.`, { type, l, r });
+    at(15, `type == 1 is ${type === 1}: ${type === 1 ? 'sum in the original order, from p1' : 'sum in sorted order, from p2'}.`, { type, l, r });
+    const name = type === 1 ? 'p1' : 'p2', p = type === 1 ? p1 : p2, out = p[r] - p[l - 1];
+    at(type === 1 ? 16 : 18, `Print ${name}[${r}] − ${name}[${l - 1}] = ${p[r]} − ${p[l - 1]} = ${out}.`, { [`${name}[r]`]: p[r], [`${name}[l - 1]`]: p[l - 1], output: out }, { lit: [[name, r], [name, l - 1]], done: true, out });
+    return steps;
+  }
+
   const DEMOS = {
     // 1A Theatre Square: an n x m plaza (n rows down, m across) covered by a x a flagstones.
     'theatre-square': {
@@ -309,6 +391,128 @@
               chars[k].classList.toggle('is-right', i > 0 && k >= i);
             }
             this.bars.forEach((b, k) => { b.classList.toggle('is-now', k + 1 === i); b.classList.toggle('is-peak', k + 1 === i && peak); });
+          },
+        };
+      },
+    },
+
+    // 2188B Seats: the code panel is the solution's loop verbatim (blank lines dropped, outer indent removed).
+    'seats': {
+      code: [
+        'int ans = 0;',
+        'int zeros = 1;',
+        'for (int i = 0; i < n; i++) {',
+        "    if (s[i] == '1') {",
+        '        ans++;',
+        '        ans += zeros / 3;',
+        '        zeros = 0;',
+        '    } else {',
+        '        zeros++;',
+        '    }',
+        '}',
+        'zeros++;',
+        'ans += zeros / 3;',
+        "std::cout << ans << '\\n';",
+      ],
+      setup(api) {
+        let s = '1000010000';
+        const hint = 'Only 0 and 1, 1 to 14 seats, no two 1s side by side.';
+        textField(api.inputs, 's', s, 14, 'viz-seats-hint', hint, v => {
+          if (!v.length) return 'Type at least one seat.';
+          if (/[^01]/.test(v)) return 'Use only 0 and 1.';
+          if (v.length > 14) return 'At most 14 seats.';  // more seats would shrink below a readable size
+          if (v.includes('11')) return 'Two 1s sit side by side; the problem never gives that.';
+          s = v; api.rebuild();
+          return '';
+        });
+        const svg = svgEl('svg', { class: 'viz-svg', role: 'img', 'aria-label': 'Row of seats: filled seats are taken, dashed seats at both ends are the virtual zeros, rings are the people ans adds' }, api.canvas);
+        const X = k => (k + 1) * 1.25;   // padded position -1..n to x
+        return {
+          build() { svg.setAttribute('viewBox', `-0.2 -0.2 ${(s.length + 2) * 1.25 + 0.15} 1.95`); return seatSteps(s); },
+          vars(st) {
+            return { i: st.i ?? '–', 's[i]': st.i != null ? s[st.i] : '–', zeros: st.zeros ?? '?', ans: st.ans, ...(st.done ? { output: st.out } : {}) };
+          },
+          draw(st) {
+            svg.replaceChildren();
+            const inRun = k => !!st.run && k >= st.run[0] && k <= st.run[1];
+            for (let k = -1; k <= s.length; k++) {
+              const pad = k < 0 || k === s.length, taken = !pad && s[k] === '1';
+              const cls = taken ? 'viz-cube is-moved' : `${pad ? 'viz-over' : 'viz-cell'}${inRun(k) ? ' viz-stone' : ''}`;
+              svgEl('rect', { x: X(k), y: 0, width: 1, height: 1, rx: 0.12, fill: 'none', class: cls }, svg);
+            }
+            for (const k of st.placed) svgEl('circle', { cx: X(k) + 0.5, cy: 0.5, r: 0.26, fill: 'none', class: `viz-guide${st.fresh && st.fresh.includes(k) ? ' viz-new' : ''}` }, svg);
+            if (st.i != null) svgEl('line', { x1: X(st.i) + 0.2, x2: X(st.i) + 0.8, y1: 1.35, y2: 1.35, class: 'viz-guide' }, svg);   // i points here
+          },
+        };
+      },
+    },
+
+    // 433B Kuriyama Mirai's Stones: the code panel is the solution from the arrays to the last output line, verbatim
+    // (blank lines dropped, outer indent removed).
+    'kuriyama-stones': {
+      code: [
+        'std::vector<long long> a(n + 1);',
+        'std::vector<long long> p1(n + 1, 0), p2(n + 1, 0);',
+        'for (int i = 1; i <= n; i++) {',
+        '    std::cin >> a[i];',
+        '    p1[i] = p1[i - 1] + a[i];',
+        '}',
+        'std::sort(a.begin() + 1, a.end());',
+        'for (int i = 1; i <= n; i++) {',
+        '    p2[i] = p2[i - 1] + a[i];',
+        '}',
+        'int m;',
+        'std::cin >> m;',
+        'while (m--) {',
+        '    int type, l, r;',
+        '    std::cin >> type >> l >> r;',
+        '    if (type == 1) {',
+        "        std::cout << p1[r] - p1[l - 1] << '\\n';",
+        '    } else {',
+        "        std::cout << p2[r] - p2[l - 1] << '\\n';",
+      ],
+      setup(api) {
+        let cost = [6, 4, 2, 7, 2, 7], query = [2, 3, 6], costOk = true, queryOk = true;
+        const sync = () => { if (costOk && queryOk) api.rebuild(); };
+        textField(api.inputs, 'costs', cost.join(' '), 100, 'viz-cost-hint', '1 to 8 costs from 1 to 1000000000, separated by spaces.', v => {
+          const t = v.split(/\s+/).filter(Boolean);
+          costOk = t.length >= 1 && t.length <= 8 && t.every(x => /^\d+$/.test(x) && Number(x) >= 1 && Number(x) <= 1e9);
+          if (!costOk) return t.length < 1 || t.length > 8 ? 'Enter 1 to 8 costs.' : 'Each cost is a whole number from 1 to 1000000000.';
+          cost = t.map(Number);
+          checkQuery();   // n may have changed; this also rebuilds
+          return '';
+        });
+        const checkQuery = textField(api.inputs, 'type l r', query.join(' '), 30, 'viz-query-hint', 'type is 1 (original order) or 2 (sorted), then 1 ≤ l ≤ r ≤ n.', v => {
+          const t = v.split(/\s+/).filter(Boolean), [type, l, r] = t.map(Number), n = cost.length;
+          queryOk = t.length === 3 && t.every(x => /^\d+$/.test(x)) && (type === 1 || type === 2) && l >= 1 && l <= r && r <= n;
+          if (!queryOk) return t.length !== 3 || !t.every(x => /^\d+$/.test(x)) ? 'Enter three whole numbers: type l r.' : type !== 1 && type !== 2 ? 'type is 1 or 2.' : `Need 1 ≤ l ≤ r ≤ n = ${n}.`;
+          query = [type, l, r];
+          sync();
+          return '';
+        });
+        const table = htmlEl('div', { class: 'viz-table', role: 'region', tabindex: '0', 'aria-label': 'Arrays a, p1 and p2 by index i; scrolls sideways when wide' }, api.canvas);
+        return {
+          build() {
+            const n = cost.length;
+            table.style.gridTemplateColumns = `auto repeat(${n + 1}, max-content)`;
+            table.replaceChildren(htmlEl('span', { class: 'viz-rowh' }, null, 'i'), ...Array.from({ length: n + 1 }, (_, k) => htmlEl('span', { class: 'viz-rowh' }, null, String(k))));
+            this.cells = {};
+            for (const row of ['a', 'p1', 'p2']) {
+              htmlEl('span', { class: 'viz-rowh' }, table, row);
+              this.cells[row] = Array.from({ length: n + 1 }, () => htmlEl('span', { class: 'viz-ch' }, table));
+            }
+            return stoneSteps(cost, ...query);
+          },
+          vars(st) { return st.v; },
+          draw(st) {
+            const has = (list, row, k) => list.some(([r, j]) => r === row && j === k);
+            for (const row of ['a', 'p1', 'p2']) {
+              this.cells[row].forEach((c, k) => {
+                c.textContent = st[row] ? String(st[row][k]) : '';
+                c.classList.toggle('is-lit', has(st.lit, row, k));
+                c.classList.toggle('is-right', has(st.dash, row, k));
+              });
+            }
           },
         };
       },

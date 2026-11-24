@@ -1,5 +1,91 @@
 [
  {
+  "id": "492B",
+  "name": "Vanya and Lanterns",
+  "slug": "492b-vanya-and-lanterns",
+  "status": "help",
+  "status_label": "Solved with help",
+  "solved": true,
+  "eligible": false,
+  "rating": 1200,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "binary search",
+   "implementation",
+   "math",
+   "sortings"
+  ],
+  "topics": [
+   "binary-search",
+   "greedy",
+   "implementation",
+   "math",
+   "sorting"
+  ],
+  "first_date": "2026-11-22",
+  "last_date": "2026-11-24",
+  "solved_date": null,
+  "solution_file": null,
+  "solution_url": null,
+  "post": "/posts/492b-vanya-and-lanterns/",
+  "page": null,
+  "link": "https://codeforces.com/problemset/problem/492/B"
+ },
+ {
+  "id": "433B",
+  "name": "Kuriyama Mirai's Stones",
+  "slug": "433b-kuriyama-mirai-s-stones",
+  "status": "help",
+  "status_label": "Solved with help",
+  "solved": true,
+  "eligible": false,
+  "rating": 1200,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "dp",
+   "implementation",
+   "sortings"
+  ],
+  "topics": [
+   "dp",
+   "implementation",
+   "sorting"
+  ],
+  "first_date": "2026-11-22",
+  "last_date": "2026-11-24",
+  "solved_date": "2026-11-24",
+  "solution_file": "CF Questions/433_B_Kuriyama_Mirai_Stones.cpp",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/7523112498c750902a8eef15fe08ef4b49a92374/CF%20Questions/433_B_Kuriyama_Mirai_Stones.cpp",
+  "post": null,
+  "page": "/problems/433b-kuriyama-mirai-s-stones/",
+  "link": "https://codeforces.com/problemset/problem/433/B"
+ },
+ {
+  "id": "2188B",
+  "name": "Seats",
+  "slug": "2188b-seats",
+  "status": "solved",
+  "status_label": "Solved",
+  "solved": true,
+  "eligible": true,
+  "rating": 1000,
+  "rating_source": "codeforces",
+  "cf_tags": [
+   "greedy"
+  ],
+  "topics": [
+   "greedy"
+  ],
+  "first_date": "2026-11-24",
+  "last_date": "2026-11-24",
+  "solved_date": "2026-11-24",
+  "solution_file": "CF Questions/2188_B_Seats",
+  "solution_url": "https://github.com/zainkashifcs/comp-program-grind/blob/d7d7d702e52ade087f9cb081a505c7c2d5927cb0/CF%20Questions/2188_B_Seats",
+  "post": null,
+  "page": "/problems/2188b-seats/",
+  "link": "https://codeforces.com/problemset/problem/2188/B"
+ },
+ {
   "id": "474B",
   "name": "Worms",
   "slug": "474b-worms",

@@ -88,6 +88,13 @@
    "math"
   ]
  },
+ "2188B": {
+  "name": "Seats",
+  "rating": 1000,
+  "tags": [
+   "greedy"
+  ]
+ },
  "2275A": {
   "name": "In Search of Convenience",
   "rating": 800,
@@ -162,6 +169,15 @@
    "sortings"
   ]
  },
+ "433B": {
+  "name": "Kuriyama Mirai's Stones",
+  "rating": 1200,
+  "tags": [
+   "dp",
+   "implementation",
+   "sortings"
+  ]
+ },
  "451A": {
   "name": "Game With Sticks",
   "rating": 900,
@@ -182,6 +198,16 @@
   "tags": [
    "binary search",
    "implementation"
+  ]
+ },
+ "492B": {
+  "name": "Vanya and Lanterns",
+  "rating": 1200,
+  "tags": [
+   "binary search",
+   "implementation",
+   "math",
+   "sortings"
   ]
  },
  "4A": {

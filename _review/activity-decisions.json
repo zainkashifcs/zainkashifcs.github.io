@@ -23,5 +23,13 @@
   {"commit": "58dc2ab", "problem": "474B", "action": "unverified", "type": "solved",
    "reason": "no 474B file anywhere in the repository history; kept internal only"},
   {"commit": "fc05024", "problem": "263A", "action": "milestone", "title": "First 2D grid problem"},
-  {"commit": "3b330f6", "problem": "4C", "action": "milestone", "title": "First 1300-rated problem"}
+  {"commit": "3b330f6", "problem": "4C", "action": "milestone", "title": "First 1300-rated problem"},
+  {"commit": "c2974d7", "problem": "433B", "action": "record", "type": "solved", "assisted": true, "file": "CF Questions/433_B_Kuriyama_Mirai_Stones",
+   "reason": "file added without a .cpp extension, so the rule missed it; first solve was assisted (confirmed by Zain, 2026-11-24)"},
+  {"commit": "7523112", "problem": "433B", "action": "record", "type": "redo", "file": "CF Questions/433_B_Kuriyama_Mirai_Stones.cpp",
+   "reason": "rename to .cpp plus the redo note; redo was independent (confirmed by Zain, 2026-11-24)"},
+  {"commit": "4dd24c0", "problem": "492B", "action": "record", "type": "solved", "assisted": true, "file": "CF Questions/492B_Vanya_And_Lanterns",
+   "reason": "file added without a .cpp extension, so the rule missed it; assisted solve (confirmed by Zain, 2026-11-24)"},
+  {"commit": "d7d7d70", "problem": "2188B", "action": "record", "type": "solved", "file": "CF Questions/2188_B_Seats",
+   "reason": "file has no .cpp extension, so the rule missed it; solved independently (confirmed by Zain, 2026-11-24)"}
 ]

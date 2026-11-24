@@ -18,5 +18,15 @@
     "demo": "distinct-split",
     "title": "Scrub the split",
     "lede": "Not solved yet in the log; this shows the prefix and suffix idea. Lit letters are the distinct ones on each side of the split."
+  },
+  "2188B": {
+    "demo": "seats",
+    "title": "Count the seats",
+    "lede": "Type a row of seats, then step through the loop. Dashed seats are the two virtual zeros; rings are the people each zeros / 3 adds."
+  },
+  "433B": {
+    "demo": "kuriyama-stones",
+    "title": "Build both prefix sums",
+    "lede": "Change the costs and the query, then step through p1, the sort, p2 and the one subtraction that answers the query."
   }
 }

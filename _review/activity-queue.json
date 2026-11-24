@@ -1,18 +1,1 @@
-[
-  {
-    "commit": "c2974d7",
-    "date": "2026-11-22",
-    "message": "solve CF 433B kuriyama stones (assisted, prefix sums)",
-    "problem": "433B",
-    "reason": "message says 'solved' but no file for 433B changed in this commit",
-    "files": []
-  },
-  {
-    "commit": "4dd24c0",
-    "date": "2026-11-22",
-    "message": "solve CF 492B vanya lanterns (assisted, sorting + edge cases)",
-    "problem": "492B",
-    "reason": "message says 'solved' but no file for 492B changed in this commit",
-    "files": []
-  }
-]
+[]

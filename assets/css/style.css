@@ -1663,6 +1663,10 @@ li.is-picked > a.row { background: var(--fill-2); box-shadow: 0 0 0 1px var(--fi
 .viz-splitbar[hidden] { display: none; }
 .viz-word.is-peak .viz-ch.is-lit { box-shadow: 0 0 0 1px var(--text), 0 0 14px -2px color-mix(in srgb, var(--text) 45%, transparent); }
 .viz-bar.is-peak { filter: drop-shadow(0 0 4px color-mix(in srgb, var(--text) 60%, transparent)); }
+/* array rows (433B): one column per index, cells grow to fit long long sums; scrolls inside the stage when wide */
+.viz-table { display: grid; gap: 4px; max-width: 100%; overflow-x: auto; padding-bottom: 2px; }
+.viz-table .viz-ch { width: auto; min-width: 2rem; height: 2rem; padding-inline: .4rem; font-size: .8125rem; font-variant-numeric: tabular-nums; }
+.viz-rowh { align-self: center; justify-self: center; font: 500 .75rem var(--mono); color: var(--text-3); font-variant-numeric: tabular-nums; }
 @media (prefers-reduced-motion: no-preference) {
   .viz-marker { transition: transform 240ms var(--ease-spring), height 240ms var(--ease-spring); }
   .viz-var.is-changed { animation: viz-pop 360ms var(--ease-overshoot); }
