@@ -825,7 +825,7 @@
     "display": true,
     "decided_by": "zain",
     "rating_source": "solution header",
-    "title": "",
+    "title": "Kuriyama Mirai's Stones",
     "post": null,
     "source_url": "https://github.com/zainkashifcs/comp-program-grind/blob/c2974d798a471935773c2f5870572b22f17412de/CF%20Questions/433_B_Kuriyama_Mirai_Stones",
     "seq": 40
@@ -846,7 +846,7 @@
     "display": true,
     "decided_by": "zain",
     "rating_source": "solution header",
-    "title": "",
+    "title": "Vanya and Lanterns",
     "post": "/posts/492b-vanya-and-lanterns/",
     "source_url": "https://github.com/zainkashifcs/comp-program-grind/blob/4dd24c0f96301279a0045176e9fdc8e048789124/CF%20Questions/492B_Vanya_And_Lanterns",
     "seq": 41
@@ -867,7 +867,7 @@
     "display": true,
     "decided_by": "zain",
     "rating_source": "solution header",
-    "title": "",
+    "title": "Kuriyama Mirai's Stones",
     "post": null,
     "source_url": "https://github.com/zainkashifcs/comp-program-grind/blob/7523112498c750902a8eef15fe08ef4b49a92374/CF%20Questions/433_B_Kuriyama_Mirai_Stones.cpp",
     "seq": 42
@@ -888,7 +888,7 @@
     "display": true,
     "decided_by": "rule",
     "rating_source": "solution header",
-    "title": "",
+    "title": "Vanya and Lanterns",
     "post": "/posts/492b-vanya-and-lanterns/",
     "source_url": "https://github.com/zainkashifcs/comp-program-grind/blob/149987e06f99cf8d15830c3e64a8c03f088f61a8/CF%20Questions/492B_Vanya_And_Lanterns.cpp",
     "seq": 43
@@ -908,7 +908,7 @@
     "rating": null,
     "display": true,
     "decided_by": "zain",
-    "title": "",
+    "title": "Seats",
     "post": null,
     "source_url": "https://github.com/zainkashifcs/comp-program-grind/blob/d7d7d702e52ade087f9cb081a505c7c2d5927cb0/CF%20Questions/2188_B_Seats",
     "seq": 44
@@ -929,7 +929,7 @@
     "display": true,
     "decided_by": "rule",
     "post": "/posts/492b-vanya-and-lanterns/",
-    "title": "",
+    "title": "Vanya and Lanterns",
     "source_url": null,
     "seq": 45
   }

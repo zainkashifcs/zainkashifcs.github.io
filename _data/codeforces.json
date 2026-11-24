@@ -26,6 +26,7 @@
   "1790D",
   "1791D",
   "1791E",
+  "2188B",
   "2193C",
   "2275A",
   "2275B",
@@ -54,18 +55,18 @@
   "791A",
   "977A"
  ],
- "accepted_count": 37,
+ "accepted_count": 38,
  "by_rating": {
   "800": 24,
   "900": 3,
-  "1000": 3,
+  "1000": 4,
   "1100": 2,
   "1200": 4,
   "1300": 1
  },
  "tags": {
   "implementation": 26,
-  "greedy": 10,
+  "greedy": 11,
   "strings": 9,
   "sortings": 8,
   "brute force": 5,
